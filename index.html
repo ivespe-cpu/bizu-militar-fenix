@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIZÚ MILITAR FÊNIX - SISTEMA DE GESTÃO</title>
+    <title>BIZÚ MILITAR FÊNIX - SISTEMA DE ELITE</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050a15; color: white; font-family: 'Segoe UI', sans-serif; }
-        .militar-gradient { background: linear-gradient(180deg, #0a111f 0%, #050a15 100%); }
-        .fenix-border { border: 1px solid rgba(255, 102, 0, 0.3); }
-        .text-fenix { color: #ff6600; }
-        .bg-fenix { background-color: #ff6600; }
-        .card-missao { background: #101827; border-radius: 15px; transition: transform 0.2s; }
-        .card-missao:hover { transform: scale(1.05); border-color: #ff6600; }
-        .capa-apostila { border-radius: 8px; border: 2px solid #1e293b; width: 100%; height: 220px; object-fit: cover; }
+        :root {
+            --azul-marinho: #001233;
+            --dourado: #D4AF37; /* OURO MILITAR */
+            --vermelho: #bc0000;
+        }
+        body { background-color: var(--azul-marinho); color: white; font-family: 'Segoe UI', sans-serif; }
+        .militar-gradient { background: linear-gradient(180deg, #001233 0%, #000814 100%); }
+        .border-ouro { border: 2px solid var(--dourado); }
+        .text-ouro { color: var(--dourado); }
+        .bg-ouro { background-color: var(--dourado); }
+        .card-escola { background: rgba(255,255,255,0.05); border-bottom: 4px solid var(--dourado); transition: 0.3s; cursor: pointer; }
+        .card-escola:hover { transform: translateY(-5px); background: rgba(212, 175, 55, 0.1); }
+        .capa-apostila { border: 1px solid var(--dourado); border-radius: 8px; width: 100%; height: 280px; object-fit: cover; }
+        .linha-vermelha { height: 3px; background: repeating-linear-gradient(45deg, var(--vermelho), var(--vermelho) 10px, #800000 10px, #800000 20px); }
     </style>
 </head>
 <body>
@@ -25,24 +31,18 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // BANCO DE DADOS DE MISSÕES E APOSTILAS
-        const MISSOES = [
-            { id: 'CN', nome: 'COLÉGIO NAVAL' },
-            { id: 'CMRJ', nome: 'ESCOLA MILITAR - RJ' },
-            { id: 'EEAR', nome: 'EEAR' },
-            { id: 'EsPCEx', nome: 'ESPCEX' },
-            { id: 'ESA', nome: 'ESA' },
-            { id: 'CONCURSOS', nome: 'CONCURSOS' }
-        ];
+        // INSTRUÇÃO: Substitua os links abaixo pelas suas logos reais
+        const LOGO_BIZU_MILITAR = "https://i.ibb.co/6P0S8rF/logo-bizu.jpg"; // LOGO FRENTE
+        const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/9H7W1V8/logo-fenix.png"; // LOGO INTERNA
 
         const APOSTILAS = [
-            { materia: 'MATEMÁTICA', img: 'https://i.ibb.co/LzYvWfK/capa-matematica.jpg' },
-            { materia: 'PORTUGUÊS', img: 'https://i.ibb.co/Vv3Y7zD/capa-portugues.jpg' },
-            { materia: 'INGLÊS', img: 'https://i.ibb.co/fDbX9t4/capa-ingles.jpg' },
-            { materia: 'HISTÓRIA', img: 'https://i.ibb.co/G3Xm6xV/capa-historia.jpg' },
-            { materia: 'GEOGRAFIA', img: 'https://i.ibb.co/C0L5X5n/capa-geografia.jpg' },
-            { materia: 'BIOLOGIA', img: 'https://i.ibb.co/zX8Q1fK/capa-biologia.jpg' },
-            { materia: 'QUÍMICA', img: 'https://i.ibb.co/VqfFv7q/capa-quimica.jpg' }
+            { mat: 'HISTÓRIA', img: 'https://i.postimg.cc/T3mY1vF0/capa-historia.jpg' },
+            { mat: 'INGLÊS', img: 'https://i.postimg.cc/G2R0gVzG/capa-ingles.jpg' },
+            { mat: 'MATEMÁTICA', img: 'https://i.postimg.cc/Nj0WqLgY/capa-matematica.jpg' },
+            { mat: 'PORTUGUÊS', img: 'https://i.postimg.cc/N0n8f8bW/capa-portugues.jpg' },
+            { mat: 'QUÍMICA', img: 'https://i.postimg.cc/Y9S7F2L1/capa-quimica.jpg' },
+            { mat: 'GEOGRAFIA', img: 'https://i.postimg.cc/Xv3yM1v4/capa-geografia.jpg' },
+            { mat: 'BIOLOGIA', img: 'https://i.postimg.cc/q7x2g2m9/capa-biologia.jpg' }
         ];
 
         function App() {
@@ -52,28 +52,22 @@
 
             const handleLogin = (e) => {
                 e.preventDefault();
-                // Simulação de login aprovado conforme solicitado
-                setUser({ nome: "EUFRÁSIO", patente: "COMANDANTE" });
+                setUser({ nome: "EUFRÁSIO", patente: "COMANDANTE", matricula: "AdminFenix" });
                 setStatus('qg');
             };
 
             if (status === 'login') {
                 return (
-                    <div className="min-h-screen flex items-center justify-center p-4">
-                        <div className="max-w-md w-full bg-[#0a111f] p-8 rounded-2xl border-2 border-[#ff6600] shadow-[0_0_20px_rgba(255,102,0,0.2)] text-center">
-                            <img src="https://i.ibb.co/6P0S8rF/logo-bizu.jpg" className="w-32 mx-auto mb-4 rounded-full" />
-                            <h2 className="text-xl font-black italic tracking-tighter">BIZÚ MILITAR <span className="text-fenix">FÊNIX</span></h2>
-                            <p className="text-[10px] opacity-50 mb-6">SETOR DE ACESSO RESTRITO</p>
+                    <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
+                        <div className="max-w-md w-full bg-black/60 p-10 rounded-2xl border-2 border-ouro text-center shadow-2xl">
+                            {/* LOGO BIZÚ MILITAR NA FRENTE */}
+                            <img src={LOGO_BIZU_MILITAR} className="h-40 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]" />
+                            <div className="linha-vermelha mb-8"></div>
+                            
                             <form onSubmit={handleLogin} className="space-y-4 text-left">
-                                <div>
-                                    <label className="text-[9px] font-bold text-fenix uppercase">Identificação (Login)</label>
-                                    <input type="text" className="w-full bg-[#101827] border border-gray-700 p-3 rounded mt-1 outline-none focus:border-fenix" placeholder="Digite seu acesso..." required />
-                                </div>
-                                <div>
-                                    <label className="text-[9px] font-bold text-fenix uppercase">Código de Segurança (Senha)</label>
-                                    <input type="password" className="w-full bg-[#101827] border border-gray-700 p-3 rounded mt-1 outline-none focus:border-fenix" placeholder="********" required />
-                                </div>
-                                <button type="submit" className="w-full bg-fenix text-white font-black py-3 rounded-lg hover:bg-orange-600 transition-all uppercase text-sm">Iniciar Operação</button>
+                                <input className="w-full bg-white/5 border border-ouro/30 p-4 rounded text-white outline-none focus:border-ouro" placeholder="MATRÍCULA" required />
+                                <input className="w-full bg-white/5 border border-ouro/30 p-4 rounded text-white outline-none focus:border-ouro" type="password" placeholder="SENHA" required />
+                                <button className="w-full bg-ouro text-black font-black py-4 rounded hover:bg-white transition-all uppercase tracking-widest text-sm shadow-lg">Entrar no Combate</button>
                             </form>
                         </div>
                     </div>
@@ -82,30 +76,33 @@
 
             if (status === 'qg') {
                 return (
-                    <div className="min-h-screen militar-gradient">
-                        <header className="border-b border-fenix p-4 flex justify-between items-center bg-[#0a111f]">
-                            <h1 className="font-black italic text-sm tracking-tighter">ESQUADRÃO <span className="text-fenix">FÊNIX</span></h1>
+                    <div className="min-h-screen">
+                        <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8">
+                            <div className="flex items-center gap-4">
+                                {/* LOGO ESQUADRÃO FÊNIX INTERNA */}
+                                <img src={LOGO_ESQUADRAO_FENIX} className="h-14" />
+                                <span className="font-black italic text-xl text-ouro uppercase">Central de Comando</span>
+                            </div>
                             <div className="text-right">
-                                <span className="text-[9px] block opacity-50">Logado como:</span>
-                                <span className="text-xs font-bold">{user.patente} {user.nome}</span>
+                                <p className="text-[10px] font-bold text-ouro uppercase">Bem-vindo, Comandante</p>
+                                <p className="text-sm font-black">{user.nome}</p>
                             </div>
                         </header>
 
-                        <main className="max-w-6xl mx-auto p-8">
-                            <h2 className="text-3xl font-black italic text-center mb-10">SELECIONE SUA <span className="text-fenix">MISSÃO</span></h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {MISSOES.map(m => (
-                                    <div key={m.id} onClick={() => {setEscolaSel(m); setStatus('arsenal');}} className="card-missao p-10 text-center cursor-pointer border border-transparent hover:border-fenix">
-                                        <div className="bg-black/40 w-16 h-12 mx-auto mb-4 flex items-center justify-center rounded font-black text-fenix italic">{m.id}</div>
-                                        <h3 className="font-black text-xs uppercase tracking-widest">{m.nome}</h3>
+                        <main className="max-w-6xl mx-auto p-10">
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
+                                {['COLÉGIO NAVAL', 'CMRJ', 'EEAR', 'EsPCEx', 'ESA', 'EXTRAS'].map(item => (
+                                    <div key={item} onClick={() => {setEscolaSel(item); setStatus('arsenal');}} className="card-escola p-10 text-center rounded-xl">
+                                        <div className="w-16 h-16 bg-ouro rounded-full mx-auto mb-4 flex items-center justify-center text-black font-black text-xl shadow-lg">HQ</div>
+                                        <h3 className="font-black text-sm tracking-widest text-ouro">{item}</h3>
                                     </div>
                                 ))}
                             </div>
 
-                            {/* FRASES NO RODAPÉ */}
-                            <div className="mt-20 border-t border-gray-800 pt-10 text-center opacity-40 italic text-sm">
+                            {/* FRASES MOTIVACIONAIS NA PARTE DE BAIXO */}
+                            <div className="linha-vermelha mb-6"></div>
+                            <div className="bg-black/40 p-10 rounded-xl border border-white/5 text-center italic text-xl text-slate-300">
                                 <p>"O treinamento difícil torna o combate bem mais fácil."</p>
-                                <p className="mt-2">"A limitação está apenas na sua mente e não no seu corpo."</p>
                             </div>
                         </main>
                     </div>
@@ -114,25 +111,28 @@
 
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="border-b border-fenix p-4 flex justify-between items-center bg-[#0a111f]">
-                        <h1 className="font-black italic text-sm uppercase">FÊNIX | <span className="text-fenix">{escolaSel.nome}</span></h1>
-                        <button onClick={() => setStatus('qg')} className="bg-gray-800 text-[10px] px-4 py-2 rounded font-black hover:bg-fenix transition-all">VOLTAR AO QG</button>
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8">
+                        <div className="flex items-center gap-4">
+                            <img src={LOGO_ESQUADRAO_FENIX} className="h-10" />
+                            <span className="font-black italic text-lg text-ouro uppercase">{escolaSel}</span>
+                        </div>
+                        <button onClick={() => setStatus('qg')} className="bg-white/10 px-6 py-2 rounded text-[10px] font-black border border-ouro/30 hover:bg-ouro hover:text-black transition-all">VOLTAR AO QG</button>
                     </header>
 
-                    <main className="max-w-6xl mx-auto p-8">
-                        <div className="flex gap-2 mb-10 overflow-x-auto pb-4">
-                            {['APOSTILAS', 'VIDEOAULAS', 'MOTIVACIONAIS', 'INSTITUCIONAIS', 'SIMULADOS', 'PROVAS'].map(cat => (
-                                <button key={cat} className="bg-[#101827] border border-gray-700 px-6 py-2 rounded text-[10px] font-black hover:border-fenix whitespace-nowrap">{cat}</button>
+                    <main className="max-w-7xl mx-auto p-10">
+                        <div className="grid grid-cols-3 md:grid-cols-8 gap-2 mb-10">
+                            {['APOSTILAS', 'VIDEOAULAS', 'MOTIVACIONAIS', 'INSTITUCIONAIS', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS'].map(m => (
+                                <button key={m} className="bg-white/5 p-3 rounded border border-ouro/20 text-[8px] font-black hover:bg-ouro hover:text-black transition-all">{m}</button>
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {APOSTILAS.map(apo => (
-                                <div key={apo.materia} className="bg-[#0a111f] border border-gray-800 p-2 rounded-xl hover:border-fenix transition-all group">
-                                    <img src={apo.img} className="capa-apostila mb-3" alt={apo.materia} />
-                                    <div className="p-2">
-                                        <h4 className="text-[10px] font-bold mb-3">{apo.materia}</h4>
-                                        <button className="w-full bg-fenix text-black font-black py-2 rounded text-[9px] uppercase group-hover:bg-white transition-colors">Baixar Material</button>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                            {APOSTILAS.map((apo, i) => (
+                                <div key={i} className="bg-black/40 border border-ouro/20 rounded-xl overflow-hidden hover:border-ouro transition-all">
+                                    <img src={apo.img} className="capa-apostila" alt={apo.mat} />
+                                    <div className="p-4 bg-[#001233] text-center">
+                                        <h3 className="font-black text-xs text-ouro mb-3 tracking-widest uppercase">{apo.mat}</h3>
+                                        <button className="w-full bg-ouro text-black text-[10px] font-black py-2 rounded hover:bg-white transition-all">BAIXAR MATERIAL</button>
                                     </div>
                                 </div>
                             ))}
