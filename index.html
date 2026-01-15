@@ -3,24 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIZÚ MILITAR FÊNIX</title>
+    <title>BIZÚ MILITAR FÊNIX - ELITE</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: white; margin: 0; font-family: sans-serif; overflow-x: hidden; }
-        .militar-gradient { background: linear-gradient(135deg, #0f172a 0%, #020617 100%); }
-        .fênix-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; outline: none; transition: 0.3s; width: 100%; }
-        .fênix-input:focus { border-color: #ea580c; background: rgba(255,255,255,0.1); }
-        .logo-glow { filter: drop-shadow(0 0 15px rgba(234, 88, 12, 0.4)); }
+        :root {
+            --azul-marinho: #001233;
+            --dourado: #D4AF37;
+            --vermelho: #bc0000;
+        }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
+        .border-dourada { border: 2px solid var(--dourado); }
+        .text-dourado { color: var(--dourado); }
+        .bg-dourado { background-color: var(--dourado); }
+        .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho), var(--vermelho) 10px, #8b0000 10px, #8b0000 20px); }
+        .card-escola { background: rgba(255,255,255,0.05); border-bottom: 4px solid var(--dourado); transition: 0.3s; }
+        .card-escola:hover { transform: translateY(-5px); background: rgba(212, 175, 55, 0.1); }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         const LOGO_BIZU_MILITAR = "https://i.ibb.co/C3mFvXv/logo-bizu.png"; 
         const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/9H7W1V8/logo-fenix.png"; 
@@ -28,20 +36,32 @@
         function App() {
             const [status, setStatus] = useState('login'); 
             const [escolaSel, setEscolaSel] = useState('');
+            const [fraseDia, setFraseDia] = useState("");
+
+            const frases = [
+                "O treinamento difícil torna o combate bem mais fácil",
+                "A disciplina é a alma de um exército",
+                "Só o que é bom dura o tempo suficiente para se tornar inesquecível.",
+                "A limitação está apenas na sua mente e não no seu corpo",
+                "A jornada mais longa começa com o primeiro passo.",
+                "Se você pode sonhar, pode realizar."
+            ];
+
+            useEffect(() => {
+                const dia = new Date().getDay(); // 0 (Dom) a 6 (Sab)
+                setFraseDia(frases[dia === 0 ? 0 : dia - 1]);
+            }, []);
 
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/40 p-10 rounded-[40px] border-2 border-orange-600/30 text-center shadow-2xl">
-                            <img src={LOGO_BIZU_MILITAR} alt="Bizu Militar" className="h-32 mx-auto mb-6 logo-glow" 
-                                 onError={(e) => {e.target.src="https://via.placeholder.com/150?text=BIZU+MILITAR"}} />
-                            
-                            <h1 className="text-2xl font-black italic mb-8 text-white uppercase tracking-tighter">Portal de Acesso</h1>
-                            
-                            <div className="flex flex-col gap-4 text-left">
-                                <input type="text" placeholder="LOGIN" className="fênix-input font-bold" />
-                                <input type="password" placeholder="SENHA" className="fênix-input font-bold" />
-                                <button onClick={() => setStatus('qg')} className="mt-4 bg-orange-600 hover:bg-white hover:text-black py-4 rounded-xl font-black transition-all uppercase tracking-widest text-sm">ENTRAR NO COMBATE</button>
+                        <div className="max-w-md w-full bg-black/60 p-10 rounded-lg border-2 border-[#D4AF37] text-center shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                            <img src={LOGO_BIZU_MILITAR} className="h-32 mx-auto mb-6" onError={(e) => e.target.src="https://via.placeholder.com/150?text=BIZU+MILITAR"} />
+                            <div className="linha-vermelha mb-6"></div>
+                            <div className="flex flex-col gap-4">
+                                <input type="text" placeholder="LOGIN" className="p-3 bg-white/10 border border-dourado/30 rounded text-white font-bold outline-none focus:border-dourado" />
+                                <input type="password" placeholder="SENHA" className="p-3 bg-white/10 border border-dourado/30 rounded text-white font-bold outline-none focus:border-dourado" />
+                                <button onClick={() => setStatus('qg')} className="bg-dourado text-black py-3 rounded font-black hover:bg-white transition-all uppercase tracking-tighter">Acessar Sistema</button>
                             </div>
                         </div>
                     </div>
@@ -55,32 +75,31 @@
                     { id: 'eear', nome: 'EEAR', sigla: 'EEAR' },
                     { id: 'espcex', nome: 'EsPCEx', sigla: 'EsPCEx' },
                     { id: 'esa', nome: 'ESA', sigla: 'ESA' },
-                    { id: 'extras', nome: 'CONCURSOS', sigla: 'EXTRAS' } // ATUALIZADO
+                    { id: 'extras', nome: 'CONCURSOS', sigla: 'EXTRAS' }
                 ];
 
                 return (
                     <div className="min-h-screen">
-                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-4 flex justify-between items-center px-8">
+                        <header className="bg-[#000814] border-b-2 border-dourado p-4 flex justify-between items-center px-8 shadow-xl">
                             <div className="flex items-center gap-4">
-                                <img src={LOGO_ESQUADRAO_FENIX} alt="Esquadrão Fênix" className="h-12 logo-glow" 
-                                     onError={(e) => {e.target.src="https://via.placeholder.com/50?text=FENIX"}} />
-                                <span className="font-black italic text-xl uppercase hidden md:block text-orange-500">Esquadrão Fênix</span>
+                                <img src={LOGO_ESQUADRAO_FENIX} className="h-12" onError={(e) => e.target.src="https://via.placeholder.com/50?text=FENIX"} />
+                                <span className="font-black italic text-xl text-dourado">ESQUADRÃO FÊNIX</span>
                             </div>
-                            <button onClick={() => setStatus('login')} className="bg-red-600/20 text-red-500 px-4 py-1 rounded-full text-[10px] font-black uppercase border border-red-500/30">Desconectar</button>
+                            <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs border border-red-500 px-3 py-1 rounded hover:bg-red-500 hover:text-white transition-all">LOGOUT</button>
                         </header>
                         
                         <main className="max-w-6xl mx-auto p-10">
-                            <div className="mb-12 border-l-8 border-orange-600 pl-6">
-                                <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tight">Centro de <span className="text-orange-500">Comando</span></h2>
-                                <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Selecione a unidade de ensino</p>
+                            <div className="bg-black/40 p-6 rounded-lg border-l-8 border-red-600 mb-10 shadow-lg">
+                                <h2 className="text-3xl font-black text-dourado italic uppercase mb-2">Central de Comando</h2>
+                                <p className="text-white font-serif italic text-lg">"{fraseDia}"</p>
                             </div>
                             
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                 {escolas.map(e => (
                                     <button key={e.id} onClick={() => {setEscolaSel(e.nome); setStatus('escola');}} 
-                                            className="bg-[#111827] p-8 rounded-[30px] border-2 border-white/5 hover:border-orange-600 transition-all flex flex-col items-center gap-4 group hover:bg-orange-600/5">
-                                        <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center text-sm font-black group-hover:scale-110 transition-transform italic text-orange-500 border border-white/10 shadow-lg px-2 text-center leading-tight">{e.sigla}</div>
-                                        <span className="font-black tracking-widest uppercase text-xs text-slate-300 group-hover:text-white">{e.nome}</span>
+                                            className="card-escola p-8 rounded-lg flex flex-col items-center gap-4 group">
+                                        <div className="w-20 h-20 bg-dourado rounded-full flex items-center justify-center text-black font-black text-xl shadow-lg group-hover:scale-110 transition-transform">{e.sigla}</div>
+                                        <span className="font-black tracking-widest text-sm text-dourado group-hover:text-white">{e.nome}</span>
                                     </button>
                                 ))}
                             </div>
@@ -89,39 +108,62 @@
                 );
             }
 
+            // PÁGINA DO COLÉGIO NAVAL / ESCOLAS
+            const arsenalCN = [
+                { mat: 'MATEMÁTICA', img: 'https://i.ibb.co/MD42sWr9/capa-matematica.jpg' },
+                { mat: 'PORTUGUÊS', img: 'https://i.ibb.co/tTJPWYsH/capa-portugues.jpg' },
+                { mat: 'INGLÊS', img: 'https://i.ibb.co/rRGhQGv8/capa-ingles.jpg' },
+                { mat: 'HISTÓRIA', img: 'https://i.ibb.co/tPbpMN1z/capa-historia.jpg' },
+                { mat: 'GEOGRAFIA', img: 'https://i.ibb.co/G4rdS7qT/capa-geografia.jpg' },
+                { mat: 'QUÍMICA', img: 'https://i.ibb.co/gZ78ThkL/capa-quimica.jpg' },
+                { mat: 'BIOLOGIA', img: 'https://i.ibb.co/bgrXnP4z/capa-biologia.jpg' }
+            ];
+
             return (
-                <div className="min-h-screen">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-4 flex justify-between items-center px-8">
+                <div className="min-h-screen militar-gradient">
+                    <header className="bg-[#000814] border-b-2 border-dourado p-4 flex justify-between items-center px-8">
                          <div className="flex items-center gap-4">
                             <img src={LOGO_ESQUADRAO_FENIX} className="h-10" />
-                            <span className="font-black italic text-lg uppercase">Módulo: <span className="text-orange-500">{escolaSel}</span></span>
+                            <span className="font-black italic text-lg text-dourado uppercase">{escolaSel}</span>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="bg-white/10 px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:bg-orange-600 transition-all">← Voltar</button>
+                        <button onClick={() => setStatus('qg')} className="bg-white/10 px-4 py-2 rounded text-xs font-black border border-dourado/30 hover:bg-dourado hover:text-black transition-all">VOLTAR AO QG</button>
                     </header>
 
-                    <main className="max-w-6xl mx-auto p-6 md:p-10">
-                        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                            <MenuBotao label="Apostilas" emoji="📚" />
-                            <MenuBotao label="Videoaulas" emoji="🎥" />
-                            <MenuBotao label="Motivacionais" emoji="⚡" />
-                            <MenuBotao label="Institucionais" emoji="🏛️" />
-                            <MenuBotao label="Simulados" emoji="🛡️" />
-                            <MenuBotao label="Provas" emoji="📝" /> {/* ATUALIZADO */}
+                    <main className="max-w-7xl mx-auto p-6">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 mb-10">
+                            <BotaoMenu label="APOSTILAS" emoji="📚" />
+                            <BotaoMenu label="VIDEOAULAS" emoji="🎥" />
+                            <BotaoMenu label="MOTIVACIONAIS" emoji="⚡" />
+                            <BotaoMenu label="INSTITUCIONAIS" emoji="🏛️" />
+                            <BotaoMenu label="SIMULADOS" emoji="🛡️" />
+                            <BotaoMenu label="PROVAS" emoji="📝" />
+                            <BotaoMenu label="EDITAIS" emoji="📜" color="bg-red-900" />
+                            <BotaoMenu label="GABARITOS" emoji="✅" color="bg-green-900" />
                         </div>
+
+                        <div className="linha-vermelha mb-8"></div>
                         
-                        <div className="mt-12 bg-white/5 border-2 border-dashed border-white/10 rounded-[40px] p-20 text-center">
-                            <p className="font-black text-slate-500 italic uppercase tracking-[0.3em]">Aguardando Injeção de Arsenal ({escolaSel})</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {arsenalCN.map((ap, i) => (
+                                <div key={i} className="bg-black/40 border border-dourado/20 rounded-lg overflow-hidden hover:border-dourado transition-all">
+                                    <img src={ap.img} className="w-full h-72 object-cover" />
+                                    <div className="p-4 bg-[#001233]">
+                                        <h3 className="font-black text-xs text-dourado mb-3 tracking-tighter uppercase">{ap.mat}</h3>
+                                        <button className="w-full bg-dourado text-black text-[10px] font-black py-2 rounded hover:bg-white transition-all">BAIXAR MATERIAL</button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </main>
                 </div>
             );
         }
 
-        function MenuBotao({label, emoji}) {
+        function BotaoMenu({label, emoji, color}) {
             return (
-                <button className="bg-[#111827] p-4 rounded-2xl border border-white/5 flex flex-col items-center gap-2 hover:bg-orange-600 transition-all group">
-                    <span className="text-xl group-hover:scale-125 transition-transform">{emoji}</span>
-                    <span className="text-[9px] font-black uppercase text-center text-slate-400 group-hover:text-white">{label}</span>
+                <button className={`${color || 'bg-white/5'} p-3 rounded border border-dourado/20 flex flex-col items-center gap-1 hover:scale-105 transition-all`}>
+                    <span className="text-xl">{emoji}</span>
+                    <span className="text-[8px] font-black uppercase text-center">{label}</span>
                 </button>
             );
         }
