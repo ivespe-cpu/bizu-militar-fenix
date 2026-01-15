@@ -9,9 +9,11 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: white; margin: 0; font-family: sans-serif; }
-        .card-militar { background: #0f172a; border: 2px solid rgba(255,255,255,0.1); transition: all 0.3s; }
-        .card-militar:hover { border-color: #ea580c; transform: translateY(-5px); }
+        body { background-color: #050505; color: white; margin: 0; font-family: sans-serif; overflow-x: hidden; }
+        .militar-gradient { background: linear-gradient(135deg, #0f172a 0%, #020617 100%); }
+        .gold-border { border: 2px solid #ea580c; }
+        .fênix-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; outline: none; transition: 0.3s; }
+        .fênix-input:focus { border-color: #ea580c; background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -21,78 +23,103 @@
         const { useState } = React;
 
         function App() {
-            const [modulo, setModulo] = useState('menu');
-            
-            const apostilas = [
-                { id: 1, materia: 'MATEMÁTICA', cor: 'from-orange-600 to-red-900' },
-                { id: 2, materia: 'PORTUGUÊS', cor: 'from-blue-600 to-blue-900' },
-                { id: 3, materia: 'INGLÊS', cor: 'from-green-600 to-green-900' },
-                { id: 4, materia: 'HISTÓRIA', cor: 'from-yellow-600 to-yellow-900' },
-                { id: 5, materia: 'GEOGRAFIA', cor: 'from-purple-600 to-purple-900' },
-                { id: 6, materia: 'QUÍMICA', cor: 'from-red-600 to-black' }
-            ];
+            const [status, setStatus] = useState('login'); // login, qg, escola
+            const [escolaSel, setEscolaSel] = useState('');
 
-            return (
-                <div className="min-h-screen">
-                    {/* HEADER */}
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-6 shadow-2xl">
-                        <div className="max-w-6xl mx-auto flex items-center gap-4">
-                            <div className="bg-orange-600 p-3 rounded-full">🔥</div>
-                            <div>
-                                <h1 className="text-2xl font-black italic">BIZÚ MILITAR <span className="text-orange-500">FÊNIX</span></h1>
-                                <p className="text-xs text-orange-400 font-bold tracking-widest uppercase">Setor de Operações de Elite</p>
+            // TELA DE LOGIN
+            if (status === 'login') {
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
+                        <div className="max-w-md w-full bg-black/40 p-10 rounded-[40px] border-2 border-orange-600/30 text-center shadow-[0_0_50px_rgba(234,88,12,0.2)]">
+                            <div className="text-6xl mb-6">🔥</div>
+                            <h1 className="text-3xl font-black italic mb-2 text-white uppercase tracking-tighter">Bizu Militar <span className="text-orange-600">Fênix</span></h1>
+                            <p className="text-xs text-slate-400 font-bold mb-8 tracking-[0.3em] uppercase">Setor de Acesso Restrito</p>
+                            
+                            <div className="flex flex-col gap-4 text-left">
+                                <label className="text-[10px] font-black ml-2 uppercase text-orange-500">Identificação (Login)</label>
+                                <input type="text" placeholder="Digite seu acesso..." className="fênix-input" />
+                                
+                                <label className="text-[10px] font-black ml-2 uppercase text-orange-500">Código de Segurança (Senha)</label>
+                                <input type="password" placeholder="********" className="fênix-input" />
+                                
+                                <button onClick={() => setStatus('qg')} className="mt-4 bg-orange-600 hover:bg-white hover:text-black py-4 rounded-xl font-black transition-all shadow-lg shadow-orange-600/20 uppercase tracking-widest text-sm">
+                                    Iniciar Operação
+                                </button>
                             </div>
                         </div>
+                    </div>
+                );
+            }
+
+            // SELEÇÃO DE ESCOLA (CENTRO DE COMANDO)
+            if (status === 'qg') {
+                const escolas = [
+                    { id: 'cn', nome: 'Colégio Naval', sigla: 'CN' },
+                    { id: 'rj', nome: 'Escola Militar - RJ', sigla: 'CMRJ' },
+                    { id: 'eear', nome: 'EEAR', sigla: 'EEAR' },
+                    { id: 'espcex', nome: 'EsPCEx', sigla: 'EsPCEx' },
+                    { id: 'esa', nome: 'ESA', sigla: 'ESA' }
+                ];
+
+                return (
+                    <div className="min-h-screen">
+                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-6 flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <span className="text-2xl">🔥</span>
+                                <span className="font-black italic text-xl uppercase">Esquadrão Fênix</span>
+                            </div>
+                            <button onClick={() => setStatus('login')} className="text-[10px] font-bold text-red-500 uppercase">Sair</button>
+                        </header>
+                        
+                        <main className="max-w-6xl mx-auto p-10 text-center">
+                            <h2 className="text-5xl font-black italic mb-10 uppercase">Selecione sua <span className="text-orange-500">Missão</span></h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {escolas.map(e => (
+                                    <button key={e.id} onClick={() => {setEscolaSel(e.nome); setStatus('escola');}} className="bg-[#111827] p-10 rounded-[35px] border-2 border-white/5 hover:border-orange-600 transition-all flex flex-col items-center gap-4 group">
+                                        <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform italic text-orange-500 border border-white/10">{e.sigla}</div>
+                                        <span className="font-black tracking-widest uppercase text-sm">{e.nome}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </main>
+                    </div>
+                );
+            }
+
+            // PÁGINA DA ESCOLA (COLÉGIO NAVAL, ETC)
+            return (
+                <div className="min-h-screen">
+                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-6 flex justify-between items-center">
+                         <div className="flex items-center gap-3">
+                            <span className="text-2xl">🔥</span>
+                            <span className="font-black italic text-xl uppercase">Fênix | {escolaSel}</span>
+                        </div>
+                        <button onClick={() => setStatus('qg')} className="bg-white/10 px-4 py-2 rounded-lg text-xs font-bold uppercase">Trocar Escola</button>
                     </header>
 
-                    <main className="max-w-6xl mx-auto p-6">
-                        {modulo === 'menu' ? (
-                            <div>
-                                <div className="mb-10 border-l-8 border-orange-600 pl-6">
-                                    <h2 className="text-4xl font-black uppercase italic">Centro de Comando</h2>
-                                </div>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                    <button onClick={() => setModulo('apostilas')} className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4">
-                                        <span className="text-4xl">📚</span>
-                                        <span className="font-bold">APOSTILAS</span>
-                                    </button>
-                                    <button className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
-                                        <span className="text-4xl">🎥</span>
-                                        <span className="font-bold">AULAS</span>
-                                    </button>
-                                    <button className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
-                                        <span className="text-4xl">📝</span>
-                                        <span className="font-bold">PROVAS</span>
-                                    </button>
-                                    <button className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
-                                        <span className="text-4xl">🛡️</span>
-                                        <span className="font-bold">SIMULADOS</span>
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div>
-                                <button onClick={() => setModulo('menu')} className="mb-8 bg-white/10 px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition-all">
-                                    ← VOLTAR AO QG
-                                </button>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    {apostilas.map(ap => (
-                                        <div key={ap.id} className="card-militar rounded-[30px] overflow-hidden">
-                                            <div className={`h-40 bg-gradient-to-br ${ap.cor} flex items-center justify-center`}>
-                                                <span className="text-2xl font-black italic">{ap.materia}</span>
-                                            </div>
-                                            <div className="p-4">
-                                                <button className="w-full bg-white text-black font-black py-3 rounded-xl hover:bg-orange-600 hover:text-white transition-all">
-                                                    ACESSAR CONTEÚDO
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                    <main className="max-w-6xl mx-auto p-10">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            <MenuBotao label="Apostilas" emoji="📚" />
+                            <MenuBotao label="Videoaulas" emoji="🎥" />
+                            <MenuBotao label="Motivacionais" emoji="⚡" />
+                            <MenuBotao label="Institucionais" emoji="🏛️" />
+                            <MenuBotao label="Simulados" emoji="🛡️" />
+                        </div>
+                        
+                        <div className="mt-12 bg-orange-600/10 border-2 border-orange-600/30 rounded-3xl p-20 text-center">
+                            <p className="font-black text-orange-500 italic uppercase">Carregando arsenal de {escolaSel}...</p>
+                        </div>
                     </main>
                 </div>
+            );
+        }
+
+        function MenuBotao({label, emoji}) {
+            return (
+                <button className="bg-[#111827] p-6 rounded-2xl border border-white/5 flex flex-col items-center gap-2 hover:bg-orange-600 transition-all group">
+                    <span className="text-2xl">{emoji}</span>
+                    <span className="text-[10px] font-black uppercase text-center">{label}</span>
+                </button>
             );
         }
 
