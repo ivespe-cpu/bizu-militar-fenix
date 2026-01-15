@@ -22,20 +22,17 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // --- LINKS DAS LOGOS (SUBSTITUA AQUI DEPOIS) ---
-        const LOGO_BIZU_MILITAR = "https://i.ibb.co/C3mFvXv/logo-bizu.png"; // Placeholder
-        const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/9H7W1V8/logo-fenix.png"; // Placeholder
+        const LOGO_BIZU_MILITAR = "https://i.ibb.co/C3mFvXv/logo-bizu.png"; 
+        const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/9H7W1V8/logo-fenix.png"; 
 
         function App() {
             const [status, setStatus] = useState('login'); 
             const [escolaSel, setEscolaSel] = useState('');
 
-            // TELA DE LOGIN
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
                         <div className="max-w-md w-full bg-black/40 p-10 rounded-[40px] border-2 border-orange-600/30 text-center shadow-2xl">
-                            {/* LOGO BIZÚ MILITAR NA FRENTE */}
                             <img src={LOGO_BIZU_MILITAR} alt="Bizu Militar" className="h-32 mx-auto mb-6 logo-glow" 
                                  onError={(e) => {e.target.src="https://via.placeholder.com/150?text=BIZU+MILITAR"}} />
                             
@@ -44,17 +41,13 @@
                             <div className="flex flex-col gap-4 text-left">
                                 <input type="text" placeholder="LOGIN" className="fênix-input font-bold" />
                                 <input type="password" placeholder="SENHA" className="fênix-input font-bold" />
-                                
-                                <button onClick={() => setStatus('qg')} className="mt-4 bg-orange-600 hover:bg-white hover:text-black py-4 rounded-xl font-black transition-all uppercase tracking-widest text-sm">
-                                    ENTRAR NO COMBATE
-                                </button>
+                                <button onClick={() => setStatus('qg')} className="mt-4 bg-orange-600 hover:bg-white hover:text-black py-4 rounded-xl font-black transition-all uppercase tracking-widest text-sm">ENTRAR NO COMBATE</button>
                             </div>
                         </div>
                     </div>
                 );
             }
 
-            // CENTRO DE COMANDO (SELEÇÃO DE ESCOLA)
             if (status === 'qg') {
                 const escolas = [
                     { id: 'cn', nome: 'Colégio Naval', sigla: 'CN' },
@@ -62,14 +55,13 @@
                     { id: 'eear', nome: 'EEAR', sigla: 'EEAR' },
                     { id: 'espcex', nome: 'EsPCEx', sigla: 'EsPCEx' },
                     { id: 'esa', nome: 'ESA', sigla: 'ESA' },
-                    { id: 'outros', nome: 'OUTROS', sigla: '+++' } // NOVO BOTÃO PARA FECHAR PAR
+                    { id: 'extras', nome: 'CONCURSOS', sigla: 'EXTRAS' } // ATUALIZADO
                 ];
 
                 return (
                     <div className="min-h-screen">
                         <header className="bg-[#0f172a] border-b-4 border-orange-600 p-4 flex justify-between items-center px-8">
                             <div className="flex items-center gap-4">
-                                {/* LOGO ESQUADRÃO FÊNIX NAS PÁGINAS SEGUINTES */}
                                 <img src={LOGO_ESQUADRAO_FENIX} alt="Esquadrão Fênix" className="h-12 logo-glow" 
                                      onError={(e) => {e.target.src="https://via.placeholder.com/50?text=FENIX"}} />
                                 <span className="font-black italic text-xl uppercase hidden md:block text-orange-500">Esquadrão Fênix</span>
@@ -87,7 +79,7 @@
                                 {escolas.map(e => (
                                     <button key={e.id} onClick={() => {setEscolaSel(e.nome); setStatus('escola');}} 
                                             className="bg-[#111827] p-8 rounded-[30px] border-2 border-white/5 hover:border-orange-600 transition-all flex flex-col items-center gap-4 group hover:bg-orange-600/5">
-                                        <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-xl font-black group-hover:scale-110 transition-transform italic text-orange-500 border border-white/10 shadow-lg">{e.sigla}</div>
+                                        <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center text-sm font-black group-hover:scale-110 transition-transform italic text-orange-500 border border-white/10 shadow-lg px-2 text-center leading-tight">{e.sigla}</div>
                                         <span className="font-black tracking-widest uppercase text-xs text-slate-300 group-hover:text-white">{e.nome}</span>
                                     </button>
                                 ))}
@@ -97,7 +89,6 @@
                 );
             }
 
-            // PÁGINA INTERNA DA ESCOLA
             return (
                 <div className="min-h-screen">
                     <header className="bg-[#0f172a] border-b-4 border-orange-600 p-4 flex justify-between items-center px-8">
@@ -115,11 +106,11 @@
                             <MenuBotao label="Motivacionais" emoji="⚡" />
                             <MenuBotao label="Institucionais" emoji="🏛️" />
                             <MenuBotao label="Simulados" emoji="🛡️" />
-                            <MenuBotao label="Dúvidas" emoji="💬" />
+                            <MenuBotao label="Provas" emoji="📝" /> {/* ATUALIZADO */}
                         </div>
                         
                         <div className="mt-12 bg-white/5 border-2 border-dashed border-white/10 rounded-[40px] p-20 text-center">
-                            <p className="font-black text-slate-500 italic uppercase tracking-[0.3em]">Aguardando Injeção de Conteúdo</p>
+                            <p className="font-black text-slate-500 italic uppercase tracking-[0.3em]">Aguardando Injeção de Arsenal ({escolaSel})</p>
                         </div>
                     </main>
                 </div>
