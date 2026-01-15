@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIZÚ MILITAR FÊNIX - ELITE</title>
+    <title>BIZÚ MILITAR FÊNIX - SISTEMA ELITE</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -14,10 +14,8 @@
             --dourado-ouro: #D4AF37;
             --vermelho-tatico: #bc0000;
         }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
-        .text-ouro { color: var(--dourado-ouro); }
-        .border-ouro { border: 2px solid var(--dourado-ouro); }
         
         .linha-vermelha { 
             height: 4px; 
@@ -25,58 +23,38 @@
             width: 100%;
         }
 
-        .card-escola { 
-            position: relative;
-            height: 180px;
-            overflow: hidden;
-            border-radius: 15px;
-            border-bottom: 5px solid var(--dourado-ouro);
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-size: cover;
-            background-position: center;
-        }
-        .card-escola::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 18, 51, 0.75);
-        }
-        .card-escola:hover { transform: scale(1.02); }
+        /* LOGIN: LOGO GRANDE E BOTÃO ACESO */
+        .logo-login-container { width: 100%; max-width: 380px; margin-bottom: 1rem; }
+        .logo-login { width: 100%; height: auto; border-radius: 8px; }
         
-        .sigla-txt {
-            position: relative;
-            z-index: 10;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--dourado-ouro);
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-            font-style: italic;
-        }
-
-        .logo-login { 
-            width: 100%; /* Largura total do container para alinhar com a linha */
-            max-width: 350px; /* Limite de segurança */
-            height: auto;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); 
-        }
-        
-        /* Botão Restaurado */
-        .btn-acesso {
+        .btn-combate {
             background-color: var(--dourado-ouro) !important;
             color: black !important;
             font-weight: 900;
-            text-transform: uppercase;
-            padding: 1rem;
+            letter-spacing: 1px;
+            padding: 1.2rem;
             border-radius: 0.5rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
-        .btn-acesso:hover { background-color: white !important; transform: translateY(-2px); }
+        .btn-combate:hover { background-color: white !important; transform: scale(1.02); }
 
-        .logo-interna { height: 80px; } /* Aumentada conforme pedido */
+        /* HEADER INTERNO */
+        .logo-esquadrao-topo { height: 90px; width: auto; transition: 0.3s; }
+
+        /* CARDS DE ESCOLAS COM FOTOS */
+        .card-escola { 
+            position: relative; height: 180px; border-radius: 12px;
+            border-bottom: 4px solid var(--dourado-ouro);
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            background-size: cover; background-position: center; transition: 0.4s;
+        }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.75); }
+        .card-escola:hover::before { background: rgba(0, 18, 51, 0.4); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
+
+        /* APOSTILAS */
+        .capa-doc { width: 100%; height: 260px; object-fit: cover; border-bottom: 2px solid var(--dourado-ouro); }
     </style>
 </head>
 <body>
@@ -85,37 +63,50 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const LOGO_BIZU_MILITAR = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg"; 
-        const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg"; 
+        // ASSETS OFICIAIS
+        const LOGO_BIZU = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg"; 
+        const LOGO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg"; 
 
         function App() {
             const [status, setStatus] = useState('login'); 
             const [escolaSel, setEscolaSel] = useState('');
 
-            const escolas = [
-                { sigla: 'CN', nome: 'COLÉGIO NAVAL', img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=500' },
-                { sigla: 'CMRJ', nome: 'COLÉGIO MILITAR - RJ', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/500px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg' },
-                { sigla: 'EEAR', nome: 'EEAR', img: 'https://www2.fab.mil.br/eear/images/noticias/2023/06_JUNHO/23_eear/DSC_0137.jpg' },
-                { sigla: 'EsPCEx', nome: 'EsPCEx', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Espcex-front.jpg/500px-Espcex-front.jpg' },
-                { sigla: 'ESA', nome: 'ESA', img: 'https://www.eb.mil.br/documents/10138/10321350/ESA1.jpg/87029671-3310-85f2-9333-e18e3c509618?t=1559235002737' },
-                { sigla: 'EXTRAS', nome: 'CONCURSOS', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=500' }
+            // ARSENAL DE CAPAS DO COLÉGIO NAVAL
+            const arsenalCN = [
+                { mat: 'MATEMÁTICA', img: 'https://i.ibb.co/MD42sWr9/capa-matematica.jpg' },
+                { mat: 'PORTUGUÊS', img: 'https://i.ibb.co/tTJPWYsH/capa-portugues.jpg' },
+                { mat: 'INGLÊS', img: 'https://i.ibb.co/rRGhQGv8/capa-ingles.jpg' },
+                { mat: 'HISTÓRIA', img: 'https://i.ibb.co/tPbpMN1z/capa-historia.jpg' },
+                { mat: 'GEOGRAFIA', img: 'https://i.ibb.co/G4rdS7qT/capa-geografia.jpg' },
+                { mat: 'QUÍMICA', img: 'https://i.ibb.co/gZ78ThkL/capa-quimica.jpg' },
+                { mat: 'BIOLOGIA', img: 'https://i.ibb.co/bgrXnP4z/capa-biologia.jpg' }
             ];
 
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/60 p-10 rounded-2xl border-2 border-ouro text-center shadow-2xl">
-                            <div className="flex flex-col items-center">
-                                <img src={LOGO_BIZU_MILITAR} alt="Bizu Militar" className="logo-login mb-4 rounded-lg" />
-                                <div className="linha-vermelha mb-8"></div>
+                        <div className="max-w-md w-full bg-black/70 p-10 rounded-2xl border-2 border-ouro/50 shadow-[0_0_50px_rgba(0,0,0,0.8)] text-center">
+                            <div className="logo-login-container mx-auto">
+                                <img src={LOGO_BIZU} alt="Bizu Militar" className="logo-login" />
                             </div>
-                            <div className="flex flex-col gap-4 text-left">
-                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Matrícula</label>
-                                <input type="text" placeholder="184LMC" className="p-3 bg-white/5 border border-ouro/30 rounded text-white outline-none focus:border-ouro" />
-                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Senha</label>
-                                <input type="password" placeholder="******" className="p-3 bg-white/5 border border-ouro/30 rounded text-white outline-none focus:border-ouro" />
-                                <button onClick={() => setStatus('qg')} className="btn-acesso mt-4">Entrar no Combate</button>
-                            </div>
+                            <div className="linha-vermelha mb-8"></div>
+                            
+                            {/* Atributo autoComplete="off" para evitar preenchimento indesejado */}
+                            <form className="flex flex-col gap-5 text-left" autoComplete="off">
+                                <div>
+                                    <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Matrícula de Acesso</label>
+                                    <input type="text" name="matricula-fake" placeholder="Insira sua matrícula" 
+                                           className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white focus:border-ouro outline-none" />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Senha Operacional</label>
+                                    <input type="password" name="senha-fake" placeholder="******" 
+                                           className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white focus:border-ouro outline-none" />
+                                </div>
+                                <button type="button" onClick={() => setStatus('qg')} className="btn-combate mt-4 uppercase">
+                                    Entrar no Combate
+                                </button>
+                            </form>
                         </div>
                     </div>
                 );
@@ -124,28 +115,37 @@
             if (status === 'qg') {
                 return (
                     <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-ouro p-6 flex justify-between items-center px-8 shadow-xl">
-                            <img src={LOGO_ESQUADRAO_FENIX} alt="Esquadrão Fênix" className="logo-interna rounded shadow-sm" />
-                            <div className="flex-1 text-center px-4">
-                                <h2 className="text-2xl md:text-3xl font-black text-ouro italic tracking-tighter uppercase">Bem-vindo, Comandante Eufrásio</h2>
-                                <p className="text-[10px] tracking-[0.4em] opacity-60">SISTEMA DE PREPARAÇÃO DE EXCELÊNCIA</p>
+                        <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10">
+                            <img src={LOGO_FENIX} alt="Fênix" className="logo-esquadrao-topo rounded" />
+                            
+                            <div className="absolute left-1/2 -translate-x-1/2 text-center">
+                                <h2 className="text-3xl font-black text-ouro italic uppercase tracking-tighter">Bem-vindo, Comandante Eufrásio</h2>
+                                <p className="text-xs font-bold opacity-40 tracking-[0.3em]">CENTRAL DE INTELIGÊNCIA FÊNIX</p>
                             </div>
-                            <button className="bg-red-900/20 border border-red-600 text-red-500 px-4 py-2 rounded font-black text-[10px]" onClick={() => setStatus('login')}>SAIR</button>
+
+                            <button onClick={() => setStatus('login')} className="text-[10px] font-black text-red-500 border border-red-500/30 px-4 py-2 rounded hover:bg-red-500 hover:text-white transition-all">DESCONECTAR</button>
                         </header>
                         
-                        <main className="max-w-6xl mx-auto p-10">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-                                {escolas.map(e => (
-                                    <button key={e.sigla} onClick={() => {setEscolaSel(e.sigla); setStatus('escola');}} 
-                                            className="card-escola shadow-lg" style={{backgroundImage: `url(${e.img})`}}>
-                                        <span className="sigla-txt">{e.sigla}</span>
-                                        <span className="absolute bottom-2 z-10 text-[9px] font-black tracking-[0.2em] text-white opacity-80 uppercase">{e.nome}</span>
+                        <main className="max-w-6xl mx-auto p-12">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                                {[
+                                    {s: 'CN', n: 'COLÉGIO NAVAL', bg: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400'},
+                                    {s: 'CMRJ', n: 'COLÉGIO MILITAR - RJ', bg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/400px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg'},
+                                    {s: 'EEAR', n: 'EEAR', bg: 'https://www2.fab.mil.br/eear/images/noticias/2023/06_JUNHO/23_eear/DSC_0137.jpg'},
+                                    {s: 'EsPCEx', n: 'EsPCEx', bg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Espcex-front.jpg/400px-Espcex-front.jpg'},
+                                    {s: 'ESA', n: 'ESA', bg: 'https://www.eb.mil.br/documents/10138/10321350/ESA1.jpg/400px-ESA1.jpg'},
+                                    {s: 'EXTRAS', n: 'CONCURSOS', bg: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400'}
+                                ].map(e => (
+                                    <button key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
+                                            className="card-escola" style={{backgroundImage: `url(${e.bg})`}}>
+                                        <span className="sigla-txt">{e.s}</span>
+                                        <span className="absolute bottom-3 z-10 text-[10px] font-black text-white/80 tracking-widest">{e.n}</span>
                                     </button>
                                 ))}
                             </div>
-                            <div className="linha-vermelha mb-6"></div>
-                            <div className="text-center italic text-slate-400 font-serif bg-black/20 p-6 rounded-lg">
-                                <p>"O treinamento difícil torna o combate bem mais fácil"</p>
+                            <div className="linha-vermelha mb-8"></div>
+                            <div className="bg-black/20 p-8 rounded-xl border border-white/5 text-center">
+                                <p className="italic text-slate-400 font-serif">"A limitação está apenas na sua mente e não no seu corpo"</p>
                             </div>
                         </main>
                     </div>
@@ -154,21 +154,32 @@
 
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8 shadow-md">
-                        <div className="flex items-center gap-4">
-                            <img src={LOGO_ESQUADRAO_FENIX} className="h-14 rounded" />
-                            <span className="font-black text-ouro uppercase tracking-widest">{escolaSel}</span>
+                    <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10">
+                        <div className="flex items-center gap-6">
+                            <img src={LOGO_FENIX} className="h-16 rounded" />
+                            <h1 className="text-2xl font-black text-ouro tracking-widest">{escolaSel} | ARSENAL</h1>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="bg-white/5 border border-ouro/30 px-6 py-2 rounded text-[10px] font-black hover:bg-ouro hover:text-black transition-all">VOLTAR AO QG</button>
+                        <button onClick={() => setStatus('qg')} className="bg-white/5 border border-ouro/30 px-6 py-2 rounded text-xs font-black hover:bg-ouro hover:text-black transition-all">VOLTAR AO QG</button>
                     </header>
-                    <main className="max-w-7xl mx-auto p-10 text-center">
-                        <h2 className="text-ouro font-black mb-10 tracking-[0.5em] uppercase">Módulos de Estudo Disponíveis</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 mb-10">
+
+                    <main className="max-w-7xl mx-auto p-12">
+                        <div className="grid grid-cols-2 md:grid-cols-8 gap-3 mb-12">
                             {['APOSTILAS', 'VÍDEOS', 'MOTIVAÇÃO', 'INSTITUC.', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS'].map(m => (
-                                <button key={m} className="bg-white/5 border border-ouro/20 p-2 rounded text-[8px] font-black hover:bg-ouro hover:text-black transition-all uppercase">{m}</button>
+                                <button key={m} className="bg-white/5 border border-ouro/10 p-3 rounded text-[9px] font-black hover:bg-ouro hover:text-black transition-all">{m}</button>
                             ))}
                         </div>
-                        <p className="opacity-50 italic">Selecione um módulo acima para carregar o arsenal.</p>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {arsenalCN.map((item, idx) => (
+                                <div key={idx} className="bg-black/40 border border-ouro/20 rounded-xl overflow-hidden hover:border-ouro transition-all shadow-2xl">
+                                    <img src={item.img} className="capa-doc" alt={item.mat} />
+                                    <div className="p-5 text-center">
+                                        <h4 className="font-black text-xs text-ouro mb-4 tracking-widest uppercase">{item.mat}</h4>
+                                        <button className="w-full bg-ouro text-black font-black py-3 rounded text-[10px] hover:bg-white transition-all">BAIXAR MATERIAL</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </main>
                 </div>
             );
