@@ -1,16 +1,103 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIZÚ MILITAR FÊNIX</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
+    <style>
+        body { background-color: #050505; color: white; margin: 0; font-family: sans-serif; }
+        .card-militar { background: #0f172a; border: 2px solid rgba(255,255,255,0.1); transition: all 0.3s; }
+        .card-militar:hover { border-color: #ea580c; transform: translateY(-5px); }
+    </style>
+</head>
+<body>
     <div id="root"></div>
-    <script type="text/babel" data-type="module" src="./Dashboard.jsx"></script>
-  </body>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        function App() {
+            const [modulo, setModulo] = useState('menu');
+            
+            const apostilas = [
+                { id: 1, materia: 'MATEMÁTICA', cor: 'from-orange-600 to-red-900' },
+                { id: 2, materia: 'PORTUGUÊS', cor: 'from-blue-600 to-blue-900' },
+                { id: 3, materia: 'INGLÊS', cor: 'from-green-600 to-green-900' },
+                { id: 4, materia: 'HISTÓRIA', cor: 'from-yellow-600 to-yellow-900' },
+                { id: 5, materia: 'GEOGRAFIA', cor: 'from-purple-600 to-purple-900' },
+                { id: 6, materia: 'QUÍMICA', cor: 'from-red-600 to-black' }
+            ];
+
+            return (
+                <div className="min-h-screen">
+                    {/* HEADER */}
+                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-6 shadow-2xl">
+                        <div className="max-w-6xl mx-auto flex items-center gap-4">
+                            <div className="bg-orange-600 p-3 rounded-full">🔥</div>
+                            <div>
+                                <h1 className="text-2xl font-black italic">BIZÚ MILITAR <span className="text-orange-500">FÊNIX</span></h1>
+                                <p className="text-xs text-orange-400 font-bold tracking-widest uppercase">Setor de Operações de Elite</p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto p-6">
+                        {modulo === 'menu' ? (
+                            <div>
+                                <div className="mb-10 border-l-8 border-orange-600 pl-6">
+                                    <h2 className="text-4xl font-black uppercase italic">Centro de Comando</h2>
+                                </div>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                    <button onClick={() => setModulo('apostilas')} className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4">
+                                        <span className="text-4xl">📚</span>
+                                        <span className="font-bold">APOSTILAS</span>
+                                    </button>
+                                    <button className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
+                                        <span className="text-4xl">🎥</span>
+                                        <span className="font-bold">AULAS</span>
+                                    </button>
+                                    <button className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
+                                        <span className="text-4xl">📝</span>
+                                        <span className="font-bold">PROVAS</span>
+                                    </button>
+                                    <button className="card-militar p-8 rounded-3xl flex flex-col items-center gap-4 opacity-50 cursor-not-allowed">
+                                        <span className="text-4xl">🛡️</span>
+                                        <span className="font-bold">SIMULADOS</span>
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <button onClick={() => setModulo('menu')} className="mb-8 bg-white/10 px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition-all">
+                                    ← VOLTAR AO QG
+                                </button>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    {apostilas.map(ap => (
+                                        <div key={ap.id} className="card-militar rounded-[30px] overflow-hidden">
+                                            <div className={`h-40 bg-gradient-to-br ${ap.cor} flex items-center justify-center`}>
+                                                <span className="text-2xl font-black italic">{ap.materia}</span>
+                                            </div>
+                                            <div className="p-4">
+                                                <button className="w-full bg-white text-black font-black py-3 rounded-xl hover:bg-orange-600 hover:text-white transition-all">
+                                                    ACESSAR CONTEÚDO
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
 </html>
