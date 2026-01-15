@@ -9,140 +9,134 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --azul-marinho: #001233; --dourado: #D4AF37; --vermelho: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: sans-serif; }
-        .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
-        .border-dourada { border: 2px solid var(--dourado); }
-        .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho), var(--vermelho) 10px, #8b0000 10px, #8b0000 20px); }
-        .fenix-input { background: rgba(255,255,255,0.05); border: 1px solid var(--dourado); padding: 12px; border-radius: 5px; color: white; width: 100%; outline: none; }
+        body { background-color: #050a15; color: white; font-family: 'Segoe UI', sans-serif; }
+        .militar-gradient { background: linear-gradient(180deg, #0a111f 0%, #050a15 100%); }
+        .fenix-border { border: 1px solid rgba(255, 102, 0, 0.3); }
+        .text-fenix { color: #ff6600; }
+        .bg-fenix { background-color: #ff6600; }
+        .card-missao { background: #101827; border-radius: 15px; transition: transform 0.2s; }
+        .card-missao:hover { transform: scale(1.05); border-color: #ff6600; }
+        .capa-apostila { border-radius: 8px; border: 2px solid #1e293b; width: 100%; height: 220px; object-fit: cover; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState } = React;
 
-        // --- BANCO DE DADOS INTEGRADO (BASEADO NO SEU BACKEND) ---
-        const USUARIOS_BASE = [
-            { matricula: "AdminFenix", senha: "123", nome: "Eufrásio", patente: "Comandante", perfil: "ADMIN" },
-            { matricula: "184LMC", senha: "123", nome: "Costa", patente: "2º SG.", perfil: "ALUNO" },
-            { matricula: "144MPS", senha: "123", nome: "Peçanha", patente: "1º SG.", perfil: "ALUNO" },
-            { matricula: "INSTR_SILVA", senha: "123", nome: "Silva", patente: "Instrutor", perfil: "INSTRUTOR" }
+        // BANCO DE DADOS DE MISSÕES E APOSTILAS
+        const MISSOES = [
+            { id: 'CN', nome: 'COLÉGIO NAVAL' },
+            { id: 'CMRJ', nome: 'ESCOLA MILITAR - RJ' },
+            { id: 'EEAR', nome: 'EEAR' },
+            { id: 'EsPCEx', nome: 'ESPCEX' },
+            { id: 'ESA', nome: 'ESA' },
+            { id: 'CONCURSOS', nome: 'CONCURSOS' }
+        ];
+
+        const APOSTILAS = [
+            { materia: 'MATEMÁTICA', img: 'https://i.ibb.co/LzYvWfK/capa-matematica.jpg' },
+            { materia: 'PORTUGUÊS', img: 'https://i.ibb.co/Vv3Y7zD/capa-portugues.jpg' },
+            { materia: 'INGLÊS', img: 'https://i.ibb.co/fDbX9t4/capa-ingles.jpg' },
+            { materia: 'HISTÓRIA', img: 'https://i.ibb.co/G3Xm6xV/capa-historia.jpg' },
+            { materia: 'GEOGRAFIA', img: 'https://i.ibb.co/C0L5X5n/capa-geografia.jpg' },
+            { materia: 'BIOLOGIA', img: 'https://i.ibb.co/zX8Q1fK/capa-biologia.jpg' },
+            { materia: 'QUÍMICA', img: 'https://i.ibb.co/VqfFv7q/capa-quimica.jpg' }
         ];
 
         function App() {
-            const [userLogado, setUserLogado] = useState(null);
-            const [form, setForm] = useState({ matricula: '', senha: '' });
-            const [erro, setErro] = useState('');
-            const [escolaSel, setEscolaSel] = useState('');
-            const [status, setStatus] = useState('login'); 
+            const [status, setStatus] = useState('login');
+            const [user, setUser] = useState(null);
+            const [escolaSel, setEscolaSel] = useState(null);
 
-            const frases = [
-                "O treinamento difícil torna o combate bem mais fácil",
-                "A disciplina é a alma de um exército",
-                "Só o que é bom dura o tempo suficiente para se tornar inesquecível.",
-                "A limitação está apenas na sua mente e não no seu corpo",
-                "A jornada mais longa começa com o primeiro passo.",
-                "Se você pode sonhar, pode realizar."
-            ];
-
-            const handleLogin = () => {
-                const encontrou = USUARIOS_BASE.find(u => u.matricula === form.matricula && u.senha === form.senha);
-                if (encontrou) {
-                    setUserLogado(encontrou);
-                    setStatus('qg');
-                    setErro('');
-                } else {
-                    setErro('ACESSO NEGADO: Credenciais Inválidas');
-                }
+            const handleLogin = (e) => {
+                e.preventDefault();
+                // Simulação de login aprovado conforme solicitado
+                setUser({ nome: "EUFRÁSIO", patente: "COMANDANTE" });
+                setStatus('qg');
             };
 
-            // TELA DE LOGIN TÁTICA
             if (status === 'login') {
                 return (
-                    <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/60 p-10 rounded-lg border-2 border-[#D4AF37] text-center shadow-2xl">
-                            <h1 className="text-2xl font-black text-[#D4AF37] mb-2 uppercase italic">Bizu Militar Fênix</h1>
-                            <p className="text-[10px] tracking-[0.3em] mb-6">SISTEMA DE ACESSO RESTRITO</p>
-                            <div className="linha-vermelha mb-8"></div>
-                            
-                            <div className="flex flex-col gap-4 text-left">
-                                <label className="text-[10px] font-bold text-dourado">MATRÍCULA</label>
-                                <input className="fenix-input" type="text" onChange={e => setForm({...form, matricula: e.target.value})} />
-                                
-                                <label className="text-[10px] font-bold text-dourado">SENHA</label>
-                                <input className="fenix-input" type="password" onChange={e => setForm({...form, senha: e.target.value})} />
-                                
-                                {erro && <p className="text-red-500 text-[10px] font-bold text-center">{erro}</p>}
-                                
-                                <button onClick={handleLogin} className="mt-4 bg-[#D4AF37] text-black py-4 rounded font-black hover:bg-white transition-all uppercase text-xs">Iniciar Operação</button>
-                            </div>
+                    <div className="min-h-screen flex items-center justify-center p-4">
+                        <div className="max-w-md w-full bg-[#0a111f] p-8 rounded-2xl border-2 border-[#ff6600] shadow-[0_0_20px_rgba(255,102,0,0.2)] text-center">
+                            <img src="https://i.ibb.co/6P0S8rF/logo-bizu.jpg" className="w-32 mx-auto mb-4 rounded-full" />
+                            <h2 className="text-xl font-black italic tracking-tighter">BIZÚ MILITAR <span className="text-fenix">FÊNIX</span></h2>
+                            <p className="text-[10px] opacity-50 mb-6">SETOR DE ACESSO RESTRITO</p>
+                            <form onSubmit={handleLogin} className="space-y-4 text-left">
+                                <div>
+                                    <label className="text-[9px] font-bold text-fenix uppercase">Identificação (Login)</label>
+                                    <input type="text" className="w-full bg-[#101827] border border-gray-700 p-3 rounded mt-1 outline-none focus:border-fenix" placeholder="Digite seu acesso..." required />
+                                </div>
+                                <div>
+                                    <label className="text-[9px] font-bold text-fenix uppercase">Código de Segurança (Senha)</label>
+                                    <input type="password" className="w-full bg-[#101827] border border-gray-700 p-3 rounded mt-1 outline-none focus:border-fenix" placeholder="********" required />
+                                </div>
+                                <button type="submit" className="w-full bg-fenix text-white font-black py-3 rounded-lg hover:bg-orange-600 transition-all uppercase text-sm">Iniciar Operação</button>
+                            </form>
                         </div>
                     </div>
                 );
             }
 
-            // CENTRAL DE COMANDO
             if (status === 'qg') {
-                const dia = new Date().getDay();
-                const fraseDoDia = frases[dia === 0 ? 0 : dia - 1];
-
                 return (
-                    <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-dourado p-4 flex justify-between items-center px-8 shadow-xl">
-                            <div className="flex items-center gap-4">
-                                <span className="text-dourado font-black italic">ESQUADRÃO FÊNIX</span>
-                            </div>
+                    <div className="min-h-screen militar-gradient">
+                        <header className="border-b border-fenix p-4 flex justify-between items-center bg-[#0a111f]">
+                            <h1 className="font-black italic text-sm tracking-tighter">ESQUADRÃO <span className="text-fenix">FÊNIX</span></h1>
                             <div className="text-right">
-                                <p className="text-[10px] font-bold">Logado como:</p>
-                                <p className="text-xs text-dourado font-black uppercase">{userLogado.patente} {userLogado.nome}</p>
+                                <span className="text-[9px] block opacity-50">Logado como:</span>
+                                <span className="text-xs font-bold">{user.patente} {user.nome}</span>
                             </div>
                         </header>
-                        
-                        <main className="max-w-6xl mx-auto p-10">
-                            <div className="bg-white/5 p-6 rounded-lg border-l-8 border-red-600 mb-10">
-                                <h2 className="text-2xl font-black text-dourado uppercase italic mb-2">
-                                    {userLogado.perfil === 'ADMIN' ? 'Painel do Comandante' : 'Central de Comando'}
-                                </h2>
-                                <p className="text-white italic">"Bem-vindo, {userLogado.patente} {userLogado.nome}. {fraseDoDia}"</p>
-                            </div>
-                            
-                            {/* GRADE DE ESCOLAS */}
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                {['Colégio Naval', 'Escola Militar-RJ', 'EEAR', 'EsPCEx', 'ESA', 'CONCURSOS'].map(escola => (
-                                    <button key={escola} onClick={() => {setEscolaSel(escola); setStatus('escola');}} 
-                                            className="bg-white/5 p-8 rounded border-b-4 border-dourado hover:bg-dourado/10 transition-all flex flex-col items-center gap-2">
-                                        <div className="w-12 h-12 bg-dourado rounded-full flex items-center justify-center text-black font-black">HQ</div>
-                                        <span className="font-black text-xs uppercase text-dourado">{escola}</span>
-                                    </button>
+
+                        <main className="max-w-6xl mx-auto p-8">
+                            <h2 className="text-3xl font-black italic text-center mb-10">SELECIONE SUA <span className="text-fenix">MISSÃO</span></h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {MISSOES.map(m => (
+                                    <div key={m.id} onClick={() => {setEscolaSel(m); setStatus('arsenal');}} className="card-missao p-10 text-center cursor-pointer border border-transparent hover:border-fenix">
+                                        <div className="bg-black/40 w-16 h-12 mx-auto mb-4 flex items-center justify-center rounded font-black text-fenix italic">{m.id}</div>
+                                        <h3 className="font-black text-xs uppercase tracking-widest">{m.nome}</h3>
+                                    </div>
                                 ))}
                             </div>
 
-                            {userLogado.perfil === 'ADMIN' && (
-                                <div className="mt-10 p-4 border border-dashed border-dourado/30 rounded text-center">
-                                    <p className="text-[10px] text-dourado font-black">ACESSO DE COMANDANTE LIBERADO: GESTÃO DE ALUNOS ATIVA</p>
-                                </div>
-                            )}
+                            {/* FRASES NO RODAPÉ */}
+                            <div className="mt-20 border-t border-gray-800 pt-10 text-center opacity-40 italic text-sm">
+                                <p>"O treinamento difícil torna o combate bem mais fácil."</p>
+                                <p className="mt-2">"A limitação está apenas na sua mente e não no seu corpo."</p>
+                            </div>
                         </main>
                     </div>
                 );
             }
 
-            // PÁGINA INTERNA (EX: COLÉGIO NAVAL)
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-dourado p-4 flex justify-between items-center px-8">
-                        <span className="font-black italic text-dourado uppercase">{escolaSel}</span>
-                        <button onClick={() => setStatus('qg')} className="text-xs font-black border border-dourado p-2 rounded">VOLTAR AO QG</button>
+                    <header className="border-b border-fenix p-4 flex justify-between items-center bg-[#0a111f]">
+                        <h1 className="font-black italic text-sm uppercase">FÊNIX | <span className="text-fenix">{escolaSel.nome}</span></h1>
+                        <button onClick={() => setStatus('qg')} className="bg-gray-800 text-[10px] px-4 py-2 rounded font-black hover:bg-fenix transition-all">VOLTAR AO QG</button>
                     </header>
-                    <main className="max-w-6xl mx-auto p-10 text-center">
-                        <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-10">
-                            {['APOSTILAS', 'VIDEOAULAS', 'MOTIVACIONAIS', 'INSTITUCIONAIS', 'PROVAS', 'EDITAIS'].map(m => (
-                                <div key={m} className="bg-white/5 p-4 border border-dourado/20 rounded text-[9px] font-black">{m}</div>
+
+                    <main className="max-w-6xl mx-auto p-8">
+                        <div className="flex gap-2 mb-10 overflow-x-auto pb-4">
+                            {['APOSTILAS', 'VIDEOAULAS', 'MOTIVACIONAIS', 'INSTITUCIONAIS', 'SIMULADOS', 'PROVAS'].map(cat => (
+                                <button key={cat} className="bg-[#101827] border border-gray-700 px-6 py-2 rounded text-[10px] font-black hover:border-fenix whitespace-nowrap">{cat}</button>
                             ))}
                         </div>
-                        <h3 className="text-dourado font-black italic">CONTEÚDO DISPONÍVEL PARA O {userLogado.patente.toUpperCase()} {userLogado.nome.toUpperCase()}</h3>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {APOSTILAS.map(apo => (
+                                <div key={apo.materia} className="bg-[#0a111f] border border-gray-800 p-2 rounded-xl hover:border-fenix transition-all group">
+                                    <img src={apo.img} className="capa-apostila mb-3" alt={apo.materia} />
+                                    <div className="p-2">
+                                        <h4 className="text-[10px] font-bold mb-3">{apo.materia}</h4>
+                                        <button className="w-full bg-fenix text-black font-black py-2 rounded text-[9px] uppercase group-hover:bg-white transition-colors">Baixar Material</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </main>
                 </div>
             );
