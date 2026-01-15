@@ -42,11 +42,11 @@
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 18, 51, 0.75); /* Camada escura para ler o texto */
+            background: rgba(0, 18, 51, 0.75);
             transition: 0.3s;
         }
         .card-escola:hover::before {
-            background: rgba(0, 18, 51, 0.4); /* Clareia ao passar o mouse */
+            background: rgba(0, 18, 51, 0.4);
         }
         .card-escola:hover { transform: scale(1.02); }
         
@@ -64,6 +64,9 @@
             width: 100%; height: 280px; object-fit: cover;
             border-bottom: 2px solid var(--dourado-ouro);
         }
+
+        .logo-login { max-height: 160px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); }
+        .logo-interna { max-height: 50px; }
     </style>
 </head>
 <body>
@@ -72,8 +75,9 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const LOGO_BIZU_MILITAR = "https://ibb.co/rfk1zf5W/logo-bizu.png"; 
-        const LOGO_ESQUADRAO_FENIX = "https://ibb.co/cS7nN60y/logo-fenix.png"; 
+        // --- LINKS DAS LOGOS FORNECIDOS ---
+        const LOGO_BIZU_MILITAR = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg"; 
+        const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg"; 
 
         function App() {
             const [status, setStatus] = useState('login'); 
@@ -101,13 +105,16 @@
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/60 p-10 rounded-2xl border-2 border-ouro text-center">
-                            <img src={LOGO_BIZU_MILITAR} className="h-32 mx-auto mb-6" />
+                        <div className="max-w-md w-full bg-black/60 p-10 rounded-2xl border-2 border-ouro text-center shadow-2xl">
+                            {/* LOGO BIZÚ MILITAR */}
+                            <img src={LOGO_BIZU_MILITAR} alt="Bizu Militar" className="logo-login mx-auto mb-6 rounded-lg" />
                             <div className="linha-vermelha mb-8"></div>
-                            <div className="flex flex-col gap-4">
-                                <input type="text" placeholder="MATRÍCULA" className="p-3 bg-white/5 border border-ouro/30 rounded text-white" />
-                                <input type="password" placeholder="SENHA" className="p-3 bg-white/5 border border-ouro/30 rounded text-white" />
-                                <button onClick={() => setStatus('qg')} className="bg-ouro text-black py-4 rounded font-black uppercase text-xs">Acessar</button>
+                            <div className="flex flex-col gap-4 text-left">
+                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Matrícula</label>
+                                <input type="text" placeholder="184LMC" className="p-3 bg-white/5 border border-ouro/30 rounded text-white outline-none focus:border-ouro" />
+                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Senha</label>
+                                <input type="password" placeholder="******" className="p-3 bg-white/5 border border-ouro/30 rounded text-white outline-none focus:border-ouro" />
+                                <button onClick={() => setStatus('qg')} className="bg-ouro text-black py-4 rounded font-black uppercase text-xs tracking-widest mt-4">Acessar Sistema</button>
                             </div>
                         </div>
                     </div>
@@ -117,24 +124,30 @@
             if (status === 'qg') {
                 return (
                     <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8">
-                            <img src={LOGO_ESQUADRAO_FENIX} className="h-12" />
-                            <span className="font-black italic text-xl text-ouro">CENTRAL DE COMANDO</span>
-                            <div className="text-right text-xs">Comandante Eufrásio</div>
+                        <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8 shadow-xl">
+                            <div className="flex items-center gap-4">
+                                {/* LOGO ESQUADRÃO FÊNIX */}
+                                <img src={LOGO_ESQUADRAO_FENIX} alt="Esquadrão Fênix" className="logo-interna rounded shadow-sm" />
+                                <span className="font-black italic text-xl text-ouro tracking-tighter uppercase">Central de Comando</span>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] font-bold opacity-70">COMANDANTE</p>
+                                <p className="text-sm font-black text-ouro uppercase tracking-tighter">Eufrásio</p>
+                            </div>
                         </header>
                         
                         <main className="max-w-6xl mx-auto p-10">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
                                 {escolas.map(e => (
                                     <button key={e.sigla} onClick={() => {setEscolaSel(e.sigla); setStatus('escola');}} 
-                                            className="card-escola" style={{backgroundImage: `url(${e.img})`}}>
+                                            className="card-escola shadow-lg" style={{backgroundImage: `url(${e.img})`}}>
                                         <span className="sigla-txt">{e.sigla}</span>
-                                        <span className="absolute bottom-2 z-10 text-[9px] font-black tracking-[0.2em] text-white opacity-80">{e.nome}</span>
+                                        <span className="absolute bottom-2 z-10 text-[9px] font-black tracking-[0.2em] text-white opacity-80 uppercase">{e.nome}</span>
                                     </button>
                                 ))}
                             </div>
                             <div className="linha-vermelha mb-6"></div>
-                            <div className="text-center italic text-slate-400 font-serif">
+                            <div className="text-center italic text-slate-400 font-serif bg-black/20 p-6 rounded-lg">
                                 <p>"O treinamento difícil torna o combate bem mais fácil"</p>
                             </div>
                         </main>
@@ -144,28 +157,28 @@
 
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-8 shadow-md">
                         <div className="flex items-center gap-4">
-                            <img src={LOGO_ESQUADRAO_FENIX} className="h-10" />
-                            <span className="font-black text-ouro uppercase">{escolaSel}</span>
+                            <img src={LOGO_ESQUADRAO_FENIX} className="logo-interna rounded" />
+                            <span className="font-black text-ouro uppercase tracking-widest">{escolaSel}</span>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="border border-ouro/30 px-4 py-2 rounded text-[10px] font-black">VOLTAR</button>
+                        <button onClick={() => setStatus('qg')} className="bg-white/5 border border-ouro/30 px-6 py-2 rounded text-[10px] font-black hover:bg-ouro hover:text-black transition-all">VOLTAR AO QG</button>
                     </header>
 
                     <main className="max-w-7xl mx-auto p-10">
                         <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-10">
                             {['APOSTILAS', 'VÍDEOS', 'MOTIVAÇÃO', 'INSTITUC.', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS'].map(m => (
-                                <button key={m} className="bg-white/5 border border-ouro/20 p-2 rounded text-[8px] font-black hover:bg-ouro hover:text-black transition-all">{m}</button>
+                                <button key={m} className="bg-white/5 border border-ouro/20 p-2 rounded text-[8px] font-black hover:bg-ouro hover:text-black transition-all uppercase">{m}</button>
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                             {arsenal.map((item, idx) => (
-                                <div key={idx} className="bg-black/40 border border-ouro/20 rounded-lg overflow-hidden group shadow-xl">
-                                    <img src={item.img} className="capa-apostila" />
+                                <div key={idx} className="bg-black/40 border border-ouro/20 rounded-xl overflow-hidden group shadow-2xl hover:border-ouro transition-all">
+                                    <img src={item.img} className="capa-apostila" alt={item.mat} />
                                     <div className="p-4 text-center">
-                                        <h4 className="font-black text-[10px] text-ouro mb-3">{item.mat}</h4>
-                                        <button className="w-full bg-ouro text-black font-black py-2 rounded text-[9px]">ACESSAR</button>
+                                        <h4 className="font-black text-[10px] text-ouro mb-3 tracking-widest uppercase">{item.mat}</h4>
+                                        <button className="w-full bg-ouro text-black font-black py-2 rounded text-[9px] hover:bg-white transition-all uppercase">Acessar Material</button>
                                     </div>
                                 </div>
                             ))}
