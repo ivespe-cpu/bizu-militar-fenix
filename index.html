@@ -11,9 +11,9 @@
     <style>
         body { background-color: #050505; color: white; margin: 0; font-family: sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #0f172a 0%, #020617 100%); }
-        .gold-border { border: 2px solid #ea580c; }
-        .fênix-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; outline: none; transition: 0.3s; }
+        .fênix-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; outline: none; transition: 0.3s; width: 100%; }
         .fênix-input:focus { border-color: #ea580c; background: rgba(255,255,255,0.1); }
+        .logo-glow { filter: drop-shadow(0 0 15px rgba(234, 88, 12, 0.4)); }
     </style>
 </head>
 <body>
@@ -22,28 +22,31 @@
     <script type="text/babel">
         const { useState } = React;
 
+        // --- LINKS DAS LOGOS (SUBSTITUA AQUI DEPOIS) ---
+        const LOGO_BIZU_MILITAR = "https://i.ibb.co/C3mFvXv/logo-bizu.png"; // Placeholder
+        const LOGO_ESQUADRAO_FENIX = "https://i.ibb.co/9H7W1V8/logo-fenix.png"; // Placeholder
+
         function App() {
-            const [status, setStatus] = useState('login'); // login, qg, escola
+            const [status, setStatus] = useState('login'); 
             const [escolaSel, setEscolaSel] = useState('');
 
             // TELA DE LOGIN
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/40 p-10 rounded-[40px] border-2 border-orange-600/30 text-center shadow-[0_0_50px_rgba(234,88,12,0.2)]">
-                            <div className="text-6xl mb-6">🔥</div>
-                            <h1 className="text-3xl font-black italic mb-2 text-white uppercase tracking-tighter">Bizu Militar <span className="text-orange-600">Fênix</span></h1>
-                            <p className="text-xs text-slate-400 font-bold mb-8 tracking-[0.3em] uppercase">Setor de Acesso Restrito</p>
+                        <div className="max-w-md w-full bg-black/40 p-10 rounded-[40px] border-2 border-orange-600/30 text-center shadow-2xl">
+                            {/* LOGO BIZÚ MILITAR NA FRENTE */}
+                            <img src={LOGO_BIZU_MILITAR} alt="Bizu Militar" className="h-32 mx-auto mb-6 logo-glow" 
+                                 onError={(e) => {e.target.src="https://via.placeholder.com/150?text=BIZU+MILITAR"}} />
+                            
+                            <h1 className="text-2xl font-black italic mb-8 text-white uppercase tracking-tighter">Portal de Acesso</h1>
                             
                             <div className="flex flex-col gap-4 text-left">
-                                <label className="text-[10px] font-black ml-2 uppercase text-orange-500">Identificação (Login)</label>
-                                <input type="text" placeholder="Digite seu acesso..." className="fênix-input" />
+                                <input type="text" placeholder="LOGIN" className="fênix-input font-bold" />
+                                <input type="password" placeholder="SENHA" className="fênix-input font-bold" />
                                 
-                                <label className="text-[10px] font-black ml-2 uppercase text-orange-500">Código de Segurança (Senha)</label>
-                                <input type="password" placeholder="********" className="fênix-input" />
-                                
-                                <button onClick={() => setStatus('qg')} className="mt-4 bg-orange-600 hover:bg-white hover:text-black py-4 rounded-xl font-black transition-all shadow-lg shadow-orange-600/20 uppercase tracking-widest text-sm">
-                                    Iniciar Operação
+                                <button onClick={() => setStatus('qg')} className="mt-4 bg-orange-600 hover:bg-white hover:text-black py-4 rounded-xl font-black transition-all uppercase tracking-widest text-sm">
+                                    ENTRAR NO COMBATE
                                 </button>
                             </div>
                         </div>
@@ -51,33 +54,41 @@
                 );
             }
 
-            // SELEÇÃO DE ESCOLA (CENTRO DE COMANDO)
+            // CENTRO DE COMANDO (SELEÇÃO DE ESCOLA)
             if (status === 'qg') {
                 const escolas = [
                     { id: 'cn', nome: 'Colégio Naval', sigla: 'CN' },
                     { id: 'rj', nome: 'Escola Militar - RJ', sigla: 'CMRJ' },
                     { id: 'eear', nome: 'EEAR', sigla: 'EEAR' },
                     { id: 'espcex', nome: 'EsPCEx', sigla: 'EsPCEx' },
-                    { id: 'esa', nome: 'ESA', sigla: 'ESA' }
+                    { id: 'esa', nome: 'ESA', sigla: 'ESA' },
+                    { id: 'outros', nome: 'OUTROS', sigla: '+++' } // NOVO BOTÃO PARA FECHAR PAR
                 ];
 
                 return (
                     <div className="min-h-screen">
-                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-6 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">🔥</span>
-                                <span className="font-black italic text-xl uppercase">Esquadrão Fênix</span>
+                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-4 flex justify-between items-center px-8">
+                            <div className="flex items-center gap-4">
+                                {/* LOGO ESQUADRÃO FÊNIX NAS PÁGINAS SEGUINTES */}
+                                <img src={LOGO_ESQUADRAO_FENIX} alt="Esquadrão Fênix" className="h-12 logo-glow" 
+                                     onError={(e) => {e.target.src="https://via.placeholder.com/50?text=FENIX"}} />
+                                <span className="font-black italic text-xl uppercase hidden md:block text-orange-500">Esquadrão Fênix</span>
                             </div>
-                            <button onClick={() => setStatus('login')} className="text-[10px] font-bold text-red-500 uppercase">Sair</button>
+                            <button onClick={() => setStatus('login')} className="bg-red-600/20 text-red-500 px-4 py-1 rounded-full text-[10px] font-black uppercase border border-red-500/30">Desconectar</button>
                         </header>
                         
-                        <main className="max-w-6xl mx-auto p-10 text-center">
-                            <h2 className="text-5xl font-black italic mb-10 uppercase">Selecione sua <span className="text-orange-500">Missão</span></h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <main className="max-w-6xl mx-auto p-10">
+                            <div className="mb-12 border-l-8 border-orange-600 pl-6">
+                                <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tight">Centro de <span className="text-orange-500">Comando</span></h2>
+                                <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Selecione a unidade de ensino</p>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                 {escolas.map(e => (
-                                    <button key={e.id} onClick={() => {setEscolaSel(e.nome); setStatus('escola');}} className="bg-[#111827] p-10 rounded-[35px] border-2 border-white/5 hover:border-orange-600 transition-all flex flex-col items-center gap-4 group">
-                                        <div className="w-20 h-20 bg-black rounded-2xl flex items-center justify-center text-2xl font-black group-hover:scale-110 transition-transform italic text-orange-500 border border-white/10">{e.sigla}</div>
-                                        <span className="font-black tracking-widest uppercase text-sm">{e.nome}</span>
+                                    <button key={e.id} onClick={() => {setEscolaSel(e.nome); setStatus('escola');}} 
+                                            className="bg-[#111827] p-8 rounded-[30px] border-2 border-white/5 hover:border-orange-600 transition-all flex flex-col items-center gap-4 group hover:bg-orange-600/5">
+                                        <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center text-xl font-black group-hover:scale-110 transition-transform italic text-orange-500 border border-white/10 shadow-lg">{e.sigla}</div>
+                                        <span className="font-black tracking-widest uppercase text-xs text-slate-300 group-hover:text-white">{e.nome}</span>
                                     </button>
                                 ))}
                             </div>
@@ -86,28 +97,29 @@
                 );
             }
 
-            // PÁGINA DA ESCOLA (COLÉGIO NAVAL, ETC)
+            // PÁGINA INTERNA DA ESCOLA
             return (
                 <div className="min-h-screen">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-6 flex justify-between items-center">
-                         <div className="flex items-center gap-3">
-                            <span className="text-2xl">🔥</span>
-                            <span className="font-black italic text-xl uppercase">Fênix | {escolaSel}</span>
+                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-4 flex justify-between items-center px-8">
+                         <div className="flex items-center gap-4">
+                            <img src={LOGO_ESQUADRAO_FENIX} className="h-10" />
+                            <span className="font-black italic text-lg uppercase">Módulo: <span className="text-orange-500">{escolaSel}</span></span>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="bg-white/10 px-4 py-2 rounded-lg text-xs font-bold uppercase">Trocar Escola</button>
+                        <button onClick={() => setStatus('qg')} className="bg-white/10 px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:bg-orange-600 transition-all">← Voltar</button>
                     </header>
 
-                    <main className="max-w-6xl mx-auto p-10">
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <main className="max-w-6xl mx-auto p-6 md:p-10">
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                             <MenuBotao label="Apostilas" emoji="📚" />
                             <MenuBotao label="Videoaulas" emoji="🎥" />
                             <MenuBotao label="Motivacionais" emoji="⚡" />
                             <MenuBotao label="Institucionais" emoji="🏛️" />
                             <MenuBotao label="Simulados" emoji="🛡️" />
+                            <MenuBotao label="Dúvidas" emoji="💬" />
                         </div>
                         
-                        <div className="mt-12 bg-orange-600/10 border-2 border-orange-600/30 rounded-3xl p-20 text-center">
-                            <p className="font-black text-orange-500 italic uppercase">Carregando arsenal de {escolaSel}...</p>
+                        <div className="mt-12 bg-white/5 border-2 border-dashed border-white/10 rounded-[40px] p-20 text-center">
+                            <p className="font-black text-slate-500 italic uppercase tracking-[0.3em]">Aguardando Injeção de Conteúdo</p>
                         </div>
                     </main>
                 </div>
@@ -116,9 +128,9 @@
 
         function MenuBotao({label, emoji}) {
             return (
-                <button className="bg-[#111827] p-6 rounded-2xl border border-white/5 flex flex-col items-center gap-2 hover:bg-orange-600 transition-all group">
-                    <span className="text-2xl">{emoji}</span>
-                    <span className="text-[10px] font-black uppercase text-center">{label}</span>
+                <button className="bg-[#111827] p-4 rounded-2xl border border-white/5 flex flex-col items-center gap-2 hover:bg-orange-600 transition-all group">
+                    <span className="text-xl group-hover:scale-125 transition-transform">{emoji}</span>
+                    <span className="text-[9px] font-black uppercase text-center text-slate-400 group-hover:text-white">{label}</span>
                 </button>
             );
         }
