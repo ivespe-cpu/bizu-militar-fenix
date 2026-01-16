@@ -3,51 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIZÚ MILITAR FÊNIX - SISTEMA DE SIMULADOS</title>
+    <title>BIZÚ MILITAR FÊNIX - SISTEMA ELITE</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
-        
-        /* ESTILO SIMULADOS */
-        .card-simulado {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            padding: 20px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.3s;
-            margin-bottom: 12px;
-        }
-        .card-simulado:hover {
-            background: rgba(212, 175, 55, 0.1);
-            border-color: var(--dourado-ouro);
-            transform: translateX(10px);
-        }
-        .btn-iniciar {
-            background: var(--dourado-ouro);
-            color: black;
-            font-weight: 900;
-            padding: 8px 20px;
-            border-radius: 4px;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-        .btn-aba {
-            padding: 10px 20px;
-            font-size: 10px;
-            font-weight: 900;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 4px;
-        }
-        .btn-aba.active { background: var(--dourado-ouro); color: black; }
+        .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; width: 100%; }
+        .btn-combate:hover { background-color: white !important; transform: scale(1.02); }
+        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.75); }
+        .card-escola:hover::before { background: rgba(0, 18, 51, 0.4); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.5rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
+        .capa-doc { width: 100%; height: 260px; object-fit: cover; border-bottom: 2px solid var(--dourado-ouro); }
     </style>
 </head>
 <body>
@@ -56,66 +28,95 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const LOGO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg";
+        const LOGO_BIZU = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg"; 
+        const LOGO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg"; 
+
+        // --- BASE DE DADOS DO PELOTÃO (EXTRAÍDA DA SUA PLANILHA) ---
+        const ALUNOS_DB = [
+            { n: "ALEJANDRO GASPARELLO", m: "ags186", p: "SG. GASPARELLO" },
+            { n: "ARTHUR LEANDRO MOURA", m: "alm170", p: "SG. MOURA" },
+            { n: "BERNARDO PINHEIRO", m: "bsp223", p: "SD. PINHEIRO" },
+            { n: "BRAYAN BARBOSA", m: "bab196", p: "CB. BRAYAN" },
+            { n: "BRIAN BERNARDO", m: "bbs203", p: "SD. BERNARDO" },
+            { n: "CAMILA VITÓRIA", m: "cvs208", p: "CB. CAMILA" },
+            { n: "DANIEL VICTOR", m: "dva194", p: "CB. ALBUQUERQUE" },
+            { n: "EMANUEL PEIXOTO", m: "esp192", p: "SG. PEIXOTO" },
+            { n: "LUIZ MIGUEL COSTA", m: "lmc184", p: "SG. COSTA" },
+            { n: "MAICON PEÇANHA", m: "mps144", p: "SG. PEÇANHA" },
+            { n: "MATHEUS IRENO", m: "mis133", p: "SG. IRENO" },
+            { n: "ISAAC GRANADO", m: "icg127", p: "SG. GRANADO" },
+            { n: "ISAAC LIMA", m: "iws159", p: "SG. LIMA" }
+            // O sistema aceitará qualquer matrícula que o senhor adicionar nesta lista
+        ];
 
         function App() {
-            const [status, setStatus] = useState('qg'); // Iniciando no QG para teste
+            const [status, setStatus] = useState('login'); 
+            const [user, setUser] = useState(null);
             const [escolaSel, setEscolaSel] = useState('');
-            const [aba, setAba] = useState('APOSTILAS');
+            const [inputMatricula, setInputMatricula] = useState('');
 
-            // --- BANCO DE DADOS DE SIMULADOS ---
-            const SIMULADOS_DATA = {
-                'CN': [
-                    { id: 1, nome: "SIMULADO 01 - MATEMÁTICA (PADRÃO CN)", questoes: 20, tempo: "120 min", link: "#" },
-                    { id: 2, nome: "SIMULADO 02 - PORTUGUÊS E INGLÊS", questoes: 40, tempo: "180 min", link: "#" },
-                    { id: 3, nome: "PROVA REAL CN 2024 - ADAPTADA", questoes: 50, tempo: "240 min", link: "#" }
-                ],
-                'CMRJ': [
-                    { id: 1, nome: "SIMULADO ADMISSÃO 6º ANO - MATEMÁTICA", questoes: 20, tempo: "90 min", link: "#" },
-                    { id: 2, nome: "SIMULADO ADMISSÃO 1º ANO - PORTUGUÊS", questoes: 25, tempo: "120 min", link: "#" },
-                    { id: 3, nome: "DESAFIO REDAÇÃO CMRJ - TEMA DA SEMANA", questoes: 1, tempo: "60 min", link: "#" }
-                ]
+            const tentarAcesso = (e) => {
+                e.preventDefault();
+                const matriculaLimpa = inputMatricula.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === matriculaLimpa);
+                
+                if (aluno || matriculaLimpa === 'admin') {
+                    setUser(aluno || { p: "COMANDANTE", n: "EUFRÁSIO" });
+                    setStatus('qg');
+                } else {
+                    alert("ALUNO NÃO ENCONTRADO! Verifique a matrícula.");
+                }
             };
 
-            const renderSimulados = () => {
-                const lista = SIMULADOS_DATA[escolaSel] || [];
-                if (lista.length === 0) return <p className="opacity-40 italic mt-10">Nenhum simulado carregado para esta unidade ainda.</p>;
-
+            if (status === 'login') {
                 return (
-                    <div className="max-w-4xl mx-auto mt-8">
-                        <div className="flex items-center gap-3 mb-8 border-l-4 border-ouro pl-4">
-                            <h3 className="text-xl font-black text-ouro uppercase">Arsenal de Simulados: {escolaSel}</h3>
+                    <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
+                        <div className="max-w-md w-full bg-black/70 p-10 rounded-2xl border-2 border-ouro/30 text-center shadow-2xl">
+                            <img src={LOGO_BIZU} className="w-full mb-4 rounded-lg" />
+                            <div className="linha-vermelha mb-8"></div>
+                            <form onSubmit={tentarAcesso} className="flex flex-col gap-4 text-left">
+                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Matrícula de Acesso</label>
+                                <input type="text" value={inputMatricula} onChange={(e) => setInputMatricula(e.target.value)}
+                                       className="p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" placeholder="Ex: lmc184" />
+                                <button type="submit" className="btn-combate mt-4">ENTRAR NO COMBATE</button>
+                            </form>
                         </div>
-                        {lista.map(s => (
-                            <div key={s.id} className="card-simulado">
-                                <div>
-                                    <h4 className="font-black text-sm uppercase tracking-tight">{s.nome}</h4>
-                                    <p className="text-[10px] opacity-60 uppercase mt-1">{s.questoes} QUESTÕES • TEMPO: {s.tempo}</p>
-                                </div>
-                                <button className="btn-iniciar hover:bg-white transition-all" onClick={() => window.open(s.link)}>Iniciar Teste</button>
-                            </div>
-                        ))}
                     </div>
                 );
-            };
+            }
 
             if (status === 'qg') {
                 return (
-                    <div className="min-h-screen militar-gradient">
-                        <header className="p-6 border-b-2 border-ouro flex justify-between items-center bg-[#000814]">
-                            <img src={LOGO_FENIX} className="h-16" />
-                            <h2 className="text-2xl font-black text-ouro italic">CENTRAL DE COMANDO</h2>
-                            <div className="w-16"></div>
+                    <div className="min-h-screen">
+                        <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10 shadow-xl">
+                            <img src={LOGO_FENIX} className="h-20 rounded" />
+                            <div className="text-center">
+                                <h2 className="text-3xl font-black text-ouro italic uppercase tracking-tighter">Bem-vindo, {user.p}</h2>
+                                <p className="text-[10px] tracking-[0.4em] opacity-40 uppercase">Central de Comando Fênix</p>
+                            </div>
+                            <button onClick={() => setStatus('login')} className="text-red-500 font-black text-[10px] border border-red-500/30 px-3 py-1 rounded">SAIR</button>
                         </header>
-                        <main className="max-w-6xl mx-auto p-10">
-                            <h3 className="text-center text-ouro font-black mb-10 tracking-widest uppercase">Selecione a Escola para Treinamento</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <button onClick={() => {setEscolaSel('CN'); setStatus('escola');}} className="p-12 border-2 border-ouro/30 rounded-xl bg-black/40 hover:border-ouro transition-all">
-                                    <span className="text-4xl font-black text-ouro italic">COLÉGIO NAVAL</span>
-                                </button>
-                                <button onClick={() => {setEscolaSel('CMRJ'); setStatus('escola');}} className="p-12 border-2 border-ouro/30 rounded-xl bg-black/40 hover:border-ouro transition-all">
-                                    <span className="text-4xl font-black text-ouro italic">CMRJ</span>
-                                </button>
+                        
+                        <main className="max-w-6xl mx-auto p-12">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                                {[
+                                    {s: 'CN', n: 'COLÉGIO NAVAL', img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=500'},
+                                    {s: 'CMRJ', n: 'COLÉGIO MILITAR - RJ', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/500px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg'},
+                                    {s: 'EEAR', n: 'EEAR', img: 'https://www2.fab.mil.br/eear/images/noticias/2023/06_JUNHO/23_eear/DSC_0137.jpg'},
+                                    {s: 'EsPCEx', n: 'EsPCEx', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Espcex-front.jpg/500px-Espcex-front.jpg'},
+                                    {s: 'ESA', n: 'ESA', img: 'https://www.eb.mil.br/documents/10138/10321350/ESA1.jpg/87029671-3310-85f2-9333-e18e3c509618?t=1559235002737'},
+                                    {s: 'EXTRAS', n: 'CONCURSOS', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500'}
+                                ].map(e => (
+                                    <button key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
+                                            className="card-escola" style={{backgroundImage: `url(${e.img})`}}>
+                                        <span className="sigla-txt">{e.s}</span>
+                                        <span className="absolute bottom-3 z-10 text-[9px] font-black tracking-widest text-white/80">{e.n}</span>
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="linha-vermelha mb-6"></div>
+                            <div className="text-center italic text-slate-400 font-serif">
+                                <p>"O treinamento difícil torna o combate bem mais fácil"</p>
                             </div>
                         </main>
                     </div>
@@ -124,26 +125,22 @@
 
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="p-6 border-b-2 border-ouro flex justify-between items-center bg-[#000814]">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10">
                         <div className="flex items-center gap-4">
-                            <img src={LOGO_FENIX} className="h-12" />
-                            <span className="font-black text-ouro text-xl">{escolaSel}</span>
+                            <img src={LOGO_FENIX} className="h-14 rounded" />
+                            <span className="font-black text-ouro uppercase">{escolaSel} | ARSENAL</span>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="bg-ouro text-black px-4 py-2 rounded font-black text-xs">VOLTAR AO QG</button>
+                        <button onClick={() => setStatus('qg')} className="bg-white/5 border border-ouro/30 px-6 py-2 rounded text-[10px] font-black">VOLTAR</button>
                     </header>
-
-                    <main className="max-w-6xl mx-auto p-10">
-                        <div className="flex justify-center gap-4 mb-10">
-                            {['APOSTILAS', 'VÍDEOS', 'SIMULADOS', 'PROVAS'].map(m => (
-                                <button key={m} onClick={() => setAba(m)} className={`btn-aba ${aba === m ? 'active' : ''}`}>{m}</button>
+                    <main className="max-w-7xl mx-auto p-12 text-center">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-10">
+                            {['APOSTILAS', 'VÍDEOS', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS', 'MOTIVAÇÃO', 'RANKING'].map(m => (
+                                <button key={m} className="bg-white/5 border border-ouro/20 p-2 rounded text-[8px] font-black hover:bg-ouro hover:text-black transition-all">{m}</button>
                             ))}
                         </div>
-
-                        {aba === 'SIMULADOS' ? renderSimulados() : (
-                            <div className="text-center py-20 opacity-30 italic">
-                                <p>Módulo {aba} em fase de carregamento...</p>
-                            </div>
-                        )}
+                        <div className="py-20 border-2 border-dashed border-ouro/10 rounded-xl">
+                            <p className="text-ouro/40 italic">Aguardando coordenadas de material para {escolaSel}...</p>
+                        </div>
                     </main>
                 </div>
             );
