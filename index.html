@@ -15,12 +15,14 @@
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
         .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; width: 100%; text-transform: uppercase; }
         .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.75); transition: 0.3s; }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); transition: 0.3s; }
         .card-escola:hover::before { background: rgba(0, 18, 51, 0.4); }
-        .sigla-txt { position: relative; z-index: 10; font-size: 2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; text-align: center; line-height: 1; }
-        .capa-doc { width: 100%; height: 280px; object-fit: contain; background: #000; border-bottom: 1px solid var(--dourado-ouro); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; text-align: center; }
+        .capa-doc { width: 100%; height: 280px; object-fit: contain; background: #000; }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
+        .btn-voltar { background-color: white !important; color: black !important; font-weight: 900; padding: 10px 25px; border-radius: 5px; font-size: 14px; border: 2px solid var(--dourado-ouro); transition: 0.3s; }
+        .btn-voltar:hover { background-color: var(--dourado-ouro) !important; transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -28,6 +30,8 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
+
+        const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
@@ -54,30 +58,26 @@
         ];
 
         const FRASES = [
-            "O QUE VOCÊ FAZ NO QUARTEL, FICA NO QUARTEL. O QUE VOCÊ FAZ NO BIZÚ, TE LEVA À APROVAÇÃO!",
-            "TREINAMENTO DIFÍCIL, COMBATE FÁCIL. ESTUDE AGORA, COMANDE DEPOIS.",
+            "TREINAMENTO DIFÍCIL, COMBATE FÁCIL!",
             "A DOR É TEMPORÁRIA, O NOME NO DIÁRIO OFICIAL É PARA SEMPRE.",
-            "NÃO PARE QUANDO ESTIVER CANSADO, PARE QUANDO TIVER CONCLUÍDO A MISSÃO."
+            "NÃO PARE QUANDO ESTIVER CANSADO, PARE QUANDO TIVER CONCLUÍDO A MISSÃO.",
+            "ESTUDE ENQUANTO ELES DORMEM, COMANDE ENQUANTO ELES SONHAM."
         ];
 
         const ESCOLAS = [
-            { s: 'COLÉGIO NAVAL', i: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800' },
-            { s: 'EPCAR', i: 'https://i.ibb.co/mFmP8qM/epcar-bg.png' }, 
-            { s: 'CMRJ', i: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/800px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg' },
-            { s: 'EsPCEX', i: 'https://i.ibb.co/Yy0b1X0/espcex-bg.png' },
+            { s: 'COLÉGIO NAVAL', i: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=500' },
+            { s: 'EPCAR', i: 'https://www2.fab.mil.br/epcar/images/noticias/2023/fab_em_destaque_2.jpg' },
+            { s: 'CMRJ', i: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/500px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg' },
+            { s: 'EsPCEX', i: 'https://www.eb.mil.br/documents/10138/10321350/ESA1.jpg' },
             { s: 'EEAR', i: 'https://www2.fab.mil.br/eear/images/noticias/2023/06_JUNHO/23_eear/DSC_0137.jpg' },
             { s: 'ESA', i: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Escola_de_Sargentos_das_Armas.jpg' }
         ];
 
         const MATERIAIS = [
-            { t: "MATEMÁTICA", img: "https://i.ibb.co/MD42sWr9/capa-matematica.png" },
-            { t: "PORTUGUÊS", img: "https://i.ibb.co/tTJPWYsH/capa-portugues.png" },
-            { t: "INGLÊS", img: "https://i.ibb.co/rRGhQGv8/capa-ingles.png" },
-            { t: "HISTÓRIA", img: "https://i.ibb.co/tPbpMN1z/capa-historia.png" },
-            { t: "GEOGRAFIA", img: "https://i.ibb.co/L6Vv6yF/capa-geografia.png" },
-            { t: "FÍSICA", img: "https://i.ibb.co/9vB4Zf8/capa-fisica.png" },
-            { t: "QUÍMICA", img: "https://i.ibb.co/K2N2XvH/capa-quimica.png" },
-            { t: "BIOLOGIA", img: "https://i.ibb.co/wL4N6Gk/capa-biologia.png" }
+            { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
+            { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" },
+            { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
+            { t: "QUÍMICA", f: "quimica.png" }, { t: "BIOLOGIA", f: "biologia.png" }
         ];
 
         function App() {
@@ -87,116 +87,95 @@
             const [escolaSel, setEscolaSel] = useState('');
             const [frase, setFrase] = useState("");
 
-            useEffect(() => {
-                setFrase(FRASES[Math.floor(Math.random() * FRASES.length)]);
-            }, [status]);
+            useEffect(() => { setFrase(FRASES[Math.floor(Math.random() * FRASES.length)]); }, [status]);
 
             const handleLogin = (e) => {
                 e.preventDefault();
                 const s = senhaIn.toLowerCase().trim();
-                if (s === "esp0815" || s === "admin") {
-                    setUser({ p: "COMANDANTE", n: "EUFRÁSIO" });
-                    setStatus('qg');
-                } else {
-                    const aluno = ALUNOS_DB.find(a => a.m === s);
-                    if (aluno) { setUser(aluno); setStatus('qg'); }
-                    else { alert("ACESSO NEGADO! Verifique sua matrícula."); }
-                }
+                const aluno = ALUNOS_DB.find(a => a.m === s);
+                if (s === "esp0815" || s === "admin") { setUser({ p: "COMANDANTE", pts: "∞" }); setStatus('qg'); }
+                else if (aluno) { setUser(aluno); setStatus('qg'); }
+                else { alert("MATRÍCULA NÃO ENCONTRADA!"); }
             };
 
-            if (status === 'login') {
-                return (
-                    <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/30 shadow-2xl text-center">
-                            <img src="https://i.ibb.co/BKLSQKT1/logo-bizu.jpg" className="w-full mb-6 rounded-lg shadow-lg border border-ouro/10" />
-                            <div className="linha-vermelha mb-8"></div>
-                            <form onSubmit={handleLogin} className="flex flex-col gap-4">
-                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest text-left">Acesso do Operacional</label>
-                                <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
-                                       className="p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro text-center text-xl font-mono" placeholder="DIGITE SUA SENHA" />
-                                <button type="submit" className="btn-combate mt-2">ENTRAR NO QG</button>
-                            </form>
-                        </div>
+            if (status === 'login') return (
+                <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
+                    <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/30 shadow-2xl text-center">
+                        <img src="https://i.ibb.co/BKLSQKT1/logo-bizu.jpg" className="w-full mb-6 rounded-lg shadow-lg border border-ouro/10" />
+                        <div className="linha-vermelha mb-8"></div>
+                        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                            <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
+                                   className="p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro text-center text-xl font-mono" placeholder="MATRÍCULA" />
+                            <button type="submit" className="btn-combate">ENTRAR</button>
+                        </form>
                     </div>
-                );
-            }
+                </div>
+            );
 
-            if (status === 'qg') {
-                const ranking = [...ALUNOS_DB].sort((a, b) => b.pts - a.pts);
-                return (
-                    <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10 shadow-xl sticky top-0 z-50">
-                            <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-16 rounded" />
-                            <div className="text-center hidden md:block">
-                                <h2 className="text-2xl font-black text-ouro italic uppercase leading-none">Bem-vindo, {user.p}</h2>
-                                <p className="text-[10px] text-white/50 tracking-[0.2em] mt-1 font-bold">MISSÃO DADA É MISSÃO CUMPRIDA</p>
-                            </div>
-                            <button onClick={() => setStatus('login')} className="bg-red-600/20 text-red-500 font-black text-[10px] border border-red-500/30 px-4 py-2 rounded hover:bg-red-600 hover:text-white transition-all uppercase">Encerrar Turno</button>
-                        </header>
-                        
-                        <div className="bg-white/5 border-b border-ouro/10 p-3 text-center">
-                            <p className="text-ouro font-bold text-xs italic tracking-wide">" {frase} "</p>
+            if (status === 'qg') return (
+                <div className="min-h-screen">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10 sticky top-0 z-50">
+                        <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-14 rounded" />
+                        <div className="text-center">
+                            <h2 className="text-xl font-black text-ouro italic uppercase">Olá, {user.p}</h2>
+                            <p className="text-[10px] text-white/40 tracking-widest font-bold">PLANO DE CARREIRA: ATIVO</p>
                         </div>
-
-                        <main className="max-w-7xl mx-auto p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-                            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {ESCOLAS.map(item => (
-                                    <div key={item.s} onClick={() => {setEscolaSel(item.s); setStatus('escola');}} 
-                                         className="card-escola hover:scale-[1.02] active:scale-95" style={{backgroundImage: `url(${item.i})`}}>
-                                        <span className="sigla-txt">{item.s}</span>
+                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs border border-red-500/20 px-3 py-1 rounded">SAIR</button>
+                    </header>
+                    <div className="bg-white/5 p-3 text-center border-b border-ouro/10">
+                        <p className="text-ouro font-bold text-[11px] italic">"{frase}"</p>
+                    </div>
+                    <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {ESCOLAS.map(e => (
+                                <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
+                                     className="card-escola hover:scale-[1.02]" style={{backgroundImage: `url(${e.i})`}}>
+                                    <span className="sigla-txt">{e.s}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="bg-black/40 p-5 rounded-xl border border-ouro/20 h-[500px] flex flex-col">
+                            <h3 className="text-ouro font-black text-center mb-4 italic uppercase border-b border-ouro/10 pb-2">Ranking do Pelotão</h3>
+                            <div className="space-y-2 overflow-y-auto custom-scroll pr-2">
+                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
+                                    <div key={i} className="flex justify-between p-2 bg-white/5 rounded text-[10px] border-l-2 border-ouro">
+                                        <span className="font-bold">{i+1}º {a.p}</span>
+                                        <span className="text-ouro">{a.pts} PTS</span>
                                     </div>
                                 ))}
                             </div>
-                            
-                            <div className="bg-black/40 p-6 rounded-xl border border-ouro/20 shadow-2xl h-[600px] flex flex-col">
-                                <h3 className="text-ouro font-black mb-6 text-center uppercase italic border-b border-ouro/20 pb-2">🏆 Ranking do Pelotão</h3>
-                                <div className="space-y-2 overflow-y-auto custom-scroll pr-2">
-                                    {ranking.map((aluno, idx) => (
-                                        <div key={idx} className={`flex justify-between p-3 rounded border-l-4 ${idx < 3 ? 'bg-ouro/10 border-ouro' : 'bg-white/5 border-white/20'} text-[11px] transition-all hover:bg-white/10`}>
-                                            <span className="font-bold">{idx+1}º {aluno.p}</span>
-                                            <span className="text-ouro font-black">{aluno.pts} PTS</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </main>
-                    </div>
-                );
-            }
+                        </div>
+                    </main>
+                </div>
+            );
 
             return (
                 <div className="min-h-screen militar-gradient">
                     <header className="bg-[#000814] border-b-2 border-ouro p-6 flex justify-between items-center px-10 sticky top-0 z-50">
                         <div className="flex items-center gap-4">
-                            <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-12 rounded" />
-                            <h1 className="text-xl font-black text-ouro uppercase italic tracking-tighter">{escolaSel} | Arsenal</h1>
+                            <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-10 rounded" />
+                            <h1 className="text-lg font-black text-ouro uppercase italic">{escolaSel}</h1>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="bg-white text-black px-8 py-3 rounded shadow-2xl font-black text-sm hover:bg-ouro hover:scale-105 active:scale-95 transition-all">
+                        <button onClick={() => setStatus('qg')} className="btn-voltar">
                             VOLTAR AO QG
                         </button>
                     </header>
-
-                    <main className="max-w-7xl mx-auto p-6 lg:p-10">
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-12">
+                    <main className="max-w-7xl mx-auto p-6">
+                        <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-10">
                             {['APOSTILAS', 'VÍDEOS', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS'].map(m => (
-                                <button key={m} onClick={() => alert(`Sistema de ${m} em manutenção. Disponível em breve.`)}
-                                        className="bg-white/5 border border-ouro/20 p-3 rounded text-[10px] font-black hover:bg-ouro hover:text-black transition-all uppercase tracking-widest shadow-lg">
-                                    {m}
-                                </button>
+                                <button key={m} onClick={() => alert("Módulo em fase de carregamento.")}
+                                        className="bg-white/5 border border-ouro/20 p-2 rounded text-[9px] font-black hover:bg-ouro hover:text-black transition-all">{m}</button>
                             ))}
                         </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {MATERIAIS.map((m, i) => (
-                                <div key={i} className="bg-black/60 border border-ouro/20 rounded-2xl overflow-hidden hover:border-ouro transition-all shadow-2xl group flex flex-col">
-                                    <div className="h-[300px] bg-black flex items-center justify-center p-2">
-                                        <img src={m.img} className="capa-doc group-hover:scale-105 transition-all duration-500" />
+                                <div key={i} className="bg-black/60 border border-ouro/20 rounded-xl overflow-hidden flex flex-col">
+                                    <div className="h-[280px] bg-black flex items-center justify-center p-2">
+                                        <img src={BASE_URL + m.f} className="capa-doc" onError={(e) => {e.target.src="https://via.placeholder.com/300x400?text=Carregando...";}} />
                                     </div>
-                                    <div className="p-5 text-center bg-white/5 flex-grow border-t border-ouro/10">
-                                        <div className="text-ouro font-black text-sm mb-4 tracking-widest uppercase">{m.t}</div>
-                                        <button className="w-full bg-ouro text-black text-[11px] py-3 rounded-lg hover:bg-white transition-all font-black uppercase shadow-lg">
-                                            Baixar Material
-                                        </button>
+                                    <div className="p-4 text-center border-t border-ouro/10">
+                                        <div className="text-ouro font-black text-[10px] mb-3 uppercase tracking-widest">{m.t}</div>
+                                        <button className="w-full bg-ouro text-black text-[10px] py-2 rounded font-black uppercase hover:bg-white transition-all">ACESSAR MATERIAL</button>
                                     </div>
                                 </div>
                             ))}
