@@ -10,15 +10,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
-        .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; }
+        .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; width: 100%; text-transform: uppercase; }
         .btn-combate:hover { background-color: white !important; transform: scale(1.02); }
+        
+        /* CARD DAS INSTITUIÇÕES COM FOTO */
         .card-escola { position: relative; height: 160px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; }
         .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.75); }
-        .sigla-txt { position: relative; z-index: 10; font-size: 2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
-        .capa-doc { width: 100%; height: 260px; object-fit: cover; border-bottom: 2px solid var(--dourado-ouro); }
+        .card-escola:hover::before { background: rgba(0, 18, 51, 0.4); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
+        
+        .capa-doc { width: 100%; height: 240px; object-fit: cover; border-bottom: 2px solid var(--dourado-ouro); }
     </style>
 </head>
 <body>
@@ -27,51 +31,66 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // --- BANCO DE DATOS INTEGRADO (PLANILHA) ---
-        const ALUNOS_DB = [
-            { id: 1, nome: "GASPARELLO", matricula: "ags186", patente: "SG. GASPARELLO", pontos: 1500 },
-            { id: 2, nome: "MOURA", matricula: "alm170", patente: "SG. MOURA", pontos: 1450 },
-            { id: 3, nome: "PINHEIRO", matricula: "bsp223", patente: "SD. PINHEIRO", pontos: 1200 },
-            { id: 4, nome: "BRAYAN", matricula: "bab196", patente: "CB. BRAYAN", pontos: 1100 },
-            { id: 5, nome: "BERNARDO", matricula: "bbs203", patente: "SD. BERNARDO", pontos: 900 },
-            { id: 6, nome: "COSTA", matricula: "lmc184", patente: "SG. COSTA", pontos: 1800 },
-            { id: 7, nome: "PEÇANHA", matricula: "mps144", patente: "SG. PEÇANHA", pontos: 1750 },
-            { id: 8, nome: "IRENO", matricula: "mis133", patente: "SG. IRENO", pontos: 1300 },
-            { id: 9, nome: "GRANADO", matricula: "icg127", patente: "SG. GRANADO", pontos: 1600 },
-            { id: 10, nome: "LIMA", matricula: "iws159", patente: "SG. LIMA", pontos: 1150 }
-            // ... Sistema preparado para todos os demais alunos
-        ];
-
         const LOGO_BIZU = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg"; 
         const LOGO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg"; 
+
+        // --- BANCO DE DADOS INTEGRADO (ALUNOS E RANKING) ---
+        const ALUNOS_DB = [
+            { id: 1, m: "ags186", p: "SG. GASPARELLO", pts: 1850 },
+            { id: 2, m: "alm170", p: "SG. MOURA", pts: 1720 },
+            { id: 3, m: "lmc184", p: "SG. COSTA", pts: 2100 },
+            { id: 4, m: "mps144", p: "SG. PEÇANHA", pts: 1980 },
+            { id: 5, m: "icg127", p: "SG. GRANADO", pts: 1650 },
+            { id: 6, m: "iws159", p: "SG. LIMA", pts: 1540 },
+            { id: 7, m: "mis133", p: "SG. IRENO", pts: 1490 }
+        ];
+
+        // --- DADOS DE MATERIAIS ---
+        const APOSTILAS_DATA = [
+            { mat: 'MATEMÁTICA', img: 'https://i.ibb.co/MD42sWr9/capa-matematica.jpg' },
+            { mat: 'PORTUGUÊS', img: 'https://i.ibb.co/tTJPWYsH/capa-portugues.jpg' },
+            { mat: 'INGLÊS', img: 'https://i.ibb.co/rRGhQGv8/capa-ingles.jpg' },
+            { mat: 'HISTÓRIA', img: 'https://i.ibb.co/tPbpMN1z/capa-historia.jpg' }
+        ];
 
         function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
+            const [loginIn, setLoginIn] = useState('');
+            const [senhaIn, setSenhaIn] = useState('');
             const [escolaSel, setEscolaSel] = useState('');
-            const [matriculaInput, setMatriculaInput] = useState('');
+            const [abaAtiva, setAbaAtiva] = useState('APOSTILAS');
 
             const handleLogin = (e) => {
                 e.preventDefault();
-                const encontrado = ALUNOS_DB.find(a => a.matricula === matriculaInput.toLowerCase());
-                if (encontrado || matriculaInput === 'admin') {
-                    setUser(encontrado || { nome: "EUFRÁSIO", patente: "COMANDANTE", pontos: 9999 });
+                const l = loginIn.toLowerCase().trim();
+                const s = senhaIn.trim();
+
+                if (l === "admin" && s === "esp0815") {
+                    setUser({ p: "COMANDANTE", n: "EUFRÁSIO" });
                     setStatus('qg');
                 } else {
-                    alert("MATRÍCULA NÃO ENCONTRADA NO PELOTÃO!");
+                    const aluno = ALUNOS_DB.find(a => a.m === l && a.m === s);
+                    if (aluno) {
+                        setUser({ p: aluno.p, n: aluno.p });
+                        setStatus('qg');
+                    } else {
+                        alert("ACESSO NEGADO: Verifique matrícula e senha.");
+                    }
                 }
             };
 
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/70 p-10 rounded-2xl border-2 border-ouro/30 text-center shadow-2xl">
+                        <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/30 text-center shadow-2xl">
                             <img src={LOGO_BIZU} className="w-full mb-4 rounded-lg" />
                             <div className="linha-vermelha mb-8"></div>
                             <form onSubmit={handleLogin} className="flex flex-col gap-4 text-left">
-                                <label className="text-[10px] font-black text-ouro uppercase">Matrícula Operacional</label>
-                                <input type="text" value={matriculaInput} onChange={(e) => setMatriculaInput(e.target.value)}
-                                       className="p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" placeholder="Ex: lmc184" />
+                                <input type="text" value={loginIn} onChange={(e) => setLoginIn(e.target.value)}
+                                       className="p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" placeholder="Matrícula" />
+                                <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
+                                       className="p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" placeholder="Senha" />
                                 <button type="submit" className="btn-combate mt-4">ENTRAR NO SISTEMA</button>
                             </form>
                         </div>
@@ -80,13 +99,13 @@
             }
 
             if (status === 'qg') {
-                const ranking = [...ALUNOS_DB].sort((a, b) => b.pontos - a.pontos);
+                const ranking = [...ALUNOS_DB].sort((a, b) => b.pts - a.pts);
                 return (
                     <div className="min-h-screen">
                         <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10">
                             <img src={LOGO_FENIX} className="h-20 rounded" />
                             <div className="text-center">
-                                <h2 className="text-3xl font-black text-ouro italic uppercase tracking-tighter">Bem-vindo, {user.patente}</h2>
+                                <h2 className="text-3xl font-black text-ouro italic uppercase tracking-tighter">Bem-vindo, {user.p}</h2>
                                 <p className="text-[10px] tracking-[0.4em] opacity-40 uppercase">Central de Comando Fênix</p>
                             </div>
                             <button onClick={() => setStatus('login')} className="text-red-500 font-black text-xs">SAIR</button>
@@ -96,9 +115,17 @@
                             <div className="lg:col-span-2">
                                 <h3 className="text-ouro font-black mb-6 uppercase tracking-widest border-l-4 border-red-600 pl-4">Instituições</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {['CN', 'CMRJ', 'EEAR', 'EsPCEx', 'ESA', 'EXTRAS'].map(s => (
-                                        <div key={s} onClick={() => {setEscolaSel(s); setStatus('escola');}} className="card-escola group">
-                                            <span className="sigla-txt">{s}</span>
+                                    {[
+                                        {s: 'CN', img: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=500'},
+                                        {s: 'CMRJ', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/500px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg'},
+                                        {s: 'EEAR', img: 'https://www2.fab.mil.br/eear/images/noticias/2023/06_JUNHO/23_eear/DSC_0137.jpg'},
+                                        {s: 'EsPCEx', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Espcex-front.jpg/500px-Espcex-front.jpg'},
+                                        {s: 'ESA', img: 'https://www.eb.mil.br/documents/10138/10321350/ESA1.jpg/87029671-3310-85f2-9333-e18e3c509618?t=1559235002737'},
+                                        {s: 'EXTRAS', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500'}
+                                    ].map(item => (
+                                        <div key={item.s} onClick={() => {setEscolaSel(item.s); setStatus('escola');}} 
+                                             className="card-escola" style={{backgroundImage: `url(${item.img})`}}>
+                                            <span className="sigla-txt">{item.s}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -109,8 +136,8 @@
                                 <div className="space-y-3">
                                     {ranking.slice(0, 5).map((aluno, idx) => (
                                         <div key={aluno.id} className="flex justify-between items-center p-3 bg-white/5 rounded border-l-2 border-ouro">
-                                            <span className="text-xs font-bold">{idx+1}º {aluno.patente}</span>
-                                            <span className="text-ouro font-mono">{aluno.pontos} pts</span>
+                                            <span className="text-xs font-bold">{idx+1}º {aluno.p}</span>
+                                            <span className="text-ouro font-mono">{aluno.pts} pts</span>
                                         </div>
                                     ))}
                                 </div>
@@ -130,15 +157,32 @@
                         <button onClick={() => setStatus('qg')} className="bg-ouro text-black px-6 py-2 rounded text-xs font-black">VOLTAR AO QG</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-10">
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-10">
+                        <div className="flex flex-wrap gap-2 mb-10 justify-center">
                             {['APOSTILAS', 'VÍDEOS', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS'].map(m => (
-                                <button key={m} className="bg-white/5 border border-ouro/10 p-3 rounded text-[9px] font-black hover:bg-ouro hover:text-black transition-all">{m}</button>
+                                <button key={m} onClick={() => setAbaAtiva(m)} 
+                                        className={`px-4 py-2 text-[10px] font-black border border-ouro/30 rounded transition-all ${abaAtiva === m ? 'bg-ouro text-black' : 'bg-white/5 text-white hover:bg-white/10'}`}>
+                                    {m}
+                                </button>
                             ))}
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            {/* Aqui entram as capas das apostilas já configuradas */}
-                            <p className="col-span-4 text-center opacity-40 py-20 italic">Selecione o módulo para carregar o material de {escolaSel}...</p>
-                        </div>
+
+                        {abaAtiva === 'APOSTILAS' ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {APOSTILAS_DATA.map((item, idx) => (
+                                    <div key={idx} className="bg-black/40 border border-ouro/20 rounded-xl overflow-hidden hover:border-ouro transition-all">
+                                        <img src={item.img} className="capa-doc" />
+                                        <div className="p-5 text-center">
+                                            <h4 className="font-black text-xs text-ouro mb-4 uppercase">{item.mat}</h4>
+                                            <button className="w-full bg-ouro text-black font-black py-2 rounded text-[10px]">VER MATERIAL</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-20 opacity-30 italic">
+                                Módulo {abaAtiva} em fase de carregamento para {escolaSel}...
+                            </div>
+                        )}
                     </main>
                 </div>
             );
