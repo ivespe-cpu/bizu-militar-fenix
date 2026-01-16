@@ -10,11 +10,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
-        .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; width: 100%; }
+        .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; width: 100%; text-transform: uppercase; cursor: pointer; }
         .btn-combate:hover { background-color: white !important; transform: scale(1.02); }
+        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.8); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
+        input::placeholder { color: rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
@@ -23,83 +27,138 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // --- CONFIGURAÇÃO DE ACESSO ---
-        // COMANDANTE: Altere o valor abaixo para a sua senha de 7 caracteres (3 letras e 4 números)
-        const SENHA_MESTRA_ADMIN = "ESP0815"; // 
-
+        // --- BANCO DE DADOS INTEGRADO ---
         const ALUNOS_DB = [
-            { m: "ags186", s: "ags186", p: "SG. GASPARELLO" },
-            { m: "alm170", s: "alm170", p: "SG. MOURA" },
-            { m: "lmc184", s: "lmc184", p: "SG. COSTA" },
-            { m: "mps144", s: "mps144", p: "SG. PEÇANHA" }
-            // O sistema usa a matrícula como senha padrão para os alunos.
+            { m: "ags186", p: "SG. GASPARELLO" },
+            { m: "alm170", p: "SG. MOURA" },
+            { m: "bsp223", p: "SD. PINHEIRO" },
+            { m: "bab196", p: "CB. BRAYAN" },
+            { m: "bbs203", p: "SD. BERNARDO" },
+            { m: "cvs208", p: "CB. CAMILA" },
+            { m: "dva194", p: "CB. ALBUQUERQUE" },
+            { m: "esp192", p: "SG. PEIXOTO" },
+            { m: "egc228", p: "CB. ENZO" },
+            { m: "gsp187", p: "SG. GABRIELLE PEREIRA" },
+            { m: "gac174", p: "SG. GABRIELLY COUTINHO" },
+            { m: "gem240", p: "SD. MICAELA" },
+            { m: "gfa109", p: "SUB.TEN. ARAUJO" },
+            { m: "hls197", p: "CB. SALES" },
+            { m: "icg127", p: "SG. GRANADO" },
+            { m: "iws159", p: "SG. LIMA" },
+            { m: "jgm108", p: "SUB.TEN. MORAES" },
+            { m: "jpj110", p: "ASP. JOÃO SAMUEL" },
+            { m: "jva190", p: "SG. ANDRADE" },
+            { m: "jhs198", p: "CB. JOSUÉ" },
+            { m: "jcm166", p: "SG. JUNIO" },
+            { m: "kfs245", p: "CB. FONTES" },
+            { m: "lgb226", p: "CB. BELTRON" },
+            { m: "lod225", p: "CB. FADINI" },
+            { m: "lse165", p: "SG. ELEUTHÉRIO" },
+            { m: "lfs220", p: "CB. LUIZ FERNANDO" },
+            { m: "lmc184", p: "SG. COSTA" },
+            { m: "mps144", p: "SG. PEÇANHA" },
+            { m: "mis133", p: "SG. IRENO" }
         ];
 
         function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
-            const [loginInput, setLoginInput] = useState('');
-            const [senhaInput, setSenhaInput] = useState('');
+            const [loginIn, setLoginIn] = useState('');
+            const [senhaIn, setSenhaIn] = useState('');
+            const [escolaSel, setEscolaSel] = useState('');
 
             const handleLogin = (e) => {
                 e.preventDefault();
-                const log = loginInput.toLowerCase().trim();
+                const l = loginIn.toLowerCase().trim();
+                const s = senhaIn.trim();
                 
-                // Validação Admin
-                if (log === 'admin' && senhaInput === SENHA_MESTRA_ADMIN) {
+                // Validação Admin (Eufrásio)
+                if (l === "admin" && s === "esp0815") {
                     setUser({ p: "COMANDANTE", n: "EUFRÁSIO" });
                     setStatus('qg');
                     return;
                 }
 
-                // Validação Aluno
-                const aluno = ALUNOS_DB.find(a => a.m === log && a.s === senhaInput);
+                // Validação Aluno (Matrícula = Login e Senha)
+                const aluno = ALUNOS_DB.find(a => a.m === l && a.m === s);
+                
                 if (aluno) {
                     setUser(aluno);
                     setStatus('qg');
                 } else {
-                    alert("ACESSO NEGADO! Matrícula ou Senha incorretas.");
+                    alert("ACESSO NEGADO: Verifique os dados.");
                 }
             };
 
             if (status === 'login') {
                 return (
                     <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                        <div className="max-w-md w-full bg-black/70 p-10 rounded-2xl border-2 border-ouro/30 text-center shadow-2xl">
+                        <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/30 text-center shadow-2xl">
                             <img src="https://i.ibb.co/BKLSQKT1/logo-bizu.jpg" className="w-full mb-4 rounded-lg" />
                             <div className="linha-vermelha mb-8"></div>
-                            
-                            <form onSubmit={handleLogin} className="flex flex-col gap-4 text-left">
+                            <form onSubmit={handleLogin} className="flex flex-col gap-5 text-left" autoComplete="off">
                                 <div>
-                                    <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Matrícula</label>
-                                    <input type="text" value={loginInput} onChange={(e) => setLoginInput(e.target.value)}
-                                           className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" placeholder="admin ou matrícula" />
+                                    <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Matrícula / Usuário</label>
+                                    <input 
+                                        type="text" 
+                                        value={loginIn} 
+                                        onChange={(e) => setLoginIn(e.target.value)}
+                                        className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" 
+                                        placeholder="admin ou matrícula"
+                                    />
                                 </div>
                                 <div>
-                                    <label className="text-[10px] font-black text-ouro uppercase tracking-widest">Senha Operacional</label>
-                                    <input type="password" value={senhaInput} onChange={(e) => setSenhaInput(e.target.value)}
-                                           className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" placeholder="******" />
+                                    <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Senha de Acesso</label>
+                                    <input 
+                                        type="password" 
+                                        value={senhaIn} 
+                                        onChange={(e) => setSenhaIn(e.target.value)}
+                                        className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" 
+                                        placeholder="******"
+                                    />
                                 </div>
-                                <button type="submit" className="btn-combate mt-4">AUTENTICAR ACESSO</button>
+                                <button type="submit" className="btn-combate mt-4">AUTENTICAR NO QG</button>
                             </form>
                         </div>
                     </div>
                 );
             }
 
-            // ... (Restante do código do QG e Arsenal permanece igual)
+            if (status === 'qg') {
+                return (
+                    <div className="min-h-screen">
+                        <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10 shadow-xl">
+                            <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-20 rounded" />
+                            <div className="flex-1 text-center">
+                                <h2 className="text-3xl font-black text-ouro italic uppercase tracking-tighter">BEM-VINDO, {user.p}</h2>
+                                <p className="text-[10px] tracking-[0.4em] opacity-40 uppercase">Central de Comando Fênix</p>
+                            </div>
+                            <button onClick={() => {setStatus('login'); setLoginIn(''); setSenhaIn('');}} className="text-red-500 font-black text-[10px] border border-red-500/30 px-4 py-2 rounded">SAIR</button>
+                        </header>
+                        <main className="max-w-6xl mx-auto p-12">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {['CN', 'CMRJ', 'EEAR', 'EsPCEx', 'ESA', 'EXTRAS'].map(s => (
+                                    <div key={s} onClick={() => {setEscolaSel(s); setStatus('escola');}} className="card-escola">
+                                        <span className="sigla-txt">{s}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </main>
+                    </div>
+                );
+            }
+
             return (
-                <div className="min-h-screen">
-                    <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10 shadow-xl">
-                        <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-20 rounded" />
-                        <div className="text-center">
-                            <h2 className="text-3xl font-black text-ouro italic uppercase tracking-tighter text-center">BEM-VINDO, {user.p}</h2>
+                <div className="min-h-screen militar-gradient">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-6 flex justify-between items-center px-10">
+                        <div className="flex items-center gap-6">
+                            <img src="https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg" className="h-16 rounded" />
+                            <h1 className="text-2xl font-black text-ouro uppercase">{escolaSel} | ARSENAL</h1>
                         </div>
-                        <button onClick={() => setStatus('login')} className="text-red-500 font-black text-[10px] border border-red-500/30 px-3 py-1 rounded">SAIR</button>
+                        <button onClick={() => setStatus('qg')} className="bg-ouro text-black px-6 py-2 rounded text-xs font-black">VOLTAR</button>
                     </header>
-                    <main className="max-w-6xl mx-auto p-12 text-center">
-                         <h3 className="text-ouro font-black mb-10 tracking-widest uppercase italic">Painel de Instrução Liberado</h3>
-                         <p className="opacity-50">Selecione o módulo de estudo no menu superior para iniciar.</p>
+                    <main className="max-w-7xl mx-auto p-12 text-center py-40 italic opacity-30">
+                        Área de {escolaSel} em manutenção de conteúdo...
                     </main>
                 </div>
             );
