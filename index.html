@@ -9,21 +9,27 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
+        :root { --ouro: #D4AF37; --azul: #001233; }
+        body { background: var(--azul); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        /* BACKGROUND VIDEO CONFIG */
+        .video-bg { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 0.4; }
+        
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
-        .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
-        .btn-combate { background: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; transition: 0.3s; width: 100%; text-transform: uppercase; cursor: pointer; border: none; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .btn-combate:hover { transform: scale(1.02); background: white !important; }
-        .card-escola { position: relative; height: 160px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; border: 1px solid rgba(212, 175, 55, 0.2); width: 100%; }
-        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
-        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
-        /* Ranking com Scroll para os 42 alunos */
-        .ranking-area { max-height: 400px; overflow-y: auto; padding-right: 10px; }
-        .ranking-area::-webkit-scrollbar { width: 4px; }
-        .ranking-area::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
-        .modal-overlay { background: rgba(0,0,0,0.95); position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .doc-link { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: 8px; width: 100%; text-align: left; font-weight: bold; margin-bottom: 8px; display: block; color: white; cursor: pointer; }
+        .linha-tática { height: 4px; background: repeating-linear-gradient(45deg, #bc0000, #bc0000 10px, #7b0000 10px, #7b0000 20px); }
+        
+        .glass-panel { background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); border: 1px solid rgba(211, 175, 55, 0.3); }
+        
+        /* RANKING SCROLL */
+        .ranking-scroll { max-height: 450px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--ouro) transparent; }
+        .ranking-scroll::-webkit-scrollbar { width: 5px; }
+        .ranking-scroll::-webkit-scrollbar-thumb { background: var(--ouro); border-radius: 10px; }
+
+        .btn-combate { background: var(--ouro) !important; color: black !important; font-weight: 900; transition: 0.4s; text-transform: uppercase; border: none; cursor: pointer; }
+        .btn-combate:hover { background: white !important; box-shadow: 0 0 20px var(--ouro); }
+        
+        .card-escola { position: relative; height: 140px; border-radius: 10px; border-bottom: 3px solid var(--ouro); overflow: hidden; transition: 0.3s; cursor: pointer; }
+        .card-escola:hover { transform: translateY(-5px); filter: brightness(1.2); }
     </style>
 </head>
 <body>
@@ -31,10 +37,6 @@
 
     <script type="text/babel">
         const { useState } = React;
-
-        const LOGO_IMG = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg";
-        const LOGO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg";
-        const BASE_GITHUB = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
@@ -62,36 +64,37 @@
 
         function App() {
             const [status, setStatus] = useState('login');
-            const [alunoLogado, setAlunoLogado] = useState(null);
-            const [matricula, setMatricula] = useState('');
-            const [senha, setSenha] = useState('');
-            const [modal, setModal] = useState(null);
+            const [alunoAtivo, setAlunoAtivo] = useState(null);
+            const [inputMat, setInputMat] = useState('');
+            const [inputPass, setInputPass] = useState('');
 
-            const login = () => {
-                const encontrado = ALUNOS_DB.find(a => a.m === matricula.toLowerCase());
-                if(encontrado && senha === 'fenix123') {
-                    setAlunoLogado(encontrado);
+            const tentarLogin = () => {
+                const user = ALUNOS_DB.find(a => a.m === inputMat.toLowerCase());
+                if(user && inputPass === 'fenix123') {
+                    setAlunoAtivo(user);
                     setStatus('qg');
                 } else {
-                    alert("Acesso Negado! Verifique seus dados.");
+                    alert("⚠️ ACESSO NEGADO: Matrícula ou Senha incorreta.");
                 }
             };
 
             if (status === 'login') return (
-                <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                    <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/50 shadow-2xl text-center">
-                        <img src={LOGO_IMG} className="h-32 mx-auto mb-6 rounded-lg shadow-ouro" />
-                        <div className="linha-vermelha mb-8"></div>
+                <div className="min-h-screen flex items-center justify-center p-4">
+                    {/* VIDEO DE FUNDO (Substitua a URL abaixo pela URL do seu Motion quando disponível) */}
+                    <video autoPlay muted loop className="video-bg">
+                        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-dark-blue-and-gold-background-32863-large.mp4" type="video/mp4" />
+                    </video>
+                    
+                    <div className="max-w-md w-full glass-panel p-8 rounded-3xl shadow-2xl text-center">
+                        <div className="mb-6">
+                            <h1 className="text-ouro font-black text-3xl italic tracking-tighter">BIZÚ MILITAR FÊNIX</h1>
+                            <p className="text-[10px] tracking-[0.4em] opacity-60">SISTEMA DE ELITE</p>
+                        </div>
+                        <div className="linha-tática mb-8"></div>
                         <div className="space-y-4 text-left">
-                            <div>
-                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Matrícula</label>
-                                <input value={matricula} onChange={e => setMatricula(e.target.value)} type="text" placeholder="Ex: gfa109" className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" />
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Senha Operacional</label>
-                                <input value={senha} onChange={e => setSenha(e.target.value)} type="password" placeholder="******" className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" />
-                            </div>
-                            <button onClick={login} className="btn-combate mt-4">Entrar no Combate</button>
+                            <input onChange={e => setInputMat(e.target.value)} type="text" placeholder="MATRÍCULA" className="w-full p-4 bg-white/5 border border-ouro/20 rounded-lg text-white outline-none focus:border-ouro" />
+                            <input onChange={e => setInputPass(e.target.value)} type="password" placeholder="SENHA" className="w-full p-4 bg-white/5 border border-ouro/20 rounded-lg text-white outline-none focus:border-ouro" />
+                            <button onClick={tentarLogin} className="btn-combate w-full py-4 rounded-lg">Iniciar Missão</button>
                         </div>
                     </div>
                 </div>
@@ -99,56 +102,41 @@
 
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-black border-b-2 border-ouro p-6 flex items-center justify-between px-10 sticky top-0 z-50">
-                        <img src={LOGO_FENIX} className="h-10 rounded" />
-                        <div className="text-center">
-                            <h2 className="text-xl font-black text-ouro italic uppercase">Olá, {alunoLogado?.p}</h2>
-                            <p className="text-[10px] font-bold text-white/40 tracking-widest">VOCÊ POSSUI {alunoLogado?.pts} PONTOS DE MÉRITO</p>
+                    <header className="glass-panel p-6 flex justify-between items-center border-b border-ouro/30 sticky top-0 z-50">
+                        <div>
+                            <h2 className="text-ouro font-black italic uppercase">Comando: {alunoAtivo?.p}</h2>
+                            <span className="text-[10px] bg-ouro text-black px-2 py-0.5 rounded font-bold">MÉRITO: {alunoAtivo?.pts}</span>
                         </div>
-                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs border border-red-500/30 px-3 py-1 rounded">SAIR</button>
+                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs uppercase hover:underline">Desconectar</button>
                     </header>
-                    
-                    <main className="max-w-6xl mx-auto p-8">
-                        {/* UNIDADES MILITARES */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+
+                    <main className="max-w-6xl mx-auto p-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
                             {['CN', 'CMRJ', 'EEAR', 'EsPCEx', 'ESA', 'EXTRAS'].map(s => (
-                                <button key={s} onClick={() => s === 'CN' ? setModal('cn_opcoes') : alert('Unidade em mobilização')} className="card-escola h-24">
-                                    <span className="sigla-txt text-xl">{s}</span>
-                                </button>
+                                <div key={s} className="card-escola bg-black/40 flex items-center justify-center">
+                                    <span className="text-ouro font-black text-2xl italic">{s}</span>
+                                </div>
                             ))}
                         </div>
 
-                        {/* RANKING COMPLETO DO EFETIVO */}
-                        <div className="bg-black/40 border border-ouro/30 rounded-xl p-6">
-                            <h3 className="text-ouro font-black italic mb-6">🏆 RANKING GERAL DO EFETIVO (ORDEM DE MÉRITO)</h3>
-                            <div className="ranking-area space-y-2">
+                        <div className="glass-panel rounded-2xl p-6 shadow-2xl">
+                            <h3 className="text-ouro font-black italic mb-4 flex justify-between">
+                                <span>🏆 RANKING GERAL DO EFETIVO</span>
+                                <span className="text-white/40 text-xs uppercase">42 Alunos Ativos</span>
+                            </h3>
+                            <div className="ranking-scroll space-y-2 pr-2">
                                 {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((al, i) => (
-                                    <div key={al.m} className={`flex justify-between items-center p-3 rounded border-l-4 ${al.m === alunoLogado?.m ? 'bg-ouro/20 border-white' : 'bg-white/5 border-ouro/40'}`}>
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-xs font-black opacity-40">#{i+1}</span>
-                                            <span className="font-bold text-sm">{al.p}</span>
+                                    <div key={al.m} className={`flex justify-between items-center p-3 rounded-lg border-l-4 ${al.m === alunoAtivo?.m ? 'bg-ouro/20 border-white' : 'bg-white/5 border-ouro/40'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <span className="opacity-30 font-black">#{i+1}</span>
+                                            <span className="font-bold text-sm uppercase">{al.p}</span>
                                         </div>
-                                        <span className="text-ouro font-black">{al.pts} PTS</span>
+                                        <span className="text-ouro font-bold">{al.pts} PTS</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </main>
-
-                    {/* MODAL DE OPÇÕES CN */}
-                    {modal === 'cn_opcoes' && (
-                        <div className="modal-overlay" onClick={() => setModal(null)}>
-                            <div className="bg-[#001233] border-2 border-ouro p-8 rounded-2xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
-                                <h3 className="text-ouro font-black text-2xl mb-8 italic text-center">COLÉGIO NAVAL - ARSENAL</h3>
-                                <div className="space-y-4">
-                                    <button onClick={() => window.open(BASE_GITHUB+'gabarito2025CN.pdf')} className="doc-link">✅ GABARITO 2025 (ÚLTIMO)</button>
-                                    <button onClick={() => window.open(BASE_GITHUB+'prova2025CN-mat-ingles.pdf')} className="doc-link">📝 PROVA 2025 - MAT/ING</button>
-                                    <button onClick={() => alert('Lista completa em Editais')} className="doc-link">📄 ACESSAR EDITAIS ANTERIORES</button>
-                                </div>
-                                <button onClick={() => setModal(null)} className="mt-8 w-full py-3 text-red-500 font-bold border border-red-500/20 rounded">FECHAR</button>
-                            </div>
-                        </div>
-                    )}
                 </div>
             );
         }
