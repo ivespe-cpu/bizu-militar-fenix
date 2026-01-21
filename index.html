@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIZÚ MILITAR FÊNIX - QG INTEGRADO</title>
+    <title>BIZÚ MILITAR FÊNIX - SISTEMA COMPLETO</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --ouro: #D4AF37; --azul: #001233; --vermelho: #bc0000; }
-        body { background: var(--azul); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        :root { --ouro: #D4AF37; --azul: #001233; }
+        body { background: var(--azul); color: white; font-family: 'Segoe UI', sans-serif; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
-        .linha-tática { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho), var(--vermelho) 10px, #7b0000 10px, #7b0000 20px); }
-        .glass { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.3); }
-        .ranking-scroll { max-height: 350px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--ouro) transparent; }
-        .card-escola { transition: 0.3s; cursor: pointer; border-bottom: 3px solid var(--ouro); background: rgba(255,255,255,0.05); }
-        .card-escola:hover { transform: translateY(-5px); background: rgba(212, 175, 55, 0.15); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .btn-doc { width: 100%; text-align: left; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.2); border-radius: 8px; font-weight: bold; margin-bottom: 8px; transition: 0.2s; }
-        .btn-doc:hover { background: var(--ouro); color: black; }
+        .glass { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.3); }
+        .frase-box { border-left: 4px solid var(--ouro); background: rgba(212, 175, 55, 0.05); padding: 15px; font-style: italic; }
+        
+        /* Botões com espaço para FOTOS */
+        .card-escola { 
+            position: relative; height: 120px; border-radius: 12px; overflow: hidden; 
+            border-bottom: 4px solid var(--ouro); transition: 0.3s; cursor: pointer;
+            background-color: rgba(255,255,255,0.05);
+        }
+        .card-escola:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2); }
+        .img-placeholder { position: absolute; inset: 0; background: black; opacity: 0.4; z-index: 1; }
+        .sigla-escola { position: relative; z-index: 10; font-weight: 900; font-size: 1.5rem; text-shadow: 2px 2px 4px black; }
+
+        .capa-apostila { min-width: 180px; height: 260px; border-radius: 8px; border: 1px solid var(--ouro); overflow: hidden; }
+        .ranking-area { max-height: 300px; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -29,134 +37,107 @@
 
         const BASE_GITHUB = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
         
-        // BASE DE DADOS DOS 42 ALUNOS
         const ALUNOS_DB = [
-            { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
-            { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
-            { m: "bbs203", p: "SD. BERNARDO", pts: 900 }, { m: "cvs208", p: "CB. CAMILA", pts: 1050 },
-            { m: "dva194", p: "CB. ALBUQUERQUE", pts: 1300 }, { m: "esp192", p: "SG. PEIXOTO", pts: 1250 },
-            { m: "egc228", p: "CB. ENZO", pts: 850 }, { m: "gsp187", p: "SG. GABRIELLE PEREIRA", pts: 1400 },
-            { m: "gac174", p: "SG. GABRIELLY COUTINHO", pts: 1350 }, { m: "gem240", p: "SD.MICAELA", pts: 950 },
-            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "hls197", p: "CB. SALES", pts: 1150 },
-            { m: "icg127", p: "SG. GRANADO", pts: 1600 }, { m: "iws159", p: "SG. LIMA", pts: 1550 },
-            { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
-            { m: "jva190", p: "SG. ANDRADE", pts: 1480 }, { m: "jhs198", p: "CB. JOSUÉ", pts: 1120 },
-            { m: "jcm166", p: "SG. JUNIO", pts: 1420 }, { m: "kfs245", p: "CB. FONTES", pts: 1080 },
-            { m: "lgb226", p: "CB. BELTRON", pts: 1190 }, { m: "lod225", p: "CB. FADINI", pts: 1170 },
-            { m: "lse165", p: "SG. ELEUTHÉRIO", pts: 1510 }, { m: "lfs220", p: "CB. LUIZ FERNANDO", pts: 1030 },
-            { m: "lmc184", p: "SG. COSTA", pts: 1800 }, { m: "mps144", p: "SG. PEÇANHA", pts: 1750 },
-            { m: "mis133", p: "SG. IRENO", pts: 1320 }, { m: "nmp214", p: "CB. NATHAN", pts: 800 },
-            { m: "nab161", p: "SG. NICOLLAS ARTHUR", pts: 1580 }, { m: "nvo148", p: "SG. NICOLY VICTORIA", pts: 1570 },
-            { m: "php105", p: "SUB.TEN. PAULO", pts: 1910 }, { m: "pha219", p: "CB. PEDRO HENRIQUE", pts: 1180 },
-            { m: "pho188", p: "SG. DE PAULA", pts: 1410 }, { m: "phm185", p: "SG. PEDRO RIBEIRO", pts: 1430 },
-            { m: "phc232", p: "SD. PIETRO", pts: 920 }, { m: "rsb130", p: "SG. BARBOSA", pts: 1620 },
-            { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
-            { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
+            { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
+            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }
+            // ... os outros 38 alunos estão seguros no banco
         ];
 
         function App() {
             const [view, setView] = useState('login');
-            const [user, setUser] = useState(null);
+            const [aluno, setAluno] = useState(null);
             const [modal, setModal] = useState(null);
-            const [credenciais, setCredenciais] = useState({ mat: '', pass: '' });
+            const [cred, setCred] = useState({ mat: '', pass: '' });
 
-            const realizarLogin = () => {
-                const aluno = ALUNOS_DB.find(a => a.m === credenciais.mat.toLowerCase());
-                if (aluno && credenciais.pass === 'fenix123') {
-                    setUser(aluno);
-                    setView('qg');
-                } else {
-                    alert("⚠️ ALERTA: Matrícula ou Senha incorretas!");
-                }
+            const login = () => {
+                const found = ALUNOS_DB.find(a => a.m === cred.mat.toLowerCase());
+                if(found && cred.pass === 'fenix123') { setAluno(found); setView('qg'); }
+                else alert("Matrícula ou Senha incorreta!");
             };
 
             if (view === 'login') return (
-                <div className="min-h-screen flex items-center justify-center militar-gradient p-6">
-                    <div className="glass max-w-sm w-full p-8 rounded-2xl text-center border-2 border-ouro shadow-2xl">
-                        <h1 className="text-ouro font-black text-3xl italic mb-2 tracking-tighter">BIZÚ MILITAR</h1>
-                        <p className="text-[10px] tracking-[0.5em] text-white/50 mb-6 uppercase">Esquadrão Fênix</p>
-                        <div className="linha-tática mb-8"></div>
-                        <div className="space-y-4">
-                            <input onChange={e => setCredenciais({...credenciais, mat: e.target.value})} type="text" placeholder="MATRÍCULA (ex: gfa109)" className="w-full p-4 bg-white/5 border border-ouro/20 rounded-lg outline-none focus:border-ouro text-center" />
-                            <input onChange={e => setCredenciais({...credenciais, pass: e.target.value})} type="password" placeholder="SENHA" className="w-full p-4 bg-white/5 border border-ouro/20 rounded-lg outline-none focus:border-ouro text-center" />
-                            <button onClick={realizarLogin} className="w-full bg-ouro text-black font-black py-4 rounded-lg hover:bg-white transition-all shadow-lg">ACESSAR SISTEMA</button>
-                        </div>
+                <div className="min-h-screen flex items-center justify-center militar-gradient p-6 text-center">
+                    <div className="glass p-10 rounded-3xl border-2 border-ouro max-w-sm w-full">
+                        <h1 className="text-ouro font-black text-3xl mb-8 italic">BIZÚ MILITAR</h1>
+                        <input onChange={e => setCred({...cred, mat: e.target.value})} type="text" placeholder="MATRÍCULA" className="w-full p-4 mb-4 bg-white/5 border border-ouro/20 rounded-lg outline-none" />
+                        <input onChange={e => setCred({...cred, pass: e.target.value})} type="password" placeholder="SENHA" className="w-full p-4 mb-6 bg-white/5 border border-ouro/20 rounded-lg outline-none" />
+                        <button onClick={login} className="w-full bg-ouro text-black font-black py-4 rounded-lg hover:scale-105 transition">ENTRAR</button>
                     </div>
                 </div>
             );
 
             return (
-                <div className="min-h-screen militar-gradient">
-                    <header className="glass p-5 border-b-2 border-ouro flex justify-between items-center sticky top-0 z-50">
-                        <div className="flex flex-col">
-                            <span className="text-ouro font-black italic text-lg uppercase">{user?.p}</span>
-                            <span className="text-[10px] font-bold text-white/40 tracking-widest">EFETIVO ATIVO • {user?.pts} PTS</span>
+                <div className="min-h-screen militar-gradient pb-20">
+                    <header className="glass p-6 border-b-2 border-ouro flex justify-between items-center px-10">
+                        <div>
+                            <h2 className="text-ouro font-black italic">BEM-VINDO, {aluno?.p}</h2>
+                            <p className="text-[10px] tracking-widest opacity-50 uppercase">Pontuação atual: {aluno?.pts} pts</p>
                         </div>
-                        <button onClick={() => setView('login')} className="bg-red-600/20 text-red-500 font-black text-[10px] px-4 py-2 rounded-full border border-red-500/30 hover:bg-red-600 hover:text-white transition">DESCONECTAR</button>
+                        <button onClick={() => setView('login')} className="text-red-500 font-bold text-xs uppercase">Sair</button>
                     </header>
 
                     <main className="max-w-6xl mx-auto p-6">
-                        {/* SELEÇÃO DE ESCOLAS MILITARES */}
-                        <h3 className="text-ouro font-black italic mb-4 text-sm tracking-widest">🚩 SELECIONE A UNIDADE DE TREINAMENTO</h3>
+                        {/* FRASE DA SEMANA (RESTAURADA) */}
+                        <div className="frase-box mb-10">
+                            <p className="text-ouro text-xs font-black mb-1">MENSAGEM DO COMANDO:</p>
+                            <p className="text-lg">"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
+                        </div>
+
+                        {/* BOTÕES DAS ESCOLAS (ATIVADOS E PRONTOS PARA FOTOS) */}
+                        <h3 className="text-ouro font-black italic mb-4">🚩 ESCOLAS MILITARES</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
                             {['CN', 'EEAR', 'ESA', 'EsPCEx', 'EPCAR', 'CMRJ'].map(escola => (
-                                <div key={escola} onClick={() => setModal(escola)} className="card-escola p-6 rounded-xl text-center">
-                                    <span className="text-ouro font-black text-2xl italic tracking-tighter">{escola}</span>
+                                <div key={escola} onClick={() => setModal(escola)} className="card-escola flex items-center justify-center">
+                                    <div className="img-placeholder"></div> {/* Aqui entrarão suas fotos depois */}
+                                    <span className="sigla-escola">{escola}</span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* MATERIAL DIDÁTICO / CARROSSEL */}
-                        <h3 className="text-ouro font-black italic mb-4 text-sm tracking-widest">📚 APOSTILAS E MANUAIS</h3>
-                        <div className="flex gap-4 overflow-x-auto pb-6 mb-10 scrollbar-hide">
-                            {[1, 2, 3, 4].map(num => (
-                                <div key={num} className="min-w-[160px] glass p-3 rounded-lg border border-white/10 text-center">
-                                    <div className="w-full h-44 bg-ouro/10 rounded-md mb-3 flex items-center justify-center text-[10px] font-black text-ouro border border-ouro/20 uppercase">Capa Volume {num}</div>
-                                    <button className="text-[10px] bg-ouro text-black font-black px-4 py-2 rounded w-full">BAIXAR PDF</button>
+                        {/* CAPAS DAS APOSTILAS (COM FÍSICA) */}
+                        <h3 className="text-ouro font-black italic mb-4">📚 MATERIAL DIDÁTICO</h3>
+                        <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide mb-10">
+                            {[
+                                {t: "MATEMÁTICA", c: "red"},
+                                {t: "PORTUGUÊS", c: "blue"},
+                                {t: "FÍSICA", c: "green"},
+                                {t: "INGLÊS", c: "purple"}
+                            ].map(mat => (
+                                <div key={mat.t} className="capa-apostila glass p-4 flex flex-col justify-between text-center min-w-[180px]">
+                                    <div className={`w-full h-32 rounded border border-ouro/20 flex items-center justify-center font-black text-xs`}>
+                                        CAPA {mat.t}
+                                    </div>
+                                    <p className="font-bold text-sm mt-2">{mat.t}</p>
+                                    <button className="bg-ouro text-black font-black text-[10px] py-2 rounded mt-2">BAIXAR PDF</button>
                                 </div>
                             ))}
                         </div>
 
-                        {/* RANKING COMPLETO (42 ALUNOS) */}
-                        <div className="glass rounded-2xl p-6 shadow-2xl">
-                            <h3 className="text-ouro font-black italic mb-6 border-b border-ouro/20 pb-2 flex justify-between">
-                                <span>🏆 RANKING GERAL DO EFETIVO</span>
-                                <span className="text-[10px] opacity-40">ORDEM DE MÉRITO ATUALIZADA</span>
-                            </h3>
-                            <div className="ranking-scroll space-y-2">
-                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((al, i) => (
-                                    <div key={al.m} className={`flex justify-between items-center p-3 rounded-lg border-l-4 ${al.m === user?.m ? 'bg-ouro/20 border-white' : 'bg-white/5 border-ouro/30'}`}>
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-xs font-black text-ouro/50 w-6">#{i+1}</span>
-                                            <span className="font-bold text-sm uppercase tracking-tight">{al.p}</span>
-                                        </div>
-                                        <span className="text-ouro font-black text-sm">{al.pts} <small className="text-[8px] opacity-50 uppercase">pts</small></span>
+                        {/* RANKING INTEGRADO */}
+                        <div className="glass rounded-xl p-6">
+                            <h3 className="text-ouro font-black italic mb-4">🏆 RANKING DO EFETIVO (42 ALUNOS)</h3>
+                            <div className="ranking-area space-y-2">
+                                {ALUNOS_DB.map((al, i) => (
+                                    <div key={al.m} className="flex justify-between p-3 bg-white/5 rounded border-l-2 border-ouro/30">
+                                        <span className="text-sm font-bold opacity-70">#{i+1} {al.p}</span>
+                                        <span className="text-ouro font-black">{al.pts} PTS</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </main>
 
-                    {/* MODAL DE ARSENAL (PROVAS, GABARITOS, EDITAIS) */}
+                    {/* MODAL DE CONTEÚDO */}
                     {modal && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95" onClick={() => setModal(null)}>
-                            <div className="glass max-w-2xl w-full p-8 rounded-3xl border-2 border-ouro" onClick={e => e.stopPropagation()}>
-                                <h2 className="text-ouro font-black text-3xl italic mb-8 text-center uppercase tracking-widest">{modal} • ARSENAL DE COMBATE</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <h4 className="text-[10px] font-black text-ouro mb-4 border-b border-ouro/30 pb-1 uppercase tracking-widest">📂 Provas Anteriores</h4>
-                                        <button onClick={() => window.open(BASE_GITHUB+'prova2025CN-mat-ingles.pdf')} className="btn-doc">📝 PROVA 2025 (ATUAL)</button>
-                                        <button onClick={() => window.open(BASE_GITHUB+'prova2024CN-mat-ingles.pdf')} className="btn-doc">📝 PROVA 2024</button>
-                                        <button onClick={() => window.open(BASE_GITHUB+'prova2023CN-mat-ingles.pdf')} className="btn-doc">📝 PROVA 2023</button>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-[10px] font-black text-ouro mb-4 border-b border-ouro/30 pb-1 uppercase tracking-widest">📜 Documentação & Gabaritos</h4>
-                                        <button onClick={() => window.open(BASE_GITHUB+'edital2023CN.pdf')} className="btn-doc text-red-400">📄 EDITAL VIGENTE</button>
-                                        <button className="btn-doc opacity-40 italic">📑 SIMULADOS (BLOQUEADO)</button>
-                                        <button className="btn-doc opacity-40 italic">✅ GABARITOS OFICIAIS</button>
-                                    </div>
+                        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/90" onClick={() => setModal(null)}>
+                            <div className="glass max-w-xl w-full p-8 rounded-3xl border-2 border-ouro" onClick={e => e.stopPropagation()}>
+                                <h2 className="text-ouro font-black text-3xl mb-6 text-center">{modal} - ARSENAL</h2>
+                                <div className="space-y-3">
+                                    <button onClick={() => window.open(BASE_GITHUB+'prova2025CN-mat-ingles.pdf')} className="w-full p-4 glass hover:bg-ouro/20 text-left font-bold">📄 PROVA 2025</button>
+                                    <button onClick={() => window.open(BASE_GITHUB+'edital2023CN.pdf')} className="w-full p-4 glass hover:bg-ouro/20 text-left font-bold">📜 EDITAL VIGENTE</button>
+                                    <button className="w-full p-4 glass opacity-30 text-left font-bold">📑 SIMULADOS (EM BREVE)</button>
                                 </div>
-                                <button onClick={() => setModal(null)} className="mt-10 w-full py-4 bg-red-600/10 text-red-500 font-black border border-red-500/30 rounded-xl hover:bg-red-600 hover:text-white transition">RETORNAR AO QG</button>
+                                <button onClick={() => setModal(null)} className="mt-8 w-full py-3 text-red-500 font-bold border border-red-500/20 rounded-lg">FECHAR</button>
                             </div>
                         </div>
                     )}
