@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIZÚ MILITAR FÊNIX - SISTEMA COMPLETO</title>
+    <title>BIZÚ MILITAR FÊNIX - QG OFICIAL</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -12,21 +12,18 @@
         :root { --ouro: #D4AF37; --azul: #001233; }
         body { background: var(--azul); color: white; font-family: 'Segoe UI', sans-serif; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
-        .glass { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.3); }
-        .frase-box { border-left: 4px solid var(--ouro); background: rgba(212, 175, 55, 0.05); padding: 15px; font-style: italic; }
-        
-        /* Botões com espaço para FOTOS */
-        .card-escola { 
-            position: relative; height: 120px; border-radius: 12px; overflow: hidden; 
-            border-bottom: 4px solid var(--ouro); transition: 0.3s; cursor: pointer;
-            background-color: rgba(255,255,255,0.05);
+        .glass { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.3); }
+        .btn-escola { 
+            height: 120px; border-radius: 15px; border-bottom: 4px solid var(--ouro);
+            background: rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer;
+            display: flex; items: center; justify-content: center; position: relative; overflow: hidden;
         }
-        .card-escola:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2); }
-        .img-placeholder { position: absolute; inset: 0; background: black; opacity: 0.4; z-index: 1; }
-        .sigla-escola { position: relative; z-index: 10; font-weight: 900; font-size: 1.5rem; text-shadow: 2px 2px 4px black; }
-
-        .capa-apostila { min-width: 180px; height: 260px; border-radius: 8px; border: 1px solid var(--ouro); overflow: hidden; }
-        .ranking-area { max-height: 300px; overflow-y: auto; }
+        .btn-escola:hover { transform: translateY(-5px); background: rgba(212, 175, 55, 0.15); }
+        .capa-apostila { 
+            min-width: 160px; height: 230px; border: 1px solid var(--ouro); 
+            border-radius: 8px; background: black; padding: 10px; text-align: center;
+        }
+        .logo-placeholder { width: 80px; height: 80px; background: var(--ouro); border-radius: 50%; margin: 0 auto 10px; display: flex; items: center; justify-content: center; color: black; font-weight: bold; font-size: 10px; }
     </style>
 </head>
 <body>
@@ -35,109 +32,88 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const BASE_GITHUB = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
-        
-        const ALUNOS_DB = [
-            { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
-            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }
-            // ... os outros 38 alunos estão seguros no banco
-        ];
+        const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
         function App() {
             const [view, setView] = useState('login');
-            const [aluno, setAluno] = useState(null);
             const [modal, setModal] = useState(null);
-            const [cred, setCred] = useState({ mat: '', pass: '' });
+            const [matricula, setMatricula] = useState('');
 
-            const login = () => {
-                const found = ALUNOS_DB.find(a => a.m === cred.mat.toLowerCase());
-                if(found && cred.pass === 'fenix123') { setAluno(found); setView('qg'); }
-                else alert("Matrícula ou Senha incorreta!");
+            const realizarLogin = () => {
+                if(matricula.length > 3) setView('qg');
+                else alert("Insira uma matrícula válida!");
             };
 
             if (view === 'login') return (
-                <div className="min-h-screen flex items-center justify-center militar-gradient p-6 text-center">
-                    <div className="glass p-10 rounded-3xl border-2 border-ouro max-w-sm w-full">
-                        <h1 className="text-ouro font-black text-3xl mb-8 italic">BIZÚ MILITAR</h1>
-                        <input onChange={e => setCred({...cred, mat: e.target.value})} type="text" placeholder="MATRÍCULA" className="w-full p-4 mb-4 bg-white/5 border border-ouro/20 rounded-lg outline-none" />
-                        <input onChange={e => setCred({...cred, pass: e.target.value})} type="password" placeholder="SENHA" className="w-full p-4 mb-6 bg-white/5 border border-ouro/20 rounded-lg outline-none" />
-                        <button onClick={login} className="w-full bg-ouro text-black font-black py-4 rounded-lg hover:scale-105 transition">ENTRAR</button>
+                <div className="min-h-screen flex items-center justify-center militar-gradient p-6">
+                    <div className="glass p-10 rounded-3xl border-2 border-ouro max-w-sm w-full text-center">
+                        {/* LOGO BIZU FÊNIX */}
+                        <div className="logo-placeholder">LOGO FÊNIX</div>
+                        <h1 className="text-ouro font-black text-2xl italic mb-2">BIZÚ MILITAR</h1>
+                        <p className="text-[10px] tracking-[0.4em] mb-8 opacity-50 uppercase">Esquadrão Fênix</p>
+                        
+                        <input onChange={e => setMatricula(e.target.value)} type="text" placeholder="MATRÍCULA DO ALUNO" className="w-full p-4 mb-4 bg-white/5 border border-ouro/20 rounded-lg outline-none focus:border-ouro text-center" />
+                        <input type="password" placeholder="SENHA" className="w-full p-4 mb-6 bg-white/5 border border-ouro/20 rounded-lg outline-none focus:border-ouro text-center" />
+                        
+                        <button onClick={realizarLogin} className="w-full bg-ouro text-black font-black py-4 rounded-lg hover:bg-white transition shadow-lg">EFETUAR LOGIN</button>
                     </div>
                 </div>
             );
 
             return (
-                <div className="min-h-screen militar-gradient pb-20">
-                    <header className="glass p-6 border-b-2 border-ouro flex justify-between items-center px-10">
-                        <div>
-                            <h2 className="text-ouro font-black italic">BEM-VINDO, {aluno?.p}</h2>
-                            <p className="text-[10px] tracking-widest opacity-50 uppercase">Pontuação atual: {aluno?.pts} pts</p>
+                <div className="min-h-screen militar-gradient">
+                    <header className="glass p-5 border-b-2 border-ouro flex justify-between items-center px-10 sticky top-0 z-50">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-ouro rounded-full flex items-center justify-center text-black font-black text-[8px]">LOGO</div>
+                            <span className="text-ouro font-black italic tracking-tighter">BIZÚ MILITAR FÊNIX</span>
                         </div>
-                        <button onClick={() => setView('login')} className="text-red-500 font-bold text-xs uppercase">Sair</button>
+                        <button onClick={() => setView('login')} className="text-[10px] font-black bg-red-600/20 px-4 py-2 rounded-full border border-red-600/40">SAIR</button>
                     </header>
 
                     <main className="max-w-6xl mx-auto p-6">
-                        {/* FRASE DA SEMANA (RESTAURADA) */}
-                        <div className="frase-box mb-10">
-                            <p className="text-ouro text-xs font-black mb-1">MENSAGEM DO COMANDO:</p>
-                            <p className="text-lg">"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
+                        {/* FRASE DA SEMANA */}
+                        <div className="bg-ouro/5 border-l-4 border-ouro p-6 rounded-r-xl mb-10 italic">
+                            <p className="text-ouro font-black text-[10px] uppercase mb-1">Frase da Semana:</p>
+                            <p className="text-lg">"Onde outros cansam, o Fênix renasce. A aprovação é o prêmio da constância."</p>
                         </div>
 
-                        {/* BOTÕES DAS ESCOLAS (ATIVADOS E PRONTOS PARA FOTOS) */}
-                        <h3 className="text-ouro font-black italic mb-4">🚩 ESCOLAS MILITARES</h3>
+                        {/* 6 ESCOLAS FUNCIONANDO */}
+                        <h3 className="text-ouro font-black italic mb-4 text-sm tracking-widest">🚩 UNIDADES DE ELITE</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
                             {['CN', 'EEAR', 'ESA', 'EsPCEx', 'EPCAR', 'CMRJ'].map(escola => (
-                                <div key={escola} onClick={() => setModal(escola)} className="card-escola flex items-center justify-center">
-                                    <div className="img-placeholder"></div> {/* Aqui entrarão suas fotos depois */}
-                                    <span className="sigla-escola">{escola}</span>
+                                <div key={escola} onClick={() => setModal(escola)} className="btn-escola">
+                                    <span className="text-ouro font-black text-2xl italic">{escola}</span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* CAPAS DAS APOSTILAS (COM FÍSICA) */}
-                        <h3 className="text-ouro font-black italic mb-4">📚 MATERIAL DIDÁTICO</h3>
-                        <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide mb-10">
-                            {[
-                                {t: "MATEMÁTICA", c: "red"},
-                                {t: "PORTUGUÊS", c: "blue"},
-                                {t: "FÍSICA", c: "green"},
-                                {t: "INGLÊS", c: "purple"}
-                            ].map(mat => (
-                                <div key={mat.t} className="capa-apostila glass p-4 flex flex-col justify-between text-center min-w-[180px]">
-                                    <div className={`w-full h-32 rounded border border-ouro/20 flex items-center justify-center font-black text-xs`}>
-                                        CAPA {mat.t}
-                                    </div>
-                                    <p className="font-bold text-sm mt-2">{mat.t}</p>
-                                    <button className="bg-ouro text-black font-black text-[10px] py-2 rounded mt-2">BAIXAR PDF</button>
+                        {/* 8 CAPAS DE APOSTILAS */}
+                        <h3 className="text-ouro font-black italic mb-4 text-sm tracking-widest flex justify-between">
+                            <span>📚 ARSENAL DE APOSTILAS</span>
+                            <button className="text-ouro border border-ouro px-3 py-1 rounded text-[10px] hover:bg-ouro hover:text-black transition">EXTRAS +</button>
+                        </h3>
+                        <div className="flex gap-4 overflow-x-auto pb-6 mb-10 scrollbar-hide">
+                            {['MATEMÁTICA', 'PORTUGUÊS', 'FÍSICA', 'INGLÊS', 'HISTÓRIA', 'GEOGRAFIA', 'QUÍMICA', 'BIOLOGIA'].map((mat, i) => (
+                                <div key={i} className="capa-apostila flex flex-col justify-between">
+                                    <div className="h-32 bg-ouro/10 rounded flex items-center justify-center text-[10px] font-black border border-ouro/20 uppercase">Capa {mat}</div>
+                                    <p className="text-[10px] font-bold mt-2 uppercase">{mat}</p>
+                                    <button onClick={() => window.open(BASE_PDF + 'prova2025CN-mat-ingles.pdf')} className="bg-ouro text-black font-black text-[9px] py-2 rounded mt-2">BAIXAR PDF</button>
                                 </div>
                             ))}
-                        </div>
-
-                        {/* RANKING INTEGRADO */}
-                        <div className="glass rounded-xl p-6">
-                            <h3 className="text-ouro font-black italic mb-4">🏆 RANKING DO EFETIVO (42 ALUNOS)</h3>
-                            <div className="ranking-area space-y-2">
-                                {ALUNOS_DB.map((al, i) => (
-                                    <div key={al.m} className="flex justify-between p-3 bg-white/5 rounded border-l-2 border-ouro/30">
-                                        <span className="text-sm font-bold opacity-70">#{i+1} {al.p}</span>
-                                        <span className="text-ouro font-black">{al.pts} PTS</span>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                     </main>
 
                     {/* MODAL DE CONTEÚDO */}
                     {modal && (
-                        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/90" onClick={() => setModal(null)}>
-                            <div className="glass max-w-xl w-full p-8 rounded-3xl border-2 border-ouro" onClick={e => e.stopPropagation()}>
-                                <h2 className="text-ouro font-black text-3xl mb-6 text-center">{modal} - ARSENAL</h2>
-                                <div className="space-y-3">
-                                    <button onClick={() => window.open(BASE_GITHUB+'prova2025CN-mat-ingles.pdf')} className="w-full p-4 glass hover:bg-ouro/20 text-left font-bold">📄 PROVA 2025</button>
-                                    <button onClick={() => window.open(BASE_GITHUB+'edital2023CN.pdf')} className="w-full p-4 glass hover:bg-ouro/20 text-left font-bold">📜 EDITAL VIGENTE</button>
-                                    <button className="w-full p-4 glass opacity-30 text-left font-bold">📑 SIMULADOS (EM BREVE)</button>
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95" onClick={() => setModal(null)}>
+                            <div className="glass max-w-md w-full p-8 rounded-3xl border-2 border-ouro" onClick={e => e.stopPropagation()}>
+                                <h2 className="text-ouro font-black text-3xl italic mb-8 text-center uppercase">{modal}</h2>
+                                <div className="space-y-4">
+                                    <button onClick={() => window.open(BASE_PDF + 'prova2025CN-mat-ingles.pdf')} className="w-full p-4 bg-white/5 border border-ouro/20 rounded-xl font-bold hover:bg-ouro hover:text-black transition text-left">📝 PROVA 2025 (PDF)</button>
+                                    <button onClick={() => window.open(BASE_PDF + 'edital2023CN.pdf')} className="w-full p-4 bg-white/5 border border-ouro/20 rounded-xl font-bold hover:bg-ouro hover:text-black transition text-left">📜 EDITAL OFICIAL</button>
+                                    <button className="w-full p-4 bg-white/5 border border-ouro/20 rounded-xl font-bold opacity-30 text-left">📑 SIMULADOS</button>
                                 </div>
-                                <button onClick={() => setModal(null)} className="mt-8 w-full py-3 text-red-500 font-bold border border-red-500/20 rounded-lg">FECHAR</button>
+                                <button onClick={() => setModal(null)} className="mt-8 w-full py-3 text-red-500 font-bold uppercase text-xs">Fechar</button>
                             </div>
                         </div>
                     )}
