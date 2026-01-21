@@ -10,18 +10,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); }
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
-        .btn-combate { background-color: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transition: 0.3s; width: 100%; text-transform: uppercase; cursor: pointer; border: none; }
-        .card-escola { position: relative; height: 160px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; border: 1px solid rgba(212, 175, 55, 0.2); width: 100%; }
+        .btn-combate { background: var(--dourado-ouro) !important; color: black !important; font-weight: 900; padding: 1.2rem; border-radius: 0.5rem; transition: 0.3s; width: 100%; text-transform: uppercase; cursor: pointer; border: none; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        .btn-combate:hover { transform: scale(1.02); background: white !important; }
+        .card-escola { position: relative; height: 160px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; border: 1px solid rgba(212, 175, 55, 0.2); width: 100%; }
         .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
-        .card-escola:hover { transform: translateY(-5px); border-color: var(--dourado-ouro); }
         .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 8px black; }
-        .btn-voltar { background: white !important; color: black !important; font-weight: 900; padding: 10px 20px; border-radius: 4px; border: 2px solid var(--dourado-ouro); cursor: pointer; }
+        /* Ranking com Scroll para os 42 alunos */
+        .ranking-area { max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .ranking-area::-webkit-scrollbar { width: 4px; }
+        .ranking-area::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
         .modal-overlay { background: rgba(0,0,0,0.95); position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .doc-link { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.3); padding: 12px; border-radius: 8px; width: 100%; text-align: left; font-weight: bold; margin-bottom: 8px; display: block; color: white; cursor: pointer; }
-        .doc-link:hover { background: var(--dourado-ouro); color: black; }
     </style>
 </head>
 <body>
@@ -30,7 +32,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const LOGO_BIZU = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg";
+        const LOGO_IMG = "https://i.ibb.co/BKLSQKT1/logo-bizu.jpg";
         const LOGO_FENIX = "https://i.ibb.co/Q31w6PLJ/logo-esquadrao.jpg";
         const BASE_GITHUB = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
@@ -58,139 +60,92 @@
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
-        const ESCOLAS = [
-            { s: 'CN', n: 'COLÉGIO NAVAL', bg: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400' },
-            { s: 'CMRJ', n: 'COLÉGIO MILITAR - RJ', bg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg/400px-Col%C3%A9gio_Militar_do_Rio_de_Janeiro.jpg' },
-            { s: 'EEAR', n: 'EEAR', bg: 'https://www2.fab.mil.br/eear/images/noticias/2023/06_JUNHO/23_eear/DSC_0137.jpg' },
-            { s: 'EsPCEx', n: 'EsPCEx', bg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Espcex-front.jpg/400px-Espcex-front.jpg' },
-            { s: 'ESA', n: 'ESA', bg: 'https://www.eb.mil.br/documents/10138/10321350/ESA1.jpg/400px-ESA1.jpg' },
-            { s: 'EXTRAS', n: 'CONCURSOS', bg: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400' }
-        ];
-
-        const MATERIAIS = [
-            { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
-            { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" },
-            { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
-            { t: "QUÍMICA", f: "quimica.png" }, { t: "BIOLOGIA", f: "biologia.png" }
-        ];
-
         function App() {
             const [status, setStatus] = useState('login');
-            const [escolaSel, setEscolaSel] = useState('');
+            const [alunoLogado, setAlunoLogado] = useState(null);
+            const [matricula, setMatricula] = useState('');
+            const [senha, setSenha] = useState('');
             const [modal, setModal] = useState(null);
 
-            const abrirDoc = (file) => window.open(BASE_GITHUB + file, '_blank');
+            const login = () => {
+                const encontrado = ALUNOS_DB.find(a => a.m === matricula.toLowerCase());
+                if(encontrado && senha === 'fenix123') {
+                    setAlunoLogado(encontrado);
+                    setStatus('qg');
+                } else {
+                    alert("Acesso Negado! Verifique seus dados.");
+                }
+            };
 
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
-                    <div className="max-w-md w-full bg-black/70 p-10 rounded-2xl border-2 border-[#D4AF37]/50 shadow-2xl text-center">
-                        <img src={LOGO_BIZU} className="h-24 mx-auto mb-6 rounded-lg" />
+                    <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/50 shadow-2xl text-center">
+                        <img src={LOGO_IMG} className="h-32 mx-auto mb-6 rounded-lg shadow-ouro" />
                         <div className="linha-vermelha mb-8"></div>
                         <div className="space-y-4 text-left">
-                            <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest block">Matrícula</label>
-                            <input type="text" placeholder="Insira sua matrícula" className="w-full p-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white outline-none focus:border-[#D4AF37]" />
-                            <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest block">Senha</label>
-                            <input type="password" placeholder="******" className="w-full p-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white outline-none focus:border-[#D4AF37]" />
-                            <button onClick={() => setStatus('qg')} className="btn-combate mt-4">Entrar no Combate</button>
+                            <div>
+                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Matrícula</label>
+                                <input value={matricula} onChange={e => setMatricula(e.target.value)} type="text" placeholder="Ex: gfa109" className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" />
+                            </div>
+                            <div>
+                                <label className="text-[10px] font-black text-ouro uppercase tracking-widest block mb-2">Senha Operacional</label>
+                                <input value={senha} onChange={e => setSenha(e.target.value)} type="password" placeholder="******" className="w-full p-4 bg-white/5 border border-ouro/20 rounded text-white outline-none focus:border-ouro" />
+                            </div>
+                            <button onClick={login} className="btn-combate mt-4">Entrar no Combate</button>
                         </div>
                     </div>
                 </div>
             );
 
-            if (status === 'qg') return (
+            return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-6 flex items-center justify-between">
-                        <img src={LOGO_FENIX} className="h-12 rounded" />
+                    <header className="bg-black border-b-2 border-ouro p-6 flex items-center justify-between px-10 sticky top-0 z-50">
+                        <img src={LOGO_FENIX} className="h-10 rounded" />
                         <div className="text-center">
-                            <h2 className="text-2xl font-black text-[#D4AF37] italic uppercase">Comandante Eufrásio</h2>
-                            <p className="text-[10px] opacity-40 tracking-[0.3em]">CENTRAL DE INTELIGÊNCIA FÊNIX</p>
+                            <h2 className="text-xl font-black text-ouro italic uppercase">Olá, {alunoLogado?.p}</h2>
+                            <p className="text-[10px] font-bold text-white/40 tracking-widest">VOCÊ POSSUI {alunoLogado?.pts} PONTOS DE MÉRITO</p>
                         </div>
                         <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs border border-red-500/30 px-3 py-1 rounded">SAIR</button>
                     </header>
                     
                     <main className="max-w-6xl mx-auto p-8">
-                        {/* BOTÕES DAS ESCOLAS */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
-                            {ESCOLAS.map(e => (
-                                <button key={e.s} onClick={() => {setEscolaSel(e.n); setStatus('escola');}} className="card-escola" style={{backgroundImage: `url(${e.bg})`}}>
-                                    <span className="sigla-txt">{e.s}</span>
-                                    <span className="absolute bottom-3 z-10 text-[10px] font-black text-white/80">{e.n}</span>
+                        {/* UNIDADES MILITARES */}
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+                            {['CN', 'CMRJ', 'EEAR', 'EsPCEx', 'ESA', 'EXTRAS'].map(s => (
+                                <button key={s} onClick={() => s === 'CN' ? setModal('cn_opcoes') : alert('Unidade em mobilização')} className="card-escola h-24">
+                                    <span className="sigla-txt text-xl">{s}</span>
                                 </button>
                             ))}
                         </div>
 
-                        {/* RANKING DE ALUNOS */}
-                        <div className="bg-black/40 border border-[#D4AF37]/30 rounded-xl p-6 shadow-2xl">
-                            <h3 className="text-[#D4AF37] font-black italic mb-6 flex items-center gap-2">
-                                🏆 RANKING DO EFETIVO (TOP 10)
-                            </h3>
-                            <div className="space-y-3">
-                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).slice(0, 10).map((al, i) => (
-                                    <div key={i} className="flex justify-between items-center p-3 bg-white/5 rounded border-l-4 border-[#D4AF37]">
-                                        <span className="font-bold text-sm">#{i+1} {al.p}</span>
-                                        <span className="text-[#D4AF37] font-black">{al.pts} PTS</span>
+                        {/* RANKING COMPLETO DO EFETIVO */}
+                        <div className="bg-black/40 border border-ouro/30 rounded-xl p-6">
+                            <h3 className="text-ouro font-black italic mb-6">🏆 RANKING GERAL DO EFETIVO (ORDEM DE MÉRITO)</h3>
+                            <div className="ranking-area space-y-2">
+                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((al, i) => (
+                                    <div key={al.m} className={`flex justify-between items-center p-3 rounded border-l-4 ${al.m === alunoLogado?.m ? 'bg-ouro/20 border-white' : 'bg-white/5 border-ouro/40'}`}>
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-xs font-black opacity-40">#{i+1}</span>
+                                            <span className="font-bold text-sm">{al.p}</span>
+                                        </div>
+                                        <span className="text-ouro font-black">{al.pts} PTS</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </main>
-                </div>
-            );
 
-            return (
-                <div className="min-h-screen militar-gradient">
-                    <header className="bg-black/60 border-b-2 border-[#D4AF37] p-6 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md">
-                        <div className="flex items-center gap-4">
-                            <img src={LOGO_FENIX} className="h-10 rounded" />
-                            <h2 className="text-[#D4AF37] font-black italic text-xl">{escolaSel}</h2>
-                        </div>
-                        <button onClick={() => setStatus('qg')} className="btn-voltar">VOLTAR AO QG</button>
-                    </header>
-
-                    <main className="max-w-7xl mx-auto p-6">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                            <button onClick={() => setModal('editais')} className="bg-white/5 border border-[#D4AF37]/30 p-4 rounded-lg font-bold hover:bg-[#D4AF37] hover:text-black transition-all">EDITAIS</button>
-                            <button onClick={() => setModal('provas')} className="bg-white/5 border border-[#D4AF37]/30 p-4 rounded-lg font-bold hover:bg-[#D4AF37] hover:text-black transition-all">PROVAS</button>
-                            <button onClick={() => setModal('gabaritos')} className="bg-white/5 border border-[#D4AF37]/30 p-4 rounded-lg font-bold hover:bg-[#D4AF37] hover:text-black transition-all">GABARITOS</button>
-                            <button className="opacity-40 bg-white/5 p-4 rounded-lg font-bold cursor-not-allowed">SIMULADOS</button>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                            {MATERIAIS.map((m, i) => (
-                                <div key={i} className="bg-black/40 border border-[#D4AF37]/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
-                                    <div className="h-64 bg-black flex items-center justify-center p-4">
-                                        <img src={BASE_GITHUB + m.f} className="max-h-full" onError={(e) => e.target.src="https://via.placeholder.com/300x400?text=CAPA+FISICA"} />
-                                    </div>
-                                    <div className="p-5 text-center bg-white/5">
-                                        <div className="text-[#D4AF37] font-black mb-4 tracking-widest text-sm">{m.t}</div>
-                                        <button className="btn-combate py-2 text-xs">Acessar</button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </main>
-
-                    {/* MODAL DE ARQUIVOS */}
-                    {modal && (
+                    {/* MODAL DE OPÇÕES CN */}
+                    {modal === 'cn_opcoes' && (
                         <div className="modal-overlay" onClick={() => setModal(null)}>
-                            <div className="bg-[#001233] border-2 border-[#D4AF37] p-8 rounded-3xl max-w-xl w-full shadow-2xl" onClick={e => e.stopPropagation()}>
-                                <h3 className="text-[#D4AF37] font-black text-2xl mb-8 italic text-center uppercase border-b border-[#D4AF37]/20 pb-4">{modal}</h3>
-                                <div className="max-h-96 overflow-y-auto pr-2">
-                                    {modal === 'editais' && ['2023', '2022', '2021', '2020'].map(ano => (
-                                        <button key={ano} onClick={() => abrirDoc(`edital${ano}CN.pdf`)} className="doc-link">📄 Edital {ano}</button>
-                                    ))}
-                                    {modal === 'gabaritos' && ['2025', '2024', '2023', '2022', '2021', '2020'].map(ano => (
-                                        <button key={ano} onClick={() => abrirDoc(`gabarito${ano}CN.pdf`)} className="doc-link">✅ Gabarito {ano}</button>
-                                    ))}
-                                    {modal === 'provas' && (
-                                        <>
-                                            <button onClick={() => abrirDoc('prova2025CN-mat-ingles.pdf')} className="doc-link">📝 Prova 2025 - Mat/Ing</button>
-                                            <button onClick={() => abrirDoc('prova2024CN-mat-ingles.pdf')} className="doc-link">📝 Prova 2024 - Mat/Ing</button>
-                                            <button onClick={() => abrirDoc('prova2023CN-mat-ingles.pdf')} className="doc-link">📝 Prova 2023 - Mat/Ing</button>
-                                        </>
-                                    )}
+                            <div className="bg-[#001233] border-2 border-ouro p-8 rounded-2xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
+                                <h3 className="text-ouro font-black text-2xl mb-8 italic text-center">COLÉGIO NAVAL - ARSENAL</h3>
+                                <div className="space-y-4">
+                                    <button onClick={() => window.open(BASE_GITHUB+'gabarito2025CN.pdf')} className="doc-link">✅ GABARITO 2025 (ÚLTIMO)</button>
+                                    <button onClick={() => window.open(BASE_GITHUB+'prova2025CN-mat-ingles.pdf')} className="doc-link">📝 PROVA 2025 - MAT/ING</button>
+                                    <button onClick={() => alert('Lista completa em Editais')} className="doc-link">📄 ACESSAR EDITAIS ANTERIORES</button>
                                 </div>
-                                <button onClick={() => setModal(null)} className="mt-8 w-full py-3 text-red-500 font-black border border-red-500/20 rounded-lg">FECHAR</button>
+                                <button onClick={() => setModal(null)} className="mt-8 w-full py-3 text-red-500 font-bold border border-red-500/20 rounded">FECHAR</button>
                             </div>
                         </div>
                     )}
