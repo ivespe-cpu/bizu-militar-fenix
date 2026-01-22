@@ -38,6 +38,14 @@
             box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
+        .frase-box {
+            background: rgba(0,0,0,0.5);
+            border-left: 4px solid var(--vermelho-tatico);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
         .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; }
         .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
         .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; }
@@ -46,9 +54,8 @@
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
         
-        /* Ajuste para os vídeos motion */
         .motion-video { width: 100%; border-radius: 8px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.1); }
-        .motion-header { height: 60px; border-radius: 4px; border: 1px solid var(--dourado-ouro); }
+        .motion-header { height: 120px; border-radius: 4px; border: 1px solid var(--dourado-ouro); }
     </style>
 </head>
 <body>
@@ -83,6 +90,14 @@
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
+        const FRASES_COMANDO = [
+            "A limitação está apenas na sua mente, e não no seu corpo",
+            "Coragem não é não ter medo, e sim, seguir em frente apesar do medo",
+            "Grandes batalhas só são dadas a grandes guerreiros",
+            "Vencer na vida não é um destino, é a sua escolha",
+            "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
+        ];
+
         const ESCOLAS = [
             { s: 'COLÉGIO NAVAL', i: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=500' },
             { s: 'EPCAR', i: 'https://www2.fab.mil.br/epcar/images/noticias/2023/fab_em_destaque_2.jpg' },
@@ -104,6 +119,12 @@
             const [user, setUser] = useState(null);
             const [senhaIn, setSenhaIn] = useState('');
             const [escolaSel, setEscolaSel] = useState('');
+            const [fraseDia, setFraseDia] = useState('');
+
+            useEffect(() => {
+                // Escolhe uma frase aleatória toda vez que carrega o componente
+                setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
+            }, [status]);
 
             const handleLogin = (e) => {
                 e.preventDefault();
@@ -117,7 +138,6 @@
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
                     <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/30 shadow-2xl text-center">
-                        {/* MOTION LOGO BIZU8 */}
                         <video className="motion-video mb-6" autoPlay loop muted playsInline>
                             <source src={BASE_URL + "bizu8.mp4"} type="video/mp4" />
                         </video>
@@ -131,24 +151,32 @@
 
             if (status === 'qg') return (
                 <div className="min-h-screen">
-                    <header className="bg-[#000814] border-b-2 border-ouro p-6 flex items-center justify-between px-10 sticky top-0 z-50 shadow-2xl">
-                        {/* MOTION LOGO ESQUADRAO2 NO HEADER */}
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex items-center justify-between px-10 sticky top-0 z-50 shadow-2xl">
                         <video className="motion-header" autoPlay loop muted playsInline>
                             <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
                         </video>
                         <div className="text-center">
-                            <h2 className="text-xl font-black text-ouro italic uppercase">Olá, {user.p}</h2>
+                            <h2 className="text-xl font-black text-ouro italic uppercase">Seja bem vindo, {user.p}</h2>
+                            <p className="text-[10px] text-white/60 tracking-widest mt-1">Não importa qual seja a missão, você nasceu para triunfar</p>
                         </div>
                         <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs uppercase border border-red-500/20 px-3 py-1 rounded">Sair</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {ESCOLAS.map(e => (
-                                <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
-                                     className="card-escola hover:scale-[1.02] active:scale-95 transition-all" style={{backgroundImage: `url(${e.i})`}}>
-                                    <span className="sigla-txt">{e.s}</span>
-                                </div>
-                            ))}
+                        <div className="lg:col-span-2">
+                            {/* FRASE DA SEMANA (Dinamizada) */}
+                            <div className="frase-box mb-8">
+                                <p className="text-ouro text-xs font-black mb-2 tracking-[0.3em]">MENSAGEM DO COMANDO:</p>
+                                <p className="text-xl font-medium italic">"{fraseDia}"</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {ESCOLAS.map(e => (
+                                    <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
+                                         className="card-escola hover:scale-[1.02] active:scale-95 transition-all" style={{backgroundImage: `url(${e.i})`}}>
+                                        <span className="sigla-txt">{e.s}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                         <div className="bg-black/40 p-5 rounded-xl border border-ouro/20 h-[550px] flex flex-col shadow-2xl">
                             <h3 className="text-ouro font-black text-center mb-4 italic uppercase border-b border-ouro/10 pb-2 tracking-widest">Ranking Pelotão</h3>
@@ -167,10 +195,9 @@
 
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-ouro p-6 flex justify-between items-center px-10 sticky top-0 z-50 shadow-2xl">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50 shadow-2xl">
                         <div className="flex items-center gap-4">
-                            {/* REPETE O MOTION NO HEADER DA ESCOLA */}
-                            <video className="motion-header" autoPlay loop muted playsInline style={{height: '40px'}}>
+                            <video className="motion-header" autoPlay loop muted playsInline style={{height: '80px'}}>
                                 <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
                             </video>
                             <h1 className="text-lg font-black text-ouro uppercase italic tracking-tighter">{escolaSel}</h1>
