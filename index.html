@@ -122,7 +122,8 @@
             const [senhaIn, setSenhaIn] = useState('');
             const [escolaSel, setEscolaSel] = useState('');
             const [fraseDia, setFraseDia] = useState('');
-            const [tipoDoc, setTipoDoc] = useState(''); // Nova variável para controlar Provas/Editais/Gabaritos
+            const [tipoDoc, setTipoDoc] = useState(''); 
+            const [pdfAtivo, setPdfAtivo] = useState(null); // Variável de Controle do Visualizador
 
             useEffect(() => {
                 setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
@@ -216,31 +217,12 @@
                 </div>
             );
 
-            // TELA DE DOCUMENTOS FINALIZADA (PROVAS, EDITAIS E GABARITOS)
+            // TELA DE DOCUMENTOS FINALIZADA (MODAL INTEGRADO)
             if (status === 'documentos') {
-                // Arsenal de Provas CN
-                const listaProvasCN = [
-                    "prova2021CN-Port-Ciencias.pdf", "prova2021CN-mat-ingles2.pdf",
-                    "prova2022CN-Port-Ciencias.pdf", "prova2022CN-mat-ingles.pdf",
-                    "prova2023CN-Port-Ciencias.pdf", "prova2023CN-mat-ingles.pdf",
-                    "prova2024CN-Port-Ciencias.pdf", "prova2024CN-mat-ingles.pdf",
-                    "prova2025CN-Port-Cienc2.pdf", "prova2025CN-Port-Ciencias.pdf",
-                    "prova2025CN-mat-ingles.pdf", "prova2025CN-mat-ingles2.pdf"
-                ];
+                const listaProvasCN = ["prova2021CN-Port-Ciencias.pdf", "prova2021CN-mat-ingles2.pdf", "prova2022CN-Port-Ciencias.pdf", "prova2022CN-mat-ingles.pdf", "prova2023CN-Port-Ciencias.pdf", "prova2023CN-mat-ingles.pdf", "prova2024CN-Port-Ciencias.pdf", "prova2024CN-mat-ingles.pdf", "prova2025CN-Port-Cienc2.pdf", "prova2025CN-Port-Ciencias.pdf", "prova2025CN-mat-ingles.pdf", "prova2025CN-mat-ingles2.pdf"];
+                const listaEditaisCN = ["edital2019CN.pdf", "edital2020CN.pdf", "edital2021CN.pdf", "edital2022CN.pdf", "edital2023CN.pdf"];
+                const listaGabaritosCN = ["gabarito2020CN.pdf", "gabarito2021CN.pdf", "gabarito2022CN.pdf", "gabarito2023CN.pdf", "gabarito2024CN.pdf", "gabarito2025CN.pdf"];
 
-                // Arsenal de Editais CN
-                const listaEditaisCN = [
-                    "edital2019CN.pdf", "edital2020CN.pdf", "edital2021CN.pdf", 
-                    "edital2022CN.pdf", "edital2023CN.pdf"
-                ];
-
-                // Arsenal de Gabaritos CN
-                const listaGabaritosCN = [
-                    "gabarito2020CN.pdf", "gabarito2021CN.pdf", "gabarito2022CN.pdf",
-                    "gabarito2023CN.pdf", "gabarito2024CN.pdf", "gabarito2025CN.pdf"
-                ];
-
-                // Inteligência de Seleção de Arquivos
                 let arquivosExibir = [];
                 if (escolaSel === 'COLÉGIO NAVAL') {
                     if (tipoDoc === 'PROVAS ANTERIORES') arquivosExibir = listaProvasCN;
@@ -255,41 +237,22 @@
                                 <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">{tipoDoc}</h1>
                                 <span className="text-[10px] text-white/50 tracking-[0.2em]">{escolaSel}</span>
                             </div>
-                            <button onClick={() => setStatus('escola')} className="btn-voltar-fixo shadow-lg shadow-white/10">VOLTAR</button>
+                            <button onClick={() => setStatus('escola')} className="btn-voltar-fixo shadow-lg">VOLTAR</button>
                         </header>
                         <main className="max-w-4xl mx-auto p-6">
-                            <div className="bg-black/60 rounded-xl border border-[#D4AF37]/20 p-8 shadow-2xl backdrop-blur-sm">
-                                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-                                    <p className="text-white/60 italic text-sm">Mostrando {arquivosExibir.length} registros encontrados.</p>
-                                    <div className="bg-[#D4AF37]/10 text-[#D4AF37] text-[10px] px-2 py-1 rounded border border-[#D4AF37]/20 font-black">ACESSO AUTORIZADO</div>
-                                </div>
-                                
+                            <div className="bg-black/60 rounded-xl border border-[#D4AF37]/20 p-8">
                                 <div className="space-y-3">
-                                    {arquivosExibir.length > 0 ? (
-                                        arquivosExibir.map((arquivo, index) => (
-                                            <div key={index} className="group flex justify-between items-center p-4 bg-white/5 border-l-4 border-transparent hover:border-[#D4AF37] rounded hover:bg-white/10 transition-all">
-                                                <div className="flex flex-col">
-                                                    <span className="text-[#D4AF37] text-sm font-bold tracking-wide group-hover:translate-x-1 transition-transform">
-                                                        {arquivo.replace('.pdf', '').toUpperCase()}
-                                                    </span>
-                                                    <span className="text-[9px] text-white/30 font-mono">SERVER_LOC: GITHUB/BIZUFENIX</span>
-                                                </div>
-                                                <a 
-                                                    href={BASE_URL + arquivo} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer"
-                                                    className="bg-transparent border border-[#D4AF37] text-[#D4AF37] text-[10px] font-black px-6 py-2 rounded hover:bg-[#D4AF37] hover:text-black transition-all uppercase"
-                                                >
-                                                    Visualizar
-                                                </a>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="text-center py-20">
-                                            <div className="text-5xl mb-4 opacity-20">📡</div>
-                                            <p className="text-white/40 uppercase text-xs tracking-[0.3em]">Varredura completa: Ninguém deixado para trás, mas arquivos ainda não localizados.</p>
+                                    {arquivosExibir.map((arquivo, index) => (
+                                        <div key={index} className="flex justify-between items-center p-4 bg-white/5 border-l-4 border-[#D4AF37] rounded">
+                                            <span className="text-[#D4AF37] text-sm font-bold uppercase">{arquivo.replace('.pdf', '')}</span>
+                                            <button 
+                                                onClick={() => setPdfAtivo({ url: arquivo, nome: arquivo.toUpperCase() })}
+                                                className="bg-transparent border border-[#D4AF37] text-[#D4AF37] text-[10px] font-black px-6 py-2 rounded hover:bg-[#D4AF37] hover:text-black transition-all"
+                                            >
+                                                VISUALIZAR ONLINE
+                                            </button>
                                         </div>
-                                    )}
+                                    ))}
                                 </div>
                             </div>
                         </main>
@@ -310,69 +273,15 @@
                         <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">VOLTAR AO QG</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6">
-                        {/* GRID DE BOTÕES SUPERIORES ATUALIZADOS */}
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-12">
-                            <button 
-                                onClick={() => alert("MISSÃO DO DIA: Verifique seu cronograma de estudos táticos no mural da escola.")}
-                                className="bg-blue-600 border border-blue-400 p-3 rounded text-[10px] font-black uppercase text-white hover:bg-blue-500 transition-all shadow-lg"
-                            >
-                                📅 Missão do Dia
-                            </button>
-                            
-                            <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase animate-pulse">
-                                🎬 Cine Fênix
-                            </button>
-                            
-                            <button 
-                                onClick={() => alert("SALA DE PROVAS: O próximo simulado será liberado conforme cronograma do Comando.")}
-                                className="bg-red-700 border border-red-500 p-3 rounded text-[10px] font-black uppercase text-white hover:bg-red-600 transition-all"
-                            >
-                                📝 Simulados
-                            </button>
-                            
-                            <button 
-                                onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }}
-                                className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37]/10"
-                            >
-                                📜 Provas
-                            </button>
-                            
-                            <button 
-                                onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }}
-                                className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37]/10"
-                            >
-                                📢 Editais
-                            </button>
-                            
-                            <button 
-                                onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }}
-                                className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black uppercase text-[#D4AF37] hover:bg-[#D4AF37]/10"
-                            >
-                                ✅ Gabaritos
-                            </button>
+                            <button onClick={() => alert("MISSÃO DO DIA: Verifique seu cronograma.")} className="bg-blue-600 p-3 rounded text-[10px] font-black uppercase text-white shadow-lg">📅 Missão do Dia</button>
+                            <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase animate-pulse">🎬 Cine Fênix</button>
+                            <button onClick={() => alert("SALA DE PROVAS: Próximo simulado em breve.")} className="bg-red-700 p-3 rounded text-[10px] font-black uppercase text-white">📝 Simulados</button>
+                            <button onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📜 Provas</button>
+                            <button onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📢 Editais</button>
+                            <button onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">✅ Gabaritos</button>
                         </div>
 
-                        {/* GRID DE MATERIAIS (APOSTILAS) */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {MATERIAIS.map((m, i) => (
-                                <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
-                                    <div className="h-[300px] bg-black flex items-center justify-center p-2">
-                                        <img src={BASE_URL + m.f} className="h-full object-contain" />
-                                    </div>
-                                    <div className="p-5 text-center bg-white/5 border-t border-[#D4AF37]/10">
-                                        <div className="text-[#D4AF37] font-black text-xs mb-4 uppercase">{m.t}</div>
-                                        <button className="w-full btn-material">ACESSAR MATERIAL</button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </main>
-                </div>
-            );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+                                <div key={i} className="bg-black/60 border border-[#D4AF37]/2
