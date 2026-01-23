@@ -15,7 +15,7 @@
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
         
         .btn-material { 
-            background-color: var(--dourado-ouro: #D4AF37 ) !important; 
+            background-color: var(--dourado-ouro) !important; 
             color: #000000 !important; 
             font-weight: 900 !important; 
             text-transform: uppercase;
@@ -68,6 +68,7 @@
 
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
+        // LISTA DE ALUNOS (RANKING)
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
             { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
@@ -118,8 +119,8 @@
             { s: 'EEAR', i: 'eear.jpg' },
             { s: 'ESA', i: 'esa.jpg' }
         ];
-        
-const MATERIAIS = [
+
+        const MATERIAIS = [
             { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
             { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" },
             { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
@@ -172,7 +173,7 @@ const MATERIAIS = [
                             <h2 className="text-xl font-black text-ouro italic uppercase">Seja bem vindo, {user.p}</h2>
                             <p className="text-[10px] text-white/60 tracking-widest mt-1">Não importa qual seja a missão, você nasceu para triunfar</p>
                         </div>
-                     <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs uppercase border border-red-500/20 px-3 py-1 rounded">SAIR</button>
+                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs uppercase border border-red-500/20 px-3 py-1 rounded">SAIR</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2">
@@ -205,21 +206,28 @@ const MATERIAIS = [
                 </div>
             );
 
+            // TELA DE VÍDEOS (CINE FÊNIX)
             if (status === 'videos') return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
-                        <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">CINE FÊNIX - {escolaSel}</h1>
-                        <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR</button>
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50">
+                        <h1 className="text-xl font-black text-ouro italic uppercase">CINE FÊNIX - {escolaSel}</h1>
+                        <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR AOS MATERIAIS</button>
                     </header>
-                    <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-10">
-                        {VIDEOS_DB.map((v, i) => (
-                            <div key={i} className="bg-black/60 p-4 rounded-xl border border-[#D4AF37]/20">
-                                <h3 className="text-[#D4AF37] font-bold mb-3 uppercase text-xs">{v.t}</h3>
-                                <div className="video-container">
-                                    <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
+                    <main className="max-w-7xl mx-auto p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            {VIDEOS_DB.map((v, i) => (
+                                <div key={i} className="bg-black/60 p-4 rounded-xl border border-ouro/20 shadow-2xl">
+                                    <h3 className="text-ouro font-bold mb-3 uppercase text-xs tracking-widest">{v.t}</h3>
+                                    <div className="video-container">
+                                        <iframe 
+                                            src={`https://www.youtube.com/embed/${v.id}`} 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowFullScreen>
+                                        </iframe>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </main>
                 </div>
             );
@@ -227,32 +235,32 @@ const MATERIAIS = [
             // TELA DA ESCOLA
             return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50 shadow-2xl">
                         <div className="flex items-center gap-4">
-                            <video className="motion-header" autoPlay loop muted playsInline style={{height: '60px'}}>
+                            <video className="motion-header" autoPlay loop muted playsInline style={{height: '80px'}}>
                                 <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
                             </video>
-                            <h1 className="text-lg font-black text-[#D4AF37] uppercase italic">{escolaSel}</h1>
+                            <h1 className="text-lg font-black text-ouro uppercase italic tracking-tighter">{escolaSel}</h1>
                         </div>
                         <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">VOLTAR AO QG</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6">
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-12">
-                            <button className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black uppercase text-[#D4AF37]">APOSTILAS</button>
-                            <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase animate-pulse">🎬 VÍDEOS</button>
-                            <button className="bg-white/5 border border-white/10 p-3 rounded text-[10px] font-black uppercase text-white/40">SIMULADOS</button>
-                            <button className="bg-white/5 border border-white/10 p-3 rounded text-[10px] font-black uppercase text-white/40">PROVAS</button>
-                            <button className="bg-white/5 border border-white/10 p-3 rounded text-[10px] font-black uppercase text-white/40">EDITAIS</button>
-                            <button className="bg-white/5 border border-white/10 p-3 rounded text-[10px] font-black uppercase text-white/40">GABARITOS</button>
+                            <button className="bg-white/10 border border-ouro/40 p-3 rounded text-[10px] font-black uppercase text-ouro">APOSTILAS</button>
+                            <button onClick={() => setStatus('videos')} className="bg-ouro text-black p-3 rounded text-[10px] font-black uppercase animate-pulse">VÍDEOS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">SIMULADOS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">PROVAS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">EDITAIS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">GABARITOS</button>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {MATERIAIS.map((m, i) => (
-                                <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+                                <div key={i} className="bg-black/60 border border-ouro/20 rounded-2xl overflow-hidden flex flex-col shadow-2xl group">
                                     <div className="h-[300px] bg-black flex items-center justify-center p-2">
-                                        <img src={BASE_URL + m.f} className="h-full object-contain" />
+                                        <img src={BASE_URL + m.f} className="capa-doc group-hover:scale-105 transition-all duration-500" />
                                     </div>
-                                    <div className="p-5 text-center bg-white/5 border-t border-[#D4AF37]/10">
-                                        <div className="text-[#D4AF37] font-black text-xs mb-4 uppercase">{m.t}</div>
+                                    <div className="p-5 text-center bg-white/5 border-t border-ouro/10">
+                                        <div className="text-ouro font-black text-xs mb-4 uppercase tracking-[0.2em]">{m.t}</div>
                                         <button className="w-full btn-material">ACESSAR MATERIAL</button>
                                     </div>
                                 </div>
@@ -268,3 +276,4 @@ const MATERIAIS = [
     </script>
 </body>
 </html>
+
