@@ -56,8 +56,7 @@
         .motion-video { width: 100%; border-radius: 8px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.1); }
         .motion-header { height: 120px; border-radius: 4px; border: 1px solid var(--dourado-ouro); }
 
-        /* Estilo para Galeria de Vídeos */
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     </style>
 </head>
@@ -69,6 +68,7 @@
 
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
+        // LISTA DE ALUNOS (RANKING)
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
             { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
@@ -101,12 +101,14 @@
             "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
         ];
 
-        // BANCO DE DADOS DE VÍDEOS (Adicione os IDs do YouTube aqui)
+        // BANCO DE DADOS DE VÍDEOS ATUALIZADO (CANAL @PROJETOESQUADRAOFENIX)
         const VIDEOS_DB = [
-            { t: "MOTIVACIONAL: O DESPERTAR", id: "ScMzIvxBSi4" },
-            { t: "MARINHA DO BRASIL - CN", id: "7K05v7WnL6U" },
-            { t: "A FORÇA DA EPCAR", id: "5fO-zR-m7uY" },
-            { t: "O ESPÍRITO DA ESPCEX", id: "K6Kx0Y5p4yI" }
+            { t: "FAB - REPORTAGEM SOBRE A EPCAR", id: "Vq_Z5KNmuks" },
+            { t: "ISTO É A MARINHA DO BRASIL", id: "zSSp5CQpg10" },
+            { t: "VÍDEO INSTITUCIONAL - MARINHA", id: "H0Gssr6mZbw" },
+            { t: "LUTE PELOS SEUS SONHOS", id: "Nc3WusSAIQI" },
+            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" },
+            { t: "ESPCEX AMAN MOTIVACIONAL", id: "WKMS3LfGERo" }
         ];
 
         const ESCOLAS = [
@@ -160,7 +162,7 @@
                 </div>
             );
 
-            // TELA QG (MENU PRINCIPAL)
+            // TELA QG
             if (status === 'qg') return (
                 <div className="min-h-screen">
                     <header className="bg-[#000814] border-b-2 border-ouro p-4 flex items-center justify-between px-10 sticky top-0 z-50 shadow-2xl">
@@ -204,7 +206,7 @@
                 </div>
             );
 
-            // TELA DE VÍDEOS (GALERIA)
+            // TELA DE VÍDEOS (CINE FÊNIX)
             if (status === 'videos') return (
                 <div className="min-h-screen militar-gradient">
                     <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50">
@@ -215,9 +217,13 @@
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                             {VIDEOS_DB.map((v, i) => (
                                 <div key={i} className="bg-black/60 p-4 rounded-xl border border-ouro/20 shadow-2xl">
-                                    <h3 className="text-ouro font-bold mb-3 uppercase text-sm tracking-wider">{v.t}</h3>
+                                    <h3 className="text-ouro font-bold mb-3 uppercase text-xs tracking-widest">{v.t}</h3>
                                     <div className="video-container">
-                                        <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
+                                        <iframe 
+                                            src={`https://www.youtube.com/embed/${v.id}`} 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowFullScreen>
+                                        </iframe>
                                     </div>
                                 </div>
                             ))}
@@ -226,7 +232,7 @@
                 </div>
             );
 
-            // TELA DA ESCOLA (MATERIAIS)
+            // TELA DA ESCOLA
             return (
                 <div className="min-h-screen militar-gradient">
                     <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50 shadow-2xl">
@@ -251,8 +257,7 @@
                             {MATERIAIS.map((m, i) => (
                                 <div key={i} className="bg-black/60 border border-ouro/20 rounded-2xl overflow-hidden flex flex-col shadow-2xl group">
                                     <div className="h-[300px] bg-black flex items-center justify-center p-2">
-                                        <img src={BASE_URL + m.f} className="capa-doc group-hover:scale-105 transition-all duration-500" 
-                                             onError={(e) => {e.target.src="https://via.placeholder.com/300x400?text=CAPA+NAO+ENCONTRADA";}} />
+                                        <img src={BASE_URL + m.f} className="capa-doc group-hover:scale-105 transition-all duration-500" />
                                     </div>
                                     <div className="p-5 text-center bg-white/5 border-t border-ouro/10">
                                         <div className="text-ouro font-black text-xs mb-4 uppercase tracking-[0.2em]">{m.t}</div>
