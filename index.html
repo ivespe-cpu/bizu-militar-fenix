@@ -282,6 +282,39 @@
                             <button onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">✅ Gabaritos</button>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {MATERIAIS.map((m, i) => (
-                                <div key={i} className="bg-black/60 border border-[#D4AF37]/2
+                                <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+                                    <div className="h-[300px] bg-black flex items-center justify-center p-2">
+                                        <img src={BASE_URL + m.f} className="h-full object-contain" />
+                                    </div>
+                                    <div className="p-5 text-center bg-white/5 border-t border-[#D4AF37]/10">
+                                        <div className="text-[#D4AF37] font-black text-xs mb-4 uppercase">{m.t}</div>
+                                        <button className="w-full btn-material">ACESSAR MATERIAL</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* VISUALIZADOR DE PDF MODAL (O TANQUE) */}
+                        {pdfAtivo && (
+                            <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col p-4 md:p-10">
+                                <div className="flex justify-between items-center mb-4 bg-[#000814] p-4 border border-[#D4AF37]/30 rounded">
+                                    <h2 className="text-[#D4AF37] font-black uppercase text-sm italic">ESTUDO TÁTICO: {pdfAtivo.nome}</h2>
+                                    <button onClick={() => setPdfAtivo(null)} className="bg-red-600 text-white px-6 py-2 rounded font-black hover:bg-red-700">FECHAR X</button>
+                                </div>
+                                <div className="flex-1 bg-white rounded overflow-hidden">
+                                    <iframe src={`https://docs.google.com/viewer?url=${BASE_URL + pdfAtivo.url}&embedded=true`} className="w-full h-full border-0" />
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
