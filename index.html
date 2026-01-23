@@ -33,9 +33,8 @@
             font-weight: 900 !important; 
             padding: 12px 28px !important; 
             border: 3px solid var(--dourado-ouro) !important;
-            font-size: 16px !important;
+            font-size: 14px !important;
             text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
         .frase-box {
@@ -50,13 +49,16 @@
         .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
         .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; }
         
-        .capa-doc { width: 100%; height: 280px; object-fit: contain; background: #000; }
         .custom-scroll { scrollbar-width: thin; scrollbar-color: var(--dourado-ouro) transparent; }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
         
         .motion-video { width: 100%; border-radius: 8px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.1); }
         .motion-header { height: 120px; border-radius: 4px; border: 1px solid var(--dourado-ouro); }
+
+        /* Estilo para Galeria de Vídeos */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     </style>
 </head>
 <body>
@@ -99,7 +101,14 @@
             "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
         ];
 
-        // CONFIGURAÇÃO DAS IMAGENS DAS ESCOLAS VIA GITHUB
+        // BANCO DE DADOS DE VÍDEOS (Adicione os IDs do YouTube aqui)
+        const VIDEOS_DB = [
+            { t: "MOTIVACIONAL: QUEM DISSE QUE SERIA FÁCIL?", id: "dOV_Dum7t58" },
+            { t: "ISTO É MARINHA DO BRASIL - CN", id: "zSSp5CQpg10" },
+            { t: "A FORÇA DA EPCAR", id: "Vq_Z5KNmuks" },
+            { t: "O ESPÍRITO DA ESPCEX", id: "WKMS3LfGERo" }
+        ];
+
         const ESCOLAS = [
             { s: 'COLÉGIO NAVAL', i: 'cn.jpg' },
             { s: 'EPCAR', i: 'epcar.jpg' },
@@ -136,6 +145,7 @@
                 else { alert("ACESSO NEGADO!"); }
             };
 
+            // TELA DE LOGIN
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
                     <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-ouro/30 shadow-2xl text-center">
@@ -150,6 +160,7 @@
                 </div>
             );
 
+            // TELA QG (MENU PRINCIPAL)
             if (status === 'qg') return (
                 <div className="min-h-screen">
                     <header className="bg-[#000814] border-b-2 border-ouro p-4 flex items-center justify-between px-10 sticky top-0 z-50 shadow-2xl">
@@ -168,7 +179,6 @@
                                 <p className="text-ouro text-xs font-black mb-2 tracking-[0.3em]">MENSAGEM DO COMANDO:</p>
                                 <p className="text-xl font-medium italic">"{fraseDia}"</p>
                             </div>
-
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {ESCOLAS.map(e => (
                                     <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
@@ -194,6 +204,29 @@
                 </div>
             );
 
+            // TELA DE VÍDEOS (GALERIA)
+            if (status === 'videos') return (
+                <div className="min-h-screen militar-gradient">
+                    <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50">
+                        <h1 className="text-xl font-black text-ouro italic uppercase">CINE FÊNIX - {escolaSel}</h1>
+                        <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR AOS MATERIAIS</button>
+                    </header>
+                    <main className="max-w-7xl mx-auto p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            {VIDEOS_DB.map((v, i) => (
+                                <div key={i} className="bg-black/60 p-4 rounded-xl border border-ouro/20 shadow-2xl">
+                                    <h3 className="text-ouro font-bold mb-3 uppercase text-sm tracking-wider">{v.t}</h3>
+                                    <div className="video-container">
+                                        <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </main>
+                </div>
+            );
+
+            // TELA DA ESCOLA (MATERIAIS)
             return (
                 <div className="min-h-screen militar-gradient">
                     <header className="bg-[#000814] border-b-2 border-ouro p-4 flex justify-between items-center px-10 sticky top-0 z-50 shadow-2xl">
@@ -203,16 +236,16 @@
                             </video>
                             <h1 className="text-lg font-black text-ouro uppercase italic tracking-tighter">{escolaSel}</h1>
                         </div>
-                        <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">
-                            VOLTAR AO QG
-                        </button>
+                        <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">VOLTAR AO QG</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6">
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-12">
-                            {['APOSTILAS', 'VÍDEOS', 'SIMULADOS', 'PROVAS', 'EDITAIS', 'GABARITOS'].map(m => (
-                                <button key={m} onClick={() => alert("Módulo em fase de carregamento.")}
-                                        className="bg-white/5 border border-ouro/20 p-3 rounded text-[10px] font-black hover:bg-ouro hover:text-black transition-all uppercase tracking-widest">{m}</button>
-                            ))}
+                            <button className="bg-white/10 border border-ouro/40 p-3 rounded text-[10px] font-black uppercase text-ouro">APOSTILAS</button>
+                            <button onClick={() => setStatus('videos')} className="bg-ouro text-black p-3 rounded text-[10px] font-black uppercase animate-pulse">VÍDEOS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">SIMULADOS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">PROVAS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">EDITAIS</button>
+                            <button className="bg-white/5 border border-ouro/10 p-3 rounded text-[10px] font-black uppercase">GABARITOS</button>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {MATERIAIS.map((m, i) => (
