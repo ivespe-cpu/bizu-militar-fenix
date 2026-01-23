@@ -19,33 +19,45 @@
             color: #000000 !important; 
             font-weight: 900 !important; 
             text-transform: uppercase;
+            letter-spacing: 1px;
             padding: 12px;
             border-radius: 6px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
+        .btn-material:hover { background-color: white !important; transform: translateY(-2px); }
 
         .btn-voltar-fixo { 
             background-color: #ffffff !important; 
             color: #000000 !important; 
             font-weight: 900 !important; 
-            padding: 10px 20px !important; 
-            border: 2px solid var(--dourado-ouro) !important;
+            padding: 12px 28px !important; 
+            border: 3px solid var(--dourado-ouro) !important;
+            font-size: 14px !important;
             text-transform: uppercase;
         }
 
-        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; cursor: pointer; }
-        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.6); }
-        .sigla-txt { position: relative; z-index: 10; font-size: 2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; }
-        
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; border: 2px solid var(--dourado-ouro); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        .frase-box {
+            background: rgba(0,0,0,0.5);
+            border-left: 4px solid var(--vermelho-tatico);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
-        .animate-fenix { animation: pulse-gold 2s infinite; }
+
+        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; }
+        
+        .custom-scroll { scrollbar-width: thin; scrollbar-color: var(--dourado-ouro) transparent; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
+        
+        .motion-video { width: 100%; border-radius: 8px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.1); }
+        .motion-header { height: 120px; border-radius: 4px; border: 1px solid var(--dourado-ouro); }
+
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     </style>
 </head>
 <body>
@@ -53,15 +65,43 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
+
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
+        // LISTA DE ALUNOS COMPLETA (42 ALUNOS RESTAURADOS)
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
-            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 },
-            { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 }, { m: "php105", p: "SUB.TEN. PAULO", pts: 1910 }
+            { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
+            { m: "bbs203", p: "SD. BERNARDO", pts: 900 }, { m: "cvs208", p: "CB. CAMILA", pts: 1050 },
+            { m: "dva194", p: "CB. ALBUQUERQUE", pts: 1300 }, { m: "esp192", p: "SG. PEIXOTO", pts: 1250 },
+            { m: "egc228", p: "CB. ENZO", pts: 850 }, { m: "gsp187", p: "SG. GABRIELLE PEREIRA", pts: 1400 },
+            { m: "gac174", p: "SG. GABRIELLY COUTINHO", pts: 1350 }, { m: "gem240", p: "SD.MICAELA", pts: 950 },
+            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "hls197", p: "CB. SALES", pts: 1150 },
+            { m: "icg127", p: "SG. GRANADO", pts: 1600 }, { m: "iws159", p: "SG. LIMA", pts: 1550 },
+            { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
+            { m: "jva190", p: "SG. ANDRADE", pts: 1480 }, { m: "jhs198", p: "CB. JOSUÉ", pts: 1120 },
+            { m: "jcm166", p: "SG. JUNIO", pts: 1420 }, { m: "kfs245", p: "CB. FONTES", pts: 1080 },
+            { m: "lgb226", p: "CB. BELTRON", pts: 1190 }, { m: "lod225", p: "CB. FADINI", pts: 1170 },
+            { m: "lse165", p: "SG. ELEUTHÉRIO", pts: 1510 }, { m: "lfs220", p: "CB. LUIZ FERNANDO", pts: 1030 },
+            { m: "lmc184", p: "SG. COSTA", pts: 1800 }, { m: "mps144", p: "SG. PEÇANHA", pts: 1750 },
+            { m: "mis133", p: "SG. IRENO", pts: 1320 }, { m: "nmp214", p: "CB. NATHAN", pts: 800 },
+            { m: "nab161", p: "SG. NICOLLAS ARTHUR", pts: 1580 }, { m: "nvo148", p: "SG. NICOLY VICTORIA", pts: 1570 },
+            { m: "php105", p: "SUB.TEN. PAULO", pts: 1910 }, { m: "pha219", p: "CB. PEDRO HENRIQUE", pts: 1180 },
+            { m: "pho188", p: "SG. DE PAULA", pts: 1410 }, { m: "phm185", p: "SG. PEDRO RIBEIRO", pts: 1430 },
+            { m: "phc232", p: "SD. PIETRO", pts: 920 }, { m: "rsb130", p: "SG. BARBOSA", pts: 1620 },
+            { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
+            { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
-        // BANCO DE DADOS DE VÍDEOS (IDS ATUALIZADOS)
+        const FRASES_COMANDO = [
+            "A limitação está apenas na sua mente, e não no seu corpo",
+            "Coragem não é não ter medo, e sim, seguir em frente apesar do medo",
+            "Grandes batalhas só são dadas a grandes guerreiros",
+            "Vencer na vida não é um destino, é a sua escolha",
+            "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
+        ];
+
+        // BANCO DE DADOS DE VÍDEOS ATUALIZADO (CANAL @PROJETOESQUADRAOFENIX)
         const VIDEOS_DB = [
             { t: "FAB - REPORTAGEM SOBRE A EPCAR", id: "Vq_Z5KNmuks" },
             { t: "ISTO É A MARINHA DO BRASIL", id: "zSSp5CQpg10" },
@@ -72,14 +112,20 @@
         ];
 
         const ESCOLAS = [
-            { s: 'COLÉGIO NAVAL', i: 'cn.jpg' }, { s: 'EPCAR', i: 'epcar.jpg' },
-            { s: 'CMRJ', i: 'cmrj.jpg' }, { s: 'EsPCEX', i: 'espcex.jpg' },
-            { s: 'EEAR', i: 'eear.jpg' }, { s: 'ESA', i: 'esa.jpg' }
+            { s: 'COLÉGIO NAVAL', i: 'cn.jpg' },
+            { s: 'EPCAR', i: 'epcar.jpg' },
+            { s: 'CMRJ', i: 'cmrj.jpg' },
+            { s: 'EsPCEX', i: 'espcex.jpg' },
+            { s: 'EEAR', i: 'eear.jpg' },
+            { s: 'ESA', i: 'esa.jpg' }
         ];
 
+        // RESTAURADO: TODAS AS 8 MATÉRIAS
         const MATERIAIS = [
             { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
-            { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" }
+            { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" },
+            { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
+            { t: "QUÍMICA", f: "quimica.png" }, { t: "BIOLOGIA", f: "biologia.png" }
         ];
 
         function App() {
@@ -87,6 +133,11 @@
             const [user, setUser] = useState(null);
             const [senhaIn, setSenhaIn] = useState('');
             const [escolaSel, setEscolaSel] = useState('');
+            const [fraseDia, setFraseDia] = useState('');
+
+            useEffect(() => {
+                setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
+            }, [status]);
 
             const handleLogin = (e) => {
                 e.preventDefault();
@@ -97,115 +148,66 @@
                 else { alert("ACESSO NEGADO!"); }
             };
 
-            // TELA DE LOGIN
+            // TELA DE LOGIN (COM LOGO BIZU VÍDEO RESTAURADA)
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
                     <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-[#D4AF37]/30 shadow-2xl text-center">
+                        <video className="motion-video mb-6" autoPlay loop muted playsInline>
+                            <source src={BASE_URL + "bizu8.mp4"} type="video/mp4" />
+                        </video>
                         <div className="linha-vermelha mb-8"></div>
                         <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
-                               className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono" placeholder="MATRÍCULA" />
+                               className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono" placeholder="DIGITE SUA MATRÍCULA" />
                         <button onClick={handleLogin} className="w-full btn-material">ENTRAR NO SISTEMA</button>
                     </div>
                 </div>
             );
 
-            // TELA QG
+            // TELA QG (RANKING E ESCOLAS)
             if (status === 'qg') return (
                 <div className="min-h-screen">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-6 flex items-center justify-between px-10 sticky top-0 z-50">
-                        <div className="text-center w-full">
-                            <h2 className="text-2xl font-black text-[#D4AF37] italic uppercase">SEJA BEM VINDO, {user.p}</h2>
+                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-10 sticky top-0 z-50 shadow-2xl">
+                        <video className="motion-header" autoPlay loop muted playsInline>
+                            <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
+                        </video>
+                        <div className="text-center">
+                            <h2 className="text-xl font-black text-[#D4AF37] italic uppercase">Seja bem vindo, {user.p}</h2>
+                            <p className="text-[10px] text-white/60 tracking-widest mt-1">Não importa qual seja a missão, você nasceu para triunfar</p>
                         </div>
-                        <button onClick={() => setStatus('login')} className="bg-red-600 px-4 py-2 rounded font-bold text-xs">SAIR</button>
+                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs uppercase border border-red-500/20 px-3 py-1 rounded">Sair</button>
                     </header>
-                    <main className="max-w-7xl mx-auto p-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {ESCOLAS.map(e => (
-                                <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
-                                     className="card-escola hover:scale-[1.03] transition-all" 
-                                     style={{backgroundImage: `url(${BASE_URL + e.i})`}}>
-                                    <span className="sigla-txt">{e.s}</span>
-                                </div>
-                            ))}
+                    <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2">
+                            <div className="frase-box mb-8">
+                                <p className="text-[#D4AF37] text-xs font-black mb-2 tracking-[0.3em]">MENSAGEM DO COMANDO:</p>
+                                <p className="text-xl font-medium italic">"{fraseDia}"</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {ESCOLAS.map(e => (
+                                    <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
+                                         className="card-escola hover:scale-[1.02] active:scale-95 transition-all" 
+                                         style={{backgroundImage: `url(${BASE_URL + e.i})`}}>
+                                        <span className="sigla-txt">{e.s}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div className="bg-black/40 p-5 rounded-xl border border-[#D4AF37]/20">
-                            <h3 className="text-[#D4AF37] font-black text-center mb-4 italic uppercase border-b border-[#D4AF37]/10 pb-2">Ranking Pelotão</h3>
-                            {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
-                                <div key={i} className="flex justify-between p-3 mb-2 bg-white/5 rounded text-[11px] border-l-4 border-[#D4AF37]">
-                                    <span className="font-bold">{i+1}º {a.p}</span>
-                                    <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
-                                </div>
-                            ))}
+                        <div className="bg-black/40 p-5 rounded-xl border border-[#D4AF37]/20 h-[550px] flex flex-col shadow-2xl">
+                            <h3 className="text-[#D4AF37] font-black text-center mb-4 italic uppercase border-b border-[#D4AF37]/10 pb-2 tracking-widest">Ranking Pelotão</h3>
+                            <div className="space-y-2 overflow-y-auto custom-scroll pr-2">
+                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
+                                    <div key={i} className="flex justify-between p-3 bg-white/5 rounded text-[11px] border-l-4 border-[#D4AF37]">
+                                        <span className="font-bold">{i+1}º {a.p}</span>
+                                        <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </main>
                 </div>
             );
 
-            // TELA DE VÍDEOS (CINE FÊNIX) - CORRIGIDA
+            // TELA DE VÍDEOS (CINE FÊNIX) - INTEGRADA
             if (status === 'videos') return (
                 <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10 sticky top-0 z-50">
-                        <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">CINE FÊNIX - {escolaSel}</h1>
-                        <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR</button>
-                    </header>
-                    <main className="max-w-6xl mx-auto p-10 grid grid-cols-1 md:grid-cols-2 gap-12">
-                        {VIDEOS_DB.map((v, i) => (
-                            <div key={i} className="bg-black/60 p-4 rounded-xl border border-[#D4AF37]/20 shadow-2xl">
-                                <h3 className="text-[#D4AF37] font-bold mb-4 uppercase text-center text-sm">{v.t}</h3>
-                                <div className="video-container">
-                                    <iframe 
-                                        src={`https://www.youtube.com/embed/${v.id}`} 
-                                        allowFullScreen>
-                                    </iframe>
-                                </div>
-                            </div>
-                        ))}
-                    </main>
-                </div>
-            );
-
-            // TELA DA ESCOLA (CORREÇÃO DO BOTÃO VÍDEOS)
-            return (
-                <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10 sticky top-0 z-50">
-                        <h1 className="text-xl font-black text-[#D4AF37] uppercase italic">{escolaSel}</h1>
-                        <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">VOLTAR AO QG</button>
-                    </header>
-                    <main className="max-w-7xl mx-auto p-8">
-                        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-12">
-                            <button className="bg-white/10 p-3 rounded text-[10px] font-black uppercase text-[#D4AF37] border border-[#D4AF37]/30">APOSTILAS</button>
-                            
-                            {/* BOTÃO CORRIGIDO: AMARELO E PULSANTE */}
-                            <button onClick={() => setStatus('videos')} 
-                                    className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase animate-fenix">
-                                🎬 VER VÍDEOS
-                            </button>
-
-                            <button className="bg-white/5 p-3 rounded text-[10px] font-black uppercase opacity-50">SIMULADOS</button>
-                            <button className="bg-white/5 p-3 rounded text-[10px] font-black uppercase opacity-50">PROVAS</button>
-                            <button className="bg-white/5 p-3 rounded text-[10px] font-black uppercase opacity-50">EDITAIS</button>
-                            <button className="bg-white/5 p-3 rounded text-[10px] font-black uppercase opacity-50">GABARITOS</button>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                            {MATERIAIS.map((m, i) => (
-                                <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden shadow-2xl">
-                                    <div className="h-[280px] bg-black flex items-center justify-center">
-                                        <img src={BASE_URL + m.f} className="h-full object-contain" />
-                                    </div>
-                                    <div className="p-5 text-center bg-white/5 border-t border-[#D4AF37]/10">
-                                        <div className="text-[#D4AF37] font-black text-xs mb-4">{m.t}</div>
-                                        <button className="w-full btn-material">ACESSAR</button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </main>
-                </div>
-            );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10 sticky top-0 z-50 shadow
