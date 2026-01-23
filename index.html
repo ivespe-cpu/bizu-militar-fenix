@@ -216,27 +216,86 @@
                 </div>
             );
 
-            // NOVA TELA DE DOCUMENTOS (PROVAS, EDITAIS, GABARITOS)
-            if (status === 'documentos') return (
-                <div className="min-h-screen militar-gradient">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
-                        <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">{tipoDoc} - {escolaSel}</h1>
-                        <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR</button>
-                    </header>
-                    <main className="max-w-4xl mx-auto p-6">
-                        <div className="bg-black/60 rounded-xl border border-[#D4AF37]/20 p-8">
-                            <p className="text-center text-white/60 italic mb-6">Acessando arquivos confidenciais do servidor...</p>
-                            <div className="space-y-4">
-                                {/* Placeholder para os links do GitHub */}
-                                <div className="flex justify-between items-center p-4 bg-white/5 border-l-4 border-blue-500 rounded hover:bg-white/10 cursor-pointer">
-                                    <span className="font-bold uppercase text-xs text-white">📄 Arquivo Oficial - {escolaSel}</span>
-                                    <span className="text-[#D4AF37] font-black text-[10px]">DISPONÍVEL NO GITHUB</span>
+            // TELA DE DOCUMENTOS FINALIZADA (PROVAS, EDITAIS E GABARITOS)
+            if (status === 'documentos') {
+                // Arsenal de Provas CN
+                const listaProvasCN = [
+                    "prova2021CN-Port-Ciencias.pdf", "prova2021CN-mat-ingles2.pdf",
+                    "prova2022CN-Port-Ciencias.pdf", "prova2022CN-mat-ingles.pdf",
+                    "prova2023CN-Port-Ciencias.pdf", "prova2023CN-mat-ingles.pdf",
+                    "prova2024CN-Port-Ciencias.pdf", "prova2024CN-mat-ingles.pdf",
+                    "prova2025CN-Port-Cienc2.pdf", "prova2025CN-Port-Ciencias.pdf",
+                    "prova2025CN-mat-ingles.pdf", "prova2025CN-mat-ingles2.pdf"
+                ];
+
+                // Arsenal de Editais CN
+                const listaEditaisCN = [
+                    "edital2019CN.pdf", "edital2020CN.pdf", "edital2021CN.pdf", 
+                    "edital2022CN.pdf", "edital2023CN.pdf"
+                ];
+
+                // Arsenal de Gabaritos CN
+                const listaGabaritosCN = [
+                    "gabarito2020CN.pdf", "gabarito2021CN.pdf", "gabarito2022CN.pdf",
+                    "gabarito2023CN.pdf", "gabarito2024CN.pdf", "gabarito2025CN.pdf"
+                ];
+
+                // Inteligência de Seleção de Arquivos
+                let arquivosExibir = [];
+                if (escolaSel === 'COLÉGIO NAVAL') {
+                    if (tipoDoc === 'PROVAS ANTERIORES') arquivosExibir = listaProvasCN;
+                    if (tipoDoc === 'EDITAIS') arquivosExibir = listaEditaisCN;
+                    if (tipoDoc === 'GABARITOS') arquivosExibir = listaGabaritosCN;
+                }
+
+                return (
+                    <div className="min-h-screen militar-gradient">
+                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
+                            <div className="flex flex-col">
+                                <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">{tipoDoc}</h1>
+                                <span className="text-[10px] text-white/50 tracking-[0.2em]">{escolaSel}</span>
+                            </div>
+                            <button onClick={() => setStatus('escola')} className="btn-voltar-fixo shadow-lg shadow-white/10">VOLTAR</button>
+                        </header>
+                        <main className="max-w-4xl mx-auto p-6">
+                            <div className="bg-black/60 rounded-xl border border-[#D4AF37]/20 p-8 shadow-2xl backdrop-blur-sm">
+                                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+                                    <p className="text-white/60 italic text-sm">Mostrando {arquivosExibir.length} registros encontrados.</p>
+                                    <div className="bg-[#D4AF37]/10 text-[#D4AF37] text-[10px] px-2 py-1 rounded border border-[#D4AF37]/20 font-black">ACESSO AUTORIZADO</div>
+                                </div>
+                                
+                                <div className="space-y-3">
+                                    {arquivosExibir.length > 0 ? (
+                                        arquivosExibir.map((arquivo, index) => (
+                                            <div key={index} className="group flex justify-between items-center p-4 bg-white/5 border-l-4 border-transparent hover:border-[#D4AF37] rounded hover:bg-white/10 transition-all">
+                                                <div className="flex flex-col">
+                                                    <span className="text-[#D4AF37] text-sm font-bold tracking-wide group-hover:translate-x-1 transition-transform">
+                                                        {arquivo.replace('.pdf', '').toUpperCase()}
+                                                    </span>
+                                                    <span className="text-[9px] text-white/30 font-mono">SERVER_LOC: GITHUB/BIZUFENIX</span>
+                                                </div>
+                                                <a 
+                                                    href={BASE_URL + arquivo} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="bg-transparent border border-[#D4AF37] text-[#D4AF37] text-[10px] font-black px-6 py-2 rounded hover:bg-[#D4AF37] hover:text-black transition-all uppercase"
+                                                >
+                                                    Visualizar
+                                                </a>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-20">
+                                            <div className="text-5xl mb-4 opacity-20">📡</div>
+                                            <p className="text-white/40 uppercase text-xs tracking-[0.3em]">Varredura completa: Ninguém deixado para trás, mas arquivos ainda não localizados.</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                        </div>
-                    </main>
-                </div>
-            );
+                        </main>
+                    </div>
+                );
+            }
 
             // TELA DA ESCOLA (MATERIAIS E BOTÕES DE COMANDO)
             return (
