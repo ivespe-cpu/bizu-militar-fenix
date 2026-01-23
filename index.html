@@ -15,21 +15,25 @@
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
         
         .btn-material { 
-            background-color: #D4AF37 !important; 
+            background-color: var(--dourado-ouro) !important; 
             color: #000000 !important; 
             font-weight: 900 !important; 
             text-transform: uppercase;
+            letter-spacing: 1px;
             padding: 12px;
             border-radius: 6px;
+            transition: 0.3s;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
+        .btn-material:hover { background-color: white !important; transform: translateY(-2px); }
 
         .btn-voltar-fixo { 
             background-color: #ffffff !important; 
             color: #000000 !important; 
             font-weight: 900 !important; 
             padding: 12px 28px !important; 
-            border: 3px solid #D4AF37 !important;
+            border: 3px solid var(--dourado-ouro) !important;
+            font-size: 14px !important;
             text-transform: uppercase;
         }
 
@@ -38,20 +42,22 @@
             border-left: 4px solid var(--vermelho-tatico);
             padding: 20px;
             border-radius: 0 8px 8px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid #D4AF37; overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; cursor: pointer; }
+        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid var(--dourado-ouro); overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: 0.4s; cursor: pointer; }
         .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
-        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: #D4AF37; font-style: italic; text-shadow: 2px 2px 10px black; }
+        .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: var(--dourado-ouro); font-style: italic; text-shadow: 2px 2px 10px black; }
         
+        .custom-scroll { scrollbar-width: thin; scrollbar-color: var(--dourado-ouro) transparent; }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--dourado-ouro); border-radius: 10px; }
         
-        .motion-video { width: 100%; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .motion-header { height: 100px; border-radius: 4px; border: 1px solid #D4AF37; }
+        .motion-video { width: 100%; border-radius: 8px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.1); }
+        .motion-header { height: 120px; border-radius: 4px; border: 1px solid var(--dourado-ouro); }
 
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     </style>
 </head>
 <body>
@@ -59,6 +65,7 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
+
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
         const ALUNOS_DB = [
@@ -85,6 +92,15 @@
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
+        const FRASES_COMANDO = [
+            "A limitação está apenas na sua mente, e não no seu corpo",
+            "Coragem não é não ter medo, e sim, seguir em frente apesar do medo",
+            "Grandes batalhas só são dadas a grandes guerreiros",
+            "Vencer na vida não é um destino, é a sua escolha",
+            "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
+        ];
+
+        // BANCO DE DADOS DE VÍDEOS ATUALIZADO (CANAL @PROJETOESQUADRAOFENIX)
         const VIDEOS_DB = [
             { t: "FAB - REPORTAGEM SOBRE A EPCAR", id: "Vq_Z5KNmuks" },
             { t: "ISTO É A MARINHA DO BRASIL", id: "zSSp5CQpg10" },
@@ -95,12 +111,15 @@
         ];
 
         const ESCOLAS = [
-            { s: 'COLÉGIO NAVAL', i: 'cn.jpg' }, { s: 'EPCAR', i: 'epcar.jpg' },
-            { s: 'CMRJ', i: 'cmrj.jpg' }, { s: 'EsPCEX', i: 'espcex.jpg' },
-            { s: 'EEAR', i: 'eear.jpg' }, { s: 'ESA', i: 'esa.jpg' }
+            { s: 'COLÉGIO NAVAL', i: 'cn.jpg' },
+            { s: 'EPCAR', i: 'epcar.jpg' },
+            { s: 'CMRJ', i: 'cmrj.jpg' },
+            { s: 'EsPCEX', i: 'espcex.jpg' },
+            { s: 'EEAR', i: 'eear.jpg' },
+            { s: 'ESA', i: 'esa.jpg' }
         ];
-
-        const MATERIAIS = [
+        
+const MATERIAIS = [
             { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
             { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" },
             { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
@@ -112,6 +131,11 @@
             const [user, setUser] = useState(null);
             const [senhaIn, setSenhaIn] = useState('');
             const [escolaSel, setEscolaSel] = useState('');
+            const [fraseDia, setFraseDia] = useState('');
+
+            useEffect(() => {
+                setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
+            }, [status]);
 
             const handleLogin = (e) => {
                 e.preventDefault();
@@ -122,6 +146,7 @@
                 else { alert("ACESSO NEGADO!"); }
             };
 
+            // TELA DE LOGIN
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-6 militar-gradient">
                     <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-[#D4AF37]/30 shadow-2xl text-center">
@@ -130,38 +155,47 @@
                         </video>
                         <div className="linha-vermelha mb-8"></div>
                         <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
-                               className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono" placeholder="MATRÍCULA" />
-                        <button onClick={handleLogin} className="w-full btn-material">ENTRAR</button>
+                               className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono" placeholder= “DIGITE SUA MATRÍCULA" />
+                        <button onClick={handleLogin} className="w-full btn-material">ENTRAR NO SISTEMA</button>
                     </div>
                 </div>
             );
 
+            // TELA QG
             if (status === 'qg') return (
                 <div className="min-h-screen">
-                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-10 sticky top-0 z-50">
+                    <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-10 sticky top-0 z-50 shadow-2xl">
                         <video className="motion-header" autoPlay loop muted playsInline>
                             <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
                         </video>
                         <div className="text-center">
-                            <h2 className="text-xl font-black text-[#D4AF37] italic uppercase">OLÁ, {user.p}</h2>
+                            <h2 className="text-xl font-black text-ouro italic uppercase">Seja bem vindo, {user.p}</h2>
+                            <p className="text-[10px] text-white/60 tracking-widest mt-1">Não importa qual seja a missão, você nasceu para triunfar</p>
                         </div>
-                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold border border-red-500/20 px-3 py-1 rounded text-xs">SAIR</button>
+                     <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs uppercase border border-red-500/20 px-3 py-1 rounded">SAIR</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {ESCOLAS.map(e => (
-                                <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
-                                     className="card-escola" style={{backgroundImage: `url(${BASE_URL + e.i})`}}>
-                                    <span className="sigla-txt">{e.s}</span>
-                                </div>
-                            ))}
+                        <div className="lg:col-span-2">
+                            <div className="frase-box mb-8">
+                                <p className="text-ouro text-xs font-black mb-2 tracking-[0.3em]">MENSAGEM DO COMANDO:</p>
+                                <p className="text-xl font-medium italic">"{fraseDia}"</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {ESCOLAS.map(e => (
+                                    <div key={e.s} onClick={() => {setEscolaSel(e.s); setStatus('escola');}} 
+                                         className="card-escola hover:scale-[1.02] active:scale-95 transition-all" 
+                                         style={{backgroundImage: `url(${BASE_URL + e.i})`}}>
+                                        <span className="sigla-txt">{e.s}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                         <div className="bg-black/40 p-5 rounded-xl border border-[#D4AF37]/20 h-[550px] flex flex-col shadow-2xl">
-                            <h3 className="text-[#D4AF37] font-black text-center mb-4 uppercase tracking-widest border-b border-[#D4AF37]/10 pb-2">Ranking</h3>
+                            <h3 className="text-[#D4AF37] font-black text-center mb-4 italic uppercase border-b border-[#D4AF37]/10 pb-2 tracking-widest">Ranking Pelotão</h3>
                             <div className="space-y-2 overflow-y-auto custom-scroll pr-2">
                                 {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
                                     <div key={i} className="flex justify-between p-3 bg-white/5 rounded text-[11px] border-l-4 border-[#D4AF37]">
-                                        <span>{i+1}º {a.p}</span>
+                                        <span className="font-bold">{i+1}º {a.p}</span>
                                         <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
                                     </div>
                                 ))}
@@ -190,6 +224,7 @@
                 </div>
             );
 
+            // TELA DA ESCOLA
             return (
                 <div className="min-h-screen militar-gradient">
                     <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
