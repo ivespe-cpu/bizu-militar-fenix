@@ -112,7 +112,6 @@
             ],
             "EPCAR": [], "CMRJ": [], "EsPCEX": []
         };
-
         // 42 ALUNOS REINTEGRADOS
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
@@ -137,7 +136,6 @@
             { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
-
         const FRASES_COMANDO = [
             "A limitação está apenas na sua mente, e não no seu corpo",
             "Coragem não é não ter medo, e sim, seguir em frente apesar do medo",
@@ -145,13 +143,11 @@
             "Vencer na vida não é um destino, é a sua escolha",
             "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
         ];
-
         const ESCOLAS = [
             { s: 'COLÉGIO NAVAL', i: 'cn.jpg' }, { s: 'EPCAR', i: 'epcar.jpg' },
             { s: 'CMRJ', i: 'cmrj.jpg' }, { s: 'EsPCEX', i: 'espcex.jpg' },
             { s: 'EEAR', i: 'eear.jpg' }, { s: 'ESA', i: 'esa.jpg' }
         ];
-
         // 8 CAPAS DE APOSTILAS
         const MATERIAIS = [
             { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
@@ -159,7 +155,6 @@
             { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
             { t: "QUÍMICA", f: "quimica.png" }, { t: "BIOLOGIA", f: "biologia.png" }
         ];
-
         const VIDEOS_DB = [
             { t: "FAB - REPORTAGEM SOBRE A EPCAR", id: "Vq_Z5KNmuks" },
             { t: "ISTO É A MARINHA DO BRASIL", id: "zSSp5CQpg10" },
@@ -168,7 +163,6 @@
             { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" },
             { t: "ESPCEX AMAN MOTIVACIONAL", id: "WKMS3LfGERo" }
         ];
-
         function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
@@ -177,11 +171,9 @@
             const [fraseDia, setFraseDia] = useState('');
             const [tipoDoc, setTipoDoc] = useState(''); 
             const [pdfAtivo, setPdfAtivo] = useState(null);
-
             useEffect(() => {
                 setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
             }, [status]);
-
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
                 const s = senhaIn.toLowerCase().trim();
@@ -190,7 +182,6 @@
                 else if (aluno) { setUser(aluno); setStatus('qg'); }
                 else { alert("ACESSO NEGADO!"); }
             };
-
             const renderContent = () => {
                 if (status === 'login') return (
                     <div className="min-h-screen flex items-center justify-center p-6">
@@ -205,7 +196,6 @@
                         </div>
                     </div>
                 );
-
                 if (status === 'qg') return (
                     <div className="min-h-screen">
                         <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-6 md:px-10 sticky top-0 z-50">
@@ -248,7 +238,6 @@
                         </main>
                     </div>
                 );
-
                 if (status === 'escola') return (
                     <div className="min-h-screen">
                         <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-6 md:px-10 sticky top-0 z-40">
@@ -263,15 +252,8 @@
                         <main className="max-w-5xl mx-auto p-10 text-center">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                                 <button onClick={() => alert("Missão carregada.")} className="bg-blue-600 p-3 rounded text-[10px] font-black uppercase text-white">📅 Missão</button>
-                                
-
                                 <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase">🎬 CINE FÊNIX</button>
-
-
-
-
                                 <button onClick={() => setStatus('simulado_interno')} className="bg-red-700 p-8 rounded-xl font-black text-xl hover:bg-red-800 transition-all border-2 border-white/20">
-
 
                                     📝 INICIAR SIMULADO INTERATIVO
                                 </button>
@@ -285,10 +267,6 @@
                         </main>
                     </div>
                 );
-
-
-
-
                 if (status === 'simulado_interno') {
                     const questoes = QUESTOES_DB[escolaSel] || [];
                     return (
@@ -321,8 +299,6 @@
 
             return <div className="relative min-h-screen">{renderContent()}</div>;
         }
-
-
   <button onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📜 Provas</button>
                                 <button onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📢 Editais</button>
                                 <button onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">✅ Gabaritos</button>
