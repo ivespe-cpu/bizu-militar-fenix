@@ -34,6 +34,85 @@
         const { useState, useEffect } = React;
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
+        // BANCO DE QUESTÕES INTEGRADO E ATUALIZADO
+        const QUESTOES_DB = {
+            "COLÉGIO NAVAL": [
+                {
+                    q: "Se x + 1/x = 5, determine o valor de x² + 1/x².",
+                    opts: ["23", "25", "27", "30"],
+                    correta: 0,
+                    bizu: "Eleve ambos os lados ao quadrado: (x + 1/x)² = 5². Lembre-se que o termo central é 2!"
+                },
+                {
+                    q: "Qual o resto da divisão de 38 por 7?",
+                    opts: ["1", "2", "3", "5"],
+                    correta: 2,
+                    bizu: "38 = 7 * 5 + 3. O resto é o que sobra da divisão inteira."
+                },
+                {
+                    q: "Qual o valor da expressão (1/2)^-2 + (1/3)^-1?",
+                    opts: ["5", "7", "4", "1"],
+                    correta: 1,
+                    bizu: "Expoente negativo inverte a base! (1/2)^-2 vira 2²."
+                },
+                {
+                    q: "Simplificando √(7 + √48), obtemos:",
+                    opts: ["2 + √3", "3 + √2", "√5 + √2", "1 + √6"],
+                    correta: 0,
+                    bizu: "Use a fórmula do radical duplo: C = √(A² - B). Aqui A=7 e B=48."
+                },
+                {
+                    q: "Se a² + b² = 50 e ab = 7, qual o valor de (a-b)²?",
+                    opts: ["36", "43", "57", "64"],
+                    correta: 0,
+                    bizu: "Desenvolva o produto notável: (a-b)² = a² - 2ab + b²."
+                },
+                {
+                    q: "Quantos divisores positivos tem o número 360?",
+                    opts: ["12", "18", "24", "30"],
+                    correta: 2,
+                    bizu: "Fatore 360 e use a regra: (exp1 + 1)(exp2 + 1)..."
+                },
+                {
+                    q: "O MMC entre dois números é 60 e o MDC é 5. Se um dos números é 15, qual o outro?",
+                    opts: ["10", "20", "25", "30"],
+                    correta: 1,
+                    bizu: "Lembre-se: A * B = MDC * MMC."
+                },
+                {
+                    q: "Resolva: 2x - 5 < 3x + 2. Qual o intervalo de x?",
+                    opts: ["x < -7", "x > -7", "x > 7", "x < 7"],
+                    correta: 1,
+                    bizu: "Cuidado ao trocar os lados! Se x ficar negativo, inverta o sinal da desigualdade."
+                },
+                {
+                    q: "Qual a soma dos ângulos internos de um hexágono regular?",
+                    opts: ["360°", "540°", "720°", "900°"],
+                    correta: 2,
+                    bizu: "Use a fórmula S = (n - 2) * 180°."
+                },
+                {
+                    q: "Se 3^x = 81, qual o valor de x?",
+                    opts: ["2", "3", "4", "5"],
+                    correta: 2,
+                    bizu: "Fatore o 81 na base 3: 3 * 3 * 3 * 3 = 81."
+                },
+                {
+                    q: "A área de um círculo de raio 5 é:",
+                    opts: ["10π", "20π", "25π", "50π"],
+                    correta: 2,
+                    bizu: "Fórmula da área: A = π * r²."
+                },
+                {
+                    q: "O valor de (x+y)² - (x-y)² é igual a:",
+                    opts: ["2x² + 2y²", "4xy", "0", "2xy"],
+                    correta: 1,
+                    bizu: "Desenvolva os dois quadrados. Quase tudo vai se cancelar, sobrando apenas o termo central."
+                }
+            ],
+            "EPCAR": [], "CMRJ": [], "EsPCEX": []
+        };
+
         // 42 ALUNOS REINTEGRADOS
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
@@ -181,12 +260,70 @@
                             </div>
                             <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">VOLTAR AO QG</button>
                         </header>
-                        <main className="max-w-7xl mx-auto p-6">
-                            <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-12">
+                        <main className="max-w-5xl mx-auto p-10 text-center">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                                 <button onClick={() => alert("Missão carregada.")} className="bg-blue-600 p-3 rounded text-[10px] font-black uppercase text-white">📅 Missão</button>
-                                <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase">🎬 Cine Fênix</button>
-                                <button onClick={() => alert("Simulados em breve.")} className="bg-red-700 p-3 rounded text-[10px] font-black uppercase text-white">📝 Simulados</button>
-                                <button onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📜 Provas</button>
+                                
+
+                                <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase">🎬 CINE FÊNIX</button>
+
+
+
+
+                                <button onClick={() => setStatus('simulado_interno')} className="bg-red-700 p-8 rounded-xl font-black text-xl hover:bg-red-800 transition-all border-2 border-white/20">
+
+
+                                    📝 INICIAR SIMULADO INTERATIVO
+                                </button>
+                                <button onClick={() => alert("Material em PDF sendo carregado...")} className="bg-blue-800 p-8 rounded-xl font-black text-xl border-2 border-white/20">
+                                    📚 MATERIAL DE ESTUDO
+                                </button>
+                                <button onClick={() => alert("Vídeos em manutenção")} className="bg-[#D4AF37] text-black p-8 rounded-xl font-black text-xl border-2 border-black/20">
+                                    🎬 CINE FÊNIX
+                                </button>
+                            </div>
+                        </main>
+                    </div>
+                );
+
+
+
+
+                if (status === 'simulado_interno') {
+                    const questoes = QUESTOES_DB[escolaSel] || [];
+                    return (
+                        <div className="min-h-screen militar-gradient p-6">
+                            <header className="flex justify-between items-center max-w-4xl mx-auto mb-10 border-b border-[#D4AF37] pb-4">
+                                <h1 className="text-[#D4AF37] font-black text-2xl italic">MODO DE COMBATE: {escolaSel}</h1>
+                                <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">RECUAR</button>
+                            </header>
+                            <div className="max-w-4xl mx-auto space-y-8 pb-20">
+                                {questoes.length > 0 ? questoes.map((item, index) => (
+                                    <div key={index} className="bg-black/60 p-8 rounded-2xl border border-[#D4AF37]/20 shadow-2xl">
+                                        <p className="text-xl font-bold mb-6 text-white/90"> QUESTÃO {index + 1}: {item.q}</p>
+                                        <div className="grid gap-3">
+                                            {item.opts.map((opt, i) => (
+                                                <button key={i} onClick={() => {
+                                                    if(i === item.correta) alert("NA MOSCA, GUERREIRO! 🎯");
+                                                    else alert(`MISSÃO FRACASSADA! ❌\n\nBIZU: ${item.bizu}`);
+                                                }} className="text-left p-4 bg-white/5 border border-white/10 hover:border-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-lg transition-all">
+                                                    {String.fromCharCode(65 + i)}) {opt}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )) : <p className="text-center text-xl">Nenhuma questão cadastrada para esta escola ainda.</p>}
+                            </div>
+                        </div>
+                    );
+                }
+            };
+
+            return <div className="relative min-h-screen">{renderContent()}</div>;
+        }
+
+
+  <button onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📜 Provas</button>
                                 <button onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📢 Editais</button>
                                 <button onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">✅ Gabaritos</button>
                             </div>
