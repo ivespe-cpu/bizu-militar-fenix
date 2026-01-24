@@ -46,6 +46,7 @@
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
         // --- BANCO DE DADOS: QUESTÕES ---
+        // --- BANCO DE DADOS: QUESTÕES ATUALIZADO (EPCAR E EsPCEX INCLUÍDAS) ---
         const QUESTOES_DB = {
             "COLÉGIO NAVAL": [
                 { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." },
@@ -54,7 +55,17 @@
                 { q: "Simplificando √(7 + √48), obtemos:", opts: ["2 + √3", "3 + √2", "√5 + √2", "1 + √6"], correta: 0, bizu: "Radical Duplo. A=7, B=48. C=1." },
                 { q: "Se a² + b² = 50 e ab = 7, qual o valor de (a-b)²?", opts: ["36", "43", "57", "64"], correta: 0, bizu: "(a-b)² = a² - 2ab + b² -> 50 - 14 = 36." }
             ],
-            "EPCAR": [], "CMRJ": [], "EsPCEX": []
+            "EPCAR": [
+                { q: "A média aritmética de n números é 20. Se retirarmos o número 40, a nova média passa a ser 18. Qual o valor de n?", opts: ["10", "11", "12", "15"], correta: 1, bizu: "A soma original era 20n. (20n - 40)/(n-1) = 18. Resolvendo: 20n - 40 = 18n - 18 -> 2n = 22 -> n = 11." },
+                { q: "No sistema decimal, quantos algarismos são usados para escrever todos os números de 1 a 100?", opts: ["189", "190", "192", "200"], correta: 2, bizu: "1-9 (9 alg), 10-99 (90x2 = 180 alg), 100 (3 alg). Total: 9 + 180 + 3 = 192." },
+                { q: "Qual o valor da expressão (0,25)^-1/2?", opts: ["0,5", "2", "4", "8"], correta: 1, bizu: "0,25 = 1/4. (1/4)^-1/2 é o mesmo que (4)^1/2, que é √4 = 2." }
+            ],
+            "EsPCEX": [
+                { q: "Determine o domínio da função f(x) = log(x - 3).", opts: ["x < 3", "x > 0", "x > 3", "x ≠ 3"], correta: 2, bizu: "O logaritmando deve ser estritamente positivo: x - 3 > 0, logo x > 3." },
+                { q: "Qual a distância entre os pontos A(1, 2) e B(4, 6) no plano cartesiano?", opts: ["3", "4", "5", "7"], correta: 2, bizu: "Use d² = (4-1)² + (6-2)². d² = 3² + 4² = 9 + 16 = 25. d = 5." },
+                { q: "O valor de cos(180°) é:", opts: ["0", "1", "-1", "1/2"], correta: 2, bizu: "No círculo trigonométrico, 180° está na extremidade esquerda do eixo x, onde o valor é -1." }
+            ],
+            "CMRJ": [], "EEAR": [], "ESA": []
         };
 
         // --- BANCO DE DADOS: ALUNOS ---
