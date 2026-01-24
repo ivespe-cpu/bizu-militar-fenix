@@ -4,22 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIZÚ MILITAR FÊNIX - PLATAFORMA DE ELITE</title>
+    
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
         body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); min-height: 100vh; }
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
-        .btn-material { background-color: #D4AF37 !important; color: #000 !important; font-weight: 900 !important; text-transform: uppercase; padding: 12px; border-radius: 6px; transition: 0.3s; }
+        
+        /* BOTÕES */
+        .btn-material { background-color: #D4AF37 !important; color: #000 !important; font-weight: 900 !important; text-transform: uppercase; padding: 12px; border-radius: 6px; transition: 0.3s; width: 100%; }
         .btn-material:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .btn-voltar-fixo { background-color: #fff !important; color: #000 !important; font-weight: 900 !important; padding: 10px 20px !important; border: 3px solid #D4AF37 !important; text-transform: uppercase; }
-        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid #D4AF37; overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; cursor: pointer; transition: 0.4s; }
-        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); }
+        .btn-voltar-fixo { background-color: #fff !important; color: #000 !important; font-weight: 900 !important; padding: 8px 16px !important; border: 3px solid #D4AF37 !important; text-transform: uppercase; cursor: pointer; }
+        
+        /* CARDS */
+        .card-escola { position: relative; height: 180px; border-radius: 12px; border-bottom: 4px solid #D4AF37; overflow: hidden; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; cursor: pointer; transition: 0.4s; background-color: #000; }
+        .card-escola:hover { transform: translateY(-5px); border-bottom-color: #fff; }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0, 18, 51, 0.7); transition: 0.3s; }
+        .card-escola:hover::before { background: rgba(0, 18, 51, 0.4); }
+        
         .sigla-txt { position: relative; z-index: 10; font-size: 2.2rem; font-weight: 900; color: #D4AF37; font-style: italic; text-shadow: 2px 2px 10px black; }
         .frase-box { background: rgba(0,0,0,0.5); border-left: 4px solid var(--vermelho-tatico); padding: 20px; border-radius: 0 8px 8px 0; }
+        
+        /* SCROLL E VIDEO */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 10px; }
         .motion-header { height: 60px; filter: drop-shadow(0 0 5px #D4AF37); }
@@ -34,85 +45,19 @@
         const { useState, useEffect } = React;
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
 
-        // BANCO DE QUESTÕES INTEGRADO E ATUALIZADO
+        // --- BANCO DE DADOS: QUESTÕES ---
         const QUESTOES_DB = {
             "COLÉGIO NAVAL": [
-                {
-                    q: "Se x + 1/x = 5, determine o valor de x² + 1/x².",
-                    opts: ["23", "25", "27", "30"],
-                    correta: 0,
-                    bizu: "Eleve ambos os lados ao quadrado: (x + 1/x)² = 5². Lembre-se que o termo central é 2!"
-                },
-                {
-                    q: "Qual o resto da divisão de 38 por 7?",
-                    opts: ["1", "2", "3", "5"],
-                    correta: 2,
-                    bizu: "38 = 7 * 5 + 3. O resto é o que sobra da divisão inteira."
-                },
-                {
-                    q: "Qual o valor da expressão (1/2)^-2 + (1/3)^-1?",
-                    opts: ["5", "7", "4", "1"],
-                    correta: 1,
-                    bizu: "Expoente negativo inverte a base! (1/2)^-2 vira 2²."
-                },
-                {
-                    q: "Simplificando √(7 + √48), obtemos:",
-                    opts: ["2 + √3", "3 + √2", "√5 + √2", "1 + √6"],
-                    correta: 0,
-                    bizu: "Use a fórmula do radical duplo: C = √(A² - B). Aqui A=7 e B=48."
-                },
-                {
-                    q: "Se a² + b² = 50 e ab = 7, qual o valor de (a-b)²?",
-                    opts: ["36", "43", "57", "64"],
-                    correta: 0,
-                    bizu: "Desenvolva o produto notável: (a-b)² = a² - 2ab + b²."
-                },
-                {
-                    q: "Quantos divisores positivos tem o número 360?",
-                    opts: ["12", "18", "24", "30"],
-                    correta: 2,
-                    bizu: "Fatore 360 e use a regra: (exp1 + 1)(exp2 + 1)..."
-                },
-                {
-                    q: "O MMC entre dois números é 60 e o MDC é 5. Se um dos números é 15, qual o outro?",
-                    opts: ["10", "20", "25", "30"],
-                    correta: 1,
-                    bizu: "Lembre-se: A * B = MDC * MMC."
-                },
-                {
-                    q: "Resolva: 2x - 5 < 3x + 2. Qual o intervalo de x?",
-                    opts: ["x < -7", "x > -7", "x > 7", "x < 7"],
-                    correta: 1,
-                    bizu: "Cuidado ao trocar os lados! Se x ficar negativo, inverta o sinal da desigualdade."
-                },
-                {
-                    q: "Qual a soma dos ângulos internos de um hexágono regular?",
-                    opts: ["360°", "540°", "720°", "900°"],
-                    correta: 2,
-                    bizu: "Use a fórmula S = (n - 2) * 180°."
-                },
-                {
-                    q: "Se 3^x = 81, qual o valor de x?",
-                    opts: ["2", "3", "4", "5"],
-                    correta: 2,
-                    bizu: "Fatore o 81 na base 3: 3 * 3 * 3 * 3 = 81."
-                },
-                {
-                    q: "A área de um círculo de raio 5 é:",
-                    opts: ["10π", "20π", "25π", "50π"],
-                    correta: 2,
-                    bizu: "Fórmula da área: A = π * r²."
-                },
-                {
-                    q: "O valor de (x+y)² - (x-y)² é igual a:",
-                    opts: ["2x² + 2y²", "4xy", "0", "2xy"],
-                    correta: 1,
-                    bizu: "Desenvolva os dois quadrados. Quase tudo vai se cancelar, sobrando apenas o termo central."
-                }
+                { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." },
+                { q: "Qual o resto da divisão de 38 por 7?", opts: ["1", "2", "3", "5"], correta: 2, bizu: "38 = 7*5 + 3. Resto é 3." },
+                { q: "Qual o valor da expressão (1/2)^-2 + (1/3)^-1?", opts: ["5", "7", "4", "1"], correta: 1, bizu: "(1/2)^-2 = 4 e (1/3)^-1 = 3. Soma = 7." },
+                { q: "Simplificando √(7 + √48), obtemos:", opts: ["2 + √3", "3 + √2", "√5 + √2", "1 + √6"], correta: 0, bizu: "Radical Duplo. A=7, B=48. C=1." },
+                { q: "Se a² + b² = 50 e ab = 7, qual o valor de (a-b)²?", opts: ["36", "43", "57", "64"], correta: 0, bizu: "(a-b)² = a² - 2ab + b² -> 50 - 14 = 36." }
             ],
             "EPCAR": [], "CMRJ": [], "EsPCEX": []
         };
-        // 42 ALUNOS REINTEGRADOS
+
+        // --- BANCO DE DADOS: ALUNOS ---
         const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
             { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
@@ -136,33 +81,34 @@
             { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
+
         const FRASES_COMANDO = [
-            "A limitação está apenas na sua mente, e não no seu corpo",
-            "Coragem não é não ter medo, e sim, seguir em frente apesar do medo",
-            "Grandes batalhas só são dadas a grandes guerreiros",
-            "Vencer na vida não é um destino, é a sua escolha",
-            "Os fracos perdem tempo reclamando. Os fortes agem, avançam e deixam um legado"
+            "A limitação está apenas na sua mente.",
+            "Coragem não é não ter medo, e sim, seguir em frente.",
+            "Grandes batalhas só são dadas a grandes guerreiros.",
+            "Vencer na vida não é um destino, é a sua escolha.",
+            "Os fortes agem, avançam e deixam um legado."
         ];
+
         const ESCOLAS = [
             { s: 'COLÉGIO NAVAL', i: 'cn.jpg' }, { s: 'EPCAR', i: 'epcar.jpg' },
             { s: 'CMRJ', i: 'cmrj.jpg' }, { s: 'EsPCEX', i: 'espcex.jpg' },
             { s: 'EEAR', i: 'eear.jpg' }, { s: 'ESA', i: 'esa.jpg' }
         ];
-        // 8 CAPAS DE APOSTILAS
+
         const MATERIAIS = [
             { t: "MATEMÁTICA", f: "matematica.png" }, { t: "PORTUGUÊS", f: "portugues.png" },
             { t: "INGLÊS", f: "ingles.png" }, { t: "HISTÓRIA", f: "historia.png" },
             { t: "GEOGRAFIA", f: "geografia.png" }, { t: "FÍSICA", f: "fisica.png" },
             { t: "QUÍMICA", f: "quimica.png" }, { t: "BIOLOGIA", f: "biologia.png" }
         ];
+
         const VIDEOS_DB = [
-            { t: "FAB - REPORTAGEM SOBRE A EPCAR", id: "Vq_Z5KNmuks" },
-            { t: "ISTO É A MARINHA DO BRASIL", id: "zSSp5CQpg10" },
-            { t: "VÍDEO INSTITUCIONAL - MARINHA", id: "H0Gssr6mZbw" },
-            { t: "LUTE PELOS SEUS SONHOS", id: "Nc3WusSAIQI" },
-            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" },
-            { t: "ESPCEX AMAN MOTIVACIONAL", id: "WKMS3LfGERo" }
+            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" }, { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
+            { t: "INSTITUCIONAL", id: "H0Gssr6mZbw" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
+            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
         ];
+
         function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
@@ -171,21 +117,25 @@
             const [fraseDia, setFraseDia] = useState('');
             const [tipoDoc, setTipoDoc] = useState(''); 
             const [pdfAtivo, setPdfAtivo] = useState(null);
+
             useEffect(() => {
                 setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
             }, [status]);
+
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
                 const s = senhaIn.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === s);
                 if (s === "esp0815" || s === "admin") { setUser({ p: "COMANDANTE", pts: "∞" }); setStatus('qg'); }
                 else if (aluno) { setUser(aluno); setStatus('qg'); }
-                else { alert("ACESSO NEGADO!"); }
+                else { alert("ACESSO NEGADO! Verifique sua matrícula."); }
             };
+
             const renderContent = () => {
+                // TELA 1: LOGIN
                 if (status === 'login') return (
                     <div className="min-h-screen flex items-center justify-center p-6">
-                        <div className="max-w-md w-full bg-black/80 p-10 rounded-2xl border-2 border-[#D4AF37]/30 shadow-2xl text-center">
+                        <div className="max-w-md w-full bg-black/80 p-8 rounded-2xl border-2 border-[#D4AF37]/30 shadow-2xl text-center">
                             <video className="w-full rounded mb-6 border border-[#D4AF37]/20" autoPlay loop muted playsInline>
                                 <source src={BASE_URL + "bizu8.mp4"} type="video/mp4" />
                             </video>
@@ -196,9 +146,11 @@
                         </div>
                     </div>
                 );
+
+                // TELA 2: QG (SELEÇÃO)
                 if (status === 'qg') return (
                     <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-6 md:px-10 sticky top-0 z-50">
+                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-6 sticky top-0 z-50">
                             <video className="motion-header" autoPlay loop muted playsInline>
                                 <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
                             </video>
@@ -238,80 +190,86 @@
                         </main>
                     </div>
                 );
+
+                // TELA 3: ESCOLA
                 if (status === 'escola') return (
                     <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-6 md:px-10 sticky top-0 z-40">
-                            <div className="flex items-center gap-4">
-                                <video className="motion-header" autoPlay loop muted playsInline>
-                                    <source src={BASE_URL + "esquadrao2.mp4"} type="video/mp4" />
-                                </video>
-                                <h1 className="text-lg font-black text-[#D4AF37] uppercase italic">{escolaSel}</h1>
-                            </div>
+                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-6 sticky top-0 z-40">
+                            <h1 className="text-lg font-black text-[#D4AF37] uppercase italic">{escolaSel}</h1>
                             <button onClick={() => setStatus('qg')} className="btn-voltar-fixo">VOLTAR AO QG</button>
                         </header>
                         <main className="max-w-5xl mx-auto p-10 text-center">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                                <button onClick={() => alert("Missão carregada.")} className="bg-blue-600 p-3 rounded text-[10px] font-black uppercase text-white">📅 Missão</button>
-                                <button onClick={() => setStatus('videos')} className="bg-[#D4AF37] text-black p-3 rounded text-[10px] font-black uppercase">🎬 CINE FÊNIX</button>
-                                <button onClick={() => setStatus('simulado_interno')} className="bg-red-700 p-8 rounded-xl font-black text-xl hover:bg-red-800 transition-all border-2 border-white/20">
-
-                                    📝 INICIAR SIMULADO INTERATIVO
+                                <button onClick={() => setStatus('simulado_interno')} className="bg-gradient-to-br from-red-700 to-red-900 p-8 rounded-xl font-black text-xl hover:scale-105 transition-all border-2 border-white/20 shadow-lg">
+                                    📝 <br/>SIMULADO<br/>INTERATIVO
                                 </button>
-                                <button onClick={() => alert("Material em PDF sendo carregado...")} className="bg-blue-800 p-8 rounded-xl font-black text-xl border-2 border-white/20">
-                                    📚 MATERIAL DE ESTUDO
+                                <button onClick={() => setStatus('materiais_menu')} className="bg-gradient-to-br from-blue-800 to-blue-900 p-8 rounded-xl font-black text-xl hover:scale-105 transition-all border-2 border-white/20 shadow-lg">
+                                    📚 <br/>CENTRAL DE<br/>INTELIGÊNCIA
                                 </button>
-                                <button onClick={() => alert("Vídeos em manutenção")} className="bg-[#D4AF37] text-black p-8 rounded-xl font-black text-xl border-2 border-black/20">
-                                    🎬 CINE FÊNIX
+                                <button onClick={() => setStatus('videos')} className="bg-gradient-to-br from-[#D4AF37] to-yellow-700 text-black p-8 rounded-xl font-black text-xl hover:scale-105 transition-all border-2 border-black/20 shadow-lg">
+                                    🎬 <br/>CINE<br/>FÊNIX
                                 </button>
                             </div>
                         </main>
                     </div>
                 );
+
+                // TELA 4: SIMULADO
                 if (status === 'simulado_interno') {
                     const questoes = QUESTOES_DB[escolaSel] || [];
                     return (
                         <div className="min-h-screen militar-gradient p-6">
-                            <header className="flex justify-between items-center max-w-4xl mx-auto mb-10 border-b border-[#D4AF37] pb-4">
-                                <h1 className="text-[#D4AF37] font-black text-2xl italic">MODO DE COMBATE: {escolaSel}</h1>
-                                <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">RECUAR</button>
+                            <header className="flex justify-between items-center max-w-4xl mx-auto mb-10 border-b border-[#D4AF37] pb-4 sticky top-0 bg-[#001233] z-50 pt-2">
+                                <h1 className="text-[#D4AF37] font-black text-xl italic">COMBATE: {escolaSel}</h1>
+                                <button onClick={() => setStatus('escola')} className="btn-voltar-fixo text-xs">RECUAR</button>
                             </header>
                             <div className="max-w-4xl mx-auto space-y-8 pb-20">
                                 {questoes.length > 0 ? questoes.map((item, index) => (
-                                    <div key={index} className="bg-black/60 p-8 rounded-2xl border border-[#D4AF37]/20 shadow-2xl">
-                                        <p className="text-xl font-bold mb-6 text-white/90"> QUESTÃO {index + 1}: {item.q}</p>
+                                    <div key={index} className="bg-black/60 p-6 rounded-2xl border border-[#D4AF37]/20 shadow-xl">
+                                        <p className="text-lg font-bold mb-6 text-white/90"> QUESTÃO {index + 1}: {item.q}</p>
                                         <div className="grid gap-3">
                                             {item.opts.map((opt, i) => (
                                                 <button key={i} onClick={() => {
-                                                    if(i === item.correta) alert("NA MOSCA, GUERREIRO! 🎯");
-                                                    else alert(`MISSÃO FRACASSADA! ❌\n\nBIZU: ${item.bizu}`);
-                                                }} className="text-left p-4 bg-white/5 border border-white/10 hover:border-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-lg transition-all">
-                                                    {String.fromCharCode(65 + i)}) {opt}
+                                                    if(i === item.correta) alert("✅ NA MOSCA, GUERREIRO!");
+                                                    else alert(`❌ ERRADO! \n\n💡 BIZU: ${item.bizu}`);
+                                                }} className="text-left p-4 bg-white/5 border border-white/10 hover:border-[#D4AF37] hover:bg-[#D4AF37]/20 rounded-lg transition-all">
+                                                    <span className="text-[#D4AF37] font-bold mr-2">{String.fromCharCode(65 + i)})</span> {opt}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
-                                )) : <p className="text-center text-xl">Nenhuma questão cadastrada para esta escola ainda.</p>}
+                                )) : <p className="text-center text-xl text-gray-400">AGUARDANDO NOVAS MISSÕES DO COMANDO.</p>}
                             </div>
                         </div>
                     );
                 }
-            };
 
-            return <div className="relative min-h-screen">{renderContent()}</div>;
-        }
-  <button onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📜 Provas</button>
-                                <button onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">📢 Editais</button>
-                                <button onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 p-3 rounded text-[10px] font-black text-[#D4AF37]">✅ Gabaritos</button>
+                // TELA 5: MATERIAIS MENU (Consolida os botões soltos)
+                if (status === 'materiais_menu') return (
+                     <div className="min-h-screen">
+                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-6 sticky top-0 z-40">
+                            <h1 className="text-lg font-black text-[#D4AF37] uppercase italic">MATERIAIS: {escolaSel}</h1>
+                            <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR</button>
+                        </header>
+                        <main className="max-w-6xl mx-auto p-8">
+                             {/* BOTÕES DE DOCUMENTOS ESPECÍFICOS */}
+                            <div className="flex flex-wrap gap-4 justify-center mb-10">
+                                <button onClick={() => { setTipoDoc('PROVAS ANTERIORES'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 px-6 py-3 rounded hover:bg-[#D4AF37] hover:text-black transition font-black text-[#D4AF37] uppercase">📜 Provas Anteriores</button>
+                                <button onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 px-6 py-3 rounded hover:bg-[#D4AF37] hover:text-black transition font-black text-[#D4AF37] uppercase">📢 Editais</button>
+                                <button onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }} className="bg-white/10 border border-[#D4AF37]/40 px-6 py-3 rounded hover:bg-[#D4AF37] hover:text-black transition font-black text-[#D4AF37] uppercase">✅ Gabaritos</button>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            
+                            {/* GRID DE APOSTILAS */}
+                            <h3 className="text-center text-white mb-6 border-b border-gray-700 pb-2">APOSTILAS OPERACIONAIS</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {MATERIAIS.map((m, i) => (
-                                    <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
-                                        <div className="h-[280px] bg-black flex items-center justify-center p-2 border-b border-[#D4AF37]/10">
-                                            <img src={BASE_URL + m.f} className="h-full object-contain" />
+                                    <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col shadow-lg hover:shadow-[#D4AF37]/20 transition">
+                                        <div className="h-[200px] bg-black flex items-center justify-center p-2 border-b border-[#D4AF37]/10">
+                                            <img src={BASE_URL + m.f} className="h-full object-contain" alt={m.t} />
                                         </div>
-                                        <div className="p-5 text-center bg-white/5">
-                                            <div className="text-[#D4AF37] font-black text-xs mb-4 uppercase tracking-tighter">{m.t}</div>
-                                            <button className="w-full btn-material text-[10px]">ACESSAR MATERIAL</button>
+                                        <div className="p-4 text-center bg-white/5 flex-grow flex flex-col justify-between">
+                                            <div className="text-[#D4AF37] font-black text-xs mb-3 uppercase tracking-wider">{m.t}</div>
+                                            <button onClick={() => alert("Acesso liberado em breve pelo Comando.")} className="w-full btn-material text-[10px] py-2">LER</button>
                                         </div>
                                     </div>
                                 ))}
@@ -320,21 +278,22 @@
                     </div>
                 );
 
+                // TELA 6: DOCUMENTOS (PDF LIST)
                 if (status === 'documentos') {
-                    const arquivos = ["prova2024CN-Port-Ciencias.pdf", "prova2024CN-mat-ingles.pdf", "edital2023CN.pdf", "gabarito2024CN.pdf"]; // Exemplo simplificado
+                    const arquivos = ["prova2024CN-Port-Ciencias.pdf", "prova2024CN-mat-ingles.pdf", "edital2023CN.pdf", "gabarito2024CN.pdf"];
                     return (
                         <div className="min-h-screen">
                             <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
                                 <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">{tipoDoc}</h1>
-                                <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR</button>
+                                <button onClick={() => setStatus('materiais_menu')} className="btn-voltar-fixo">VOLTAR</button>
                             </header>
                             <main className="max-w-4xl mx-auto p-6">
                                 <div className="space-y-3">
                                     {arquivos.map((arq, idx) => (
-                                        <div key={idx} className="flex justify-between items-center p-4 bg-black/40 border-l-4 border-[#D4AF37] rounded">
-                                            <span className="text-xs font-bold uppercase">{arq.replace('.pdf', '')}</span>
+                                        <div key={idx} className="flex justify-between items-center p-4 bg-black/40 border-l-4 border-[#D4AF37] rounded hover:bg-white/5 transition">
+                                            <span className="text-xs font-bold uppercase text-gray-300">{arq}</span>
                                             <button onClick={() => setPdfAtivo({ url: arq, nome: arq.toUpperCase() })}
-                                                    className="bg-[#D4AF37] text-black text-[10px] font-black px-6 py-2 rounded">VISUALIZAR</button>
+                                                    className="bg-[#D4AF37] text-black text-[10px] font-black px-6 py-2 rounded hover:scale-105 transition">VISUALIZAR</button>
                                         </div>
                                     ))}
                                 </div>
@@ -343,9 +302,10 @@
                     );
                 }
 
+                // TELA 7: VIDEOS
                 if (status === 'videos') return (
                     <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-10">
+                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex justify-between items-center px-6 sticky top-0 z-50">
                             <h1 className="text-xl font-black text-[#D4AF37] italic uppercase">🎬 CINE FÊNIX</h1>
                             <button onClick={() => setStatus('escola')} className="btn-voltar-fixo">VOLTAR</button>
                         </header>
@@ -367,23 +327,21 @@
                 <div className="militar-gradient relative min-h-screen">
                     {renderContent()}
 
-                    {/* MODAL GLOBAL - SOBERANO EM TODAS AS TELAS */}
+                    {/* MODAL DE PDF */}
                     {pdfAtivo && (
-                        <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col p-2 md:p-10">
+                        <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col p-2 md:p-6">
                             <div className="flex justify-between items-center mb-4 bg-[#000814] p-4 border border-[#D4AF37]/30 rounded">
                                 <h2 className="text-[#D4AF37] font-black uppercase text-xs italic tracking-widest">
-                                    SISTEMA FÊNIX - LEITURA: {pdfAtivo.nome}
+                                    LEITURA: {pdfAtivo.nome}
                                 </h2>
                                 <button onClick={() => setPdfAtivo(null)} 
-                                        className="bg-red-600 text-white px-8 py-2 rounded font-black hover:bg-red-700 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
-                                    FECHAR [X]
+                                        className="bg-red-600 text-white px-6 py-2 rounded font-black hover:bg-red-700 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                                    FECHAR
                                 </button>
                             </div>
                             <div className="flex-1 bg-white rounded overflow-hidden border-2 border-[#D4AF37]/20 shadow-2xl">
-                                <iframe 
-                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + pdfAtivo.url)}&embedded=true`} 
-                                    className="w-full h-full border-0"
-                                />
+                                <iframe src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + pdfAtivo.url)}&embedded=true`} 
+                                        className="w-full h-full border-0" />
                             </div>
                         </div>
                     )}
