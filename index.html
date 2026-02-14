@@ -360,3 +360,33 @@
             };
 
             return (
+                <div className="militar-gradient relative min-h-screen">
+                    {renderContent()}
+
+                    {/* MODAL DE PDF (GATILHO DE ELITE) */}
+                    {pdfAtivo && (
+                        <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col p-2 md:p-6">
+                            <div className="flex justify-between items-center mb-4 bg-[#000814] p-4 border border-[#D4AF37]/30 rounded">
+                                <h2 className="text-[#D4AF37] font-black uppercase text-xs italic tracking-widest">
+                                    LEITURA: {pdfAtivo.nome}
+                                </h2>
+                                <button onClick={() => setPdfAtivo(null)} 
+                                        className="bg-red-600 text-white px-6 py-2 rounded font-black hover:bg-red-700 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                                    FECHAR
+                                </button>
+                            </div>
+                            <div className="flex-1 bg-white rounded overflow-hidden border-2 border-[#D4AF37]/20 shadow-2xl">
+                                <iframe src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + pdfAtivo.url)}&embedded=true`} 
+                                        className="w-full h-full border-0" />
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
