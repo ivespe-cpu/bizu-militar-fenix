@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from 'lucide-react';
-
+const [pdfAtivo, setPdfAtivo] = React.useState(null);
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
@@ -76,6 +76,29 @@ export default function Dashboard() {
             <h2 className="text-2xl font-black mb-6">{escolaSelecionada}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+               <div className="cards-grid">
+
+  {/* COLÉGIO NAVAL */}
+  <div className="card" onClick={() => setPdfAtivo("/pdf/manual_cn.pdf")}>
+    <img src="/png/card_portugues.cn.png" alt="Colégio Naval" />
+    <h3>Colégio Naval</h3>
+  </div>
+
+  {/* EPCAR */}
+  <div className="card" onClick={() => setPdfAtivo("/pdf/manual_epcar.pdf")}>
+    <img src="/png/card_matematica_epcar.png" alt="EPCAR" />
+    <h3>EPCAR</h3>
+  </div>
+
+  {/* CMRJ */}
+  <div className="card" onClick={() => setPdfAtivo("/pdf/manual_cmrj.pdf")}>
+    <img src="/png/card_matematica_cmrj.png" alt="CMRJ" />
+    <h3>CMRJ – 6º Ano</h3>
+  </div>
+
+             
+</div>
               {CONFIG_ESCOLAS[escolaSelecionada].materias.map((materia) => {
                 const mat = materia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
@@ -127,7 +150,7 @@ function MenuCard({ label, icon, onClick, color }) {
   const backgroundImages = {
     "COLÉGIO NAVAL": "/cn.jpg",
     "CMRJ": "/cmrj.jpg",
-    "CMRJ - 6º ANO": "/cmrj.jpg",
+        "CMRJ - 6º ANO": "/cmrj.jpg",
     "EPCAR": "/epcar.jpg",
     "ESPÇEX": "/espcex.jpg",
     "EEAR": "/eear.jpg",
@@ -157,3 +180,14 @@ function MenuCard({ label, icon, onClick, color }) {
     </button>
   );
 }
+{pdfAtivo && (
+  <div className="pdf-overlay">
+    <button onClick={() => setPdfAtivo(null)}>Fechar</button>
+    <iframe
+      src={pdfAtivo}
+      width="100%"
+      height="100%"
+      title="PDF"
+    />
+  </div>
+)}
