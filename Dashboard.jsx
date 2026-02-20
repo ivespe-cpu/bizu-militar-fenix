@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
-
+const BASE_IMG =
+  "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
@@ -78,7 +79,7 @@ export default function Dashboard() {
   >
     <div className="absolute inset-0 bg-black/60"></div>
 
-    <div className="relative z-10 h-full flex items-center justify-center">
+    <div className="relative z-10 h-full flex flex-col items-center justify-center">
       <h2 className="text-xl font-black text-orange-400 text-center">
         {nome}
       </h2>
