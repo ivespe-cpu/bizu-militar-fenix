@@ -83,7 +83,7 @@ export default function BizuMilitarFenix() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                {/* Botões das Escolas - Ao clicar, define a escola e abre as apostilas */}
                <MenuCard label="COLÉGIO NAVAL" icon={<Anchor />} color="orange" onClick={() => { setEscolaSelecionada("COLÉGIO NAVAL"); setModuloAtivo('apostilas'); }} />
-               <MenuCard label="CMRJ (6º ANO)" icon={<Landmark />} color="green" onClick={() => { setEscolaSelecionada("CMRJ"); setModuloAtivo('apostilas'); }} />
+               <MenuCard label="CMRJ - 6º ANO" icon={<Landmark />} color="green" onClick={() => { setEscolaSelecionada("CMRJ"); setModuloAtivo('apostilas'); }} />
                <MenuCard label="EPCAR" icon={<Zap />} color="blue" onClick={() => { setEscolaSelecionada("EPCAR"); setModuloAtivo('apostilas'); }} />
             </div>
           </div>
