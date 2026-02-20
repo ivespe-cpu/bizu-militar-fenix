@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -13,8 +14,7 @@
     <style>
         :root { --dourado: #D4AF37; --azul: #001233; --vermelho: #bc0000; }
         body { background-color: var(--azul); color: white; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        .militar-gradient { background: linear-gradient(180deg, #001233 0%, #000814 100%); min-height: 100vh; }
+                .militar-gradient { background: linear-gradient(180deg, #001233 0%, #000814 100%); min-height: 100vh; }
         
         /* CARDS COM EFEITO HOVER */
         .card-escola { 
@@ -47,8 +47,14 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
+
+// --- CONFIGURAÇÃO DE CAMINHOS TÁTICOS (PASTAS DO REPOSITÓRIO) ---
         const BASE_URL = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/";
         const VIDEO_URL = BASE_URL + "video/";
+        const PNG_URL   = BASE_URL + "png/"; 
+        const PDF_URL   = BASE_URL + "pdf/";
+
+
 
         const FRASES_MOTIVACIONAIS = [
             "O treinamento difícil torna o combate fácil.",
@@ -146,15 +152,24 @@
                 const aluno = ALUNOS_DB.find(a => a.m === s);
                 if (s === "esp0815" || s === "admin") { setUser({ p: "COMANDANTE", pts: "∞", cargo: "instrutor" }); setStatus('qg'); } 
                 else if (aluno) { setUser({...aluno, cargo: "aluno"}); setStatus('qg'); } 
-                else { alert("ACESSO NEGADO!"); }
+                else { alert("ACESSO NEGADO! Verifique a sua matrícula"); }
             };
 
-            const renderContent = () => {
-                if (status === 'login') return (
-                    <div className="min-h-screen flex items-center justify-center p-6">
-                        <div className="max-w-md w-full bg-black/80 p-8 rounded-2xl border-2 border-[#D4AF37]/30 text-center shadow-2xl">
-                            <video className="w-full rounded mb-6 border border-[#D4AF37]/20" autoPlay loop muted playsInline>
-                                <source src={BASE_URL + "logo_bizu2.mp4"} type="video/mp4" />
+            const HeaderFenix = () => (
+                <div className="w-full flex justify-center py-6 bg-black/40 border-b border-[#D4AF37]/30">
+                    <video className="logo-header-top" autoPlay loop muted playsInline>
+                        <source src={VIDEO_URL + "logo_esquadrao.mp4"} type="video/mp4" />
+                    </video>
+                </div>
+            );
+
+            if (status === 'login') return (
+                <div className="militar-gradient flex items-center justify-center p-6">
+                    <div className="max-w-md w-full bg-black/80 p-8 rounded-2xl border-2 border-[#D4AF37]/30 text-center shadow-2xl">
+                        <video className="w-full rounded mb-6 border border-[#D4AF37]/20" autoPlay loop muted playsInline>
+                            <source src={VIDEO_URL + "logo_bizu2.mp4"} type="video/mp4" />
+
+
                             </video>
                             <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
                                 className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center font-mono outline-none focus:border-[#D4AF37]" placeholder="MATRÍCULA" />
@@ -163,48 +178,48 @@
                     </div>
                 );
 
-                if (status === 'qg') return (
-                    <div className="flex flex-col min-h-screen">
-                        <HeaderUniversal />
-                        <div className="text-center mt-8 px-4">
-                            <h2 className="text-[#D4AF37] text-3xl font-black italic uppercase tracking-tighter">
-                                {user?.cargo === 'instrutor' ? `ORDENS DO DIA, ${user?.p}!` : `APRESENTE-SE PARA O COMBATE, ${user?.p}!`}
-                            </h2>
-                            <p className="text-white/60 italic text-sm mt-2">"{fraseDia}"</p>
-                        </div>
+            if (status === 'qg') return (
+                <div className="militar-gradient flex flex-col min-h-screen">
+                    <HeaderFenix />
+                    <div className="text-center mt-8 px-4">
+                        <h2 className="text-[#D4AF37] text-2xl font-black italic uppercase tracking-tighter">
+                            {user?.cargo === 'instrutor' ? `ORDENS DO DIA, ${user?.p}!` : `BEM-VINDO AO COMBATE, ${user?.p}!`}
+                        </h2>
+                        <p className="text-white/40 italic text-xs mt-2">"O treinamento difícil torna o combate fácil."</p>
+                    </div>
 
                         <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-10 mt-6">
                             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {Object.keys(CONFIG_ESCOLAS).map(nome => (
                                     <div key={nome} onClick={() => {setEscolaSel(nome); setStatus('central');}} 
-                                         className="card-escola shadow-lg" style={{backgroundImage: `url(${BASE_URL}${CONFIG_ESCOLAS[nome].slug}.jpg)`}}>
+                                         className="card-escola style={{backgroundImage: `url(${BASE_URL}${CONFIG_ESCOLAS[nome].slug}.jpg)`}}>
                                         <span className="relative z-10 text-2xl font-black text-[#D4AF37] italic uppercase">{nome}</span>
                                     </div>
                                 ))}
                             </div>
-                            <div className="bg-black/40 p-6 rounded-xl border border-[#D4AF37]/20 h-[600px] flex flex-col">
-                                <h3 className="text-[#D4AF37] font-black text-center mb-4 uppercase tracking-widest border-b border-[#D4AF37]/20 pb-3">Ranking do Esquadrão</h3>
-                                <div className="flex-1 overflow-y-auto custom-scroll pr-2 space-y-2">
-                                    {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
-                                        <div key={i} className={`flex justify-between items-center p-3 rounded text-[11px] border-l-4 ${a.m === user?.m ? 'bg-[#D4AF37]/30 border-white' : 'bg-white/5 border-[#D4AF37]'}`}>
-                                            <span className="font-bold">{i+1}º {a.p}</span>
-                                            <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
-                                        </div>
-                                    ))}
-                                </div>
+                        <div className="bg-black/40 p-5 rounded-xl border border-[#D4AF37]/20 h-fit">
+                            <h3 className="text-[#D4AF37] font-black text-center mb-4 uppercase text-xs border-b border-[#D4AF37]/20 pb-2">Top Pelotão</h3>
+                            <div className="space-y-2 max-h-[400px] overflow-y-auto custom-scroll pr-2">
+                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
+                                    <div key={i} className={`flex justify-between p-3 rounded text-[11px] border-l-4 ${a.m === user?.m ? 'bg-[#D4AF37]/20 border-white' : 'bg-white/5 border-[#D4AF37]'}`}>
+                                        <span>{i+1}º {a.p}</span>
+                                        <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
+                                    </div>
+                                ))}
                             </div>
-                        </main>
-                        <button onClick={() => setStatus('login')} className="mx-auto mb-10 text-red-500 font-bold uppercase text-[10px] tracking-[4px] hover:text-white transition-all">Deslogar do Sistema</button>
-                    </div>
-                );
+                        </div>
+                    </main>
+                    <button onClick={() => setStatus('login')} className="mx-auto my-10 text-red-500 font-bold uppercase text-[10px] hover:text-white transition-all">Encerrar Sessão</button>
+                </div>
+            );
 
-                if (status === 'central') return (
-                    <div className="min-h-screen flex flex-col">
-                        <HeaderUniversal />
-                        <div className="flex-1 flex flex-col items-center justify-center p-6 -mt-10">
-                            <h1 className="text-4xl font-black text-[#D4AF37] mb-12 italic uppercase">{escolaSel}</h1>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
-                                <button onClick={() => setStatus('simulados')} className="btn-hub-master bg-red-950/40 text-red-500 border-red-500/20">
+            if (status === 'central') return (
+                <div className="militar-gradient min-h-screen flex flex-col">
+                    <HeaderFenix />
+                    <div className="flex-1 flex flex-col items-center justify-center p-6">
+                        <h1 className="text-4xl font-black text-[#D4AF37] mb-12 italic uppercase">{escolaSel}</h1>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+                            <button onClick={() => setStatus('simulados')} className="btn-hub-master bg-red-950/40 text-red-500 border-red-500/20">
                                     <span className="text-4xl">📝</span> SIMULADOS
                                 </button>
                                 <button onClick={() => setStatus('materiais')} className="btn-hub-master bg-blue-950/40 text-blue-400 border-blue-400/20">
@@ -249,47 +264,55 @@
                     );
                 }
 
-                if (status === 'materiais') return (
-                    <div className="min-h-screen flex flex-col">
-                        <HeaderUniversal />
-                        <div className="p-6">
-                            <header className="flex justify-between items-center mb-10 max-w-7xl mx-auto">
-                                <h1 className="text-[#D4AF37] font-black text-2xl italic uppercase tracking-widest">{escolaSel} - Materiais</h1>
-                                <button onClick={() => setStatus('central')} className="bg-white text-black px-6 py-2 font-black rounded text-xs">VOLTAR</button>
-                            </header>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                                {CONFIG_ESCOLAS[escolaSel].materias.map((mat, i) => {
-                                    const isManual = mat === "MANUAL";
-                                    const thumb = isManual ? 'capa_manual_cmrj.png' : `${mat.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_')}.png`;
-                                    const pdf = isManual ? 'manual_cmrj.pdf' : `${mat.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_')}_${CONFIG_ESCOLAS[escolaSel].slug}.pdf`;
-                                    
-                                    return (
-                                        <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col group hover:border-[#D4AF37] transition-all">
-                                            <div className="h-[200px] bg-cover bg-center transition-transform group-hover:scale-105" 
-                                                 style={{backgroundImage: `url(${BASE_URL}${thumb})`, backgroundColor: '#111'}}></div>
-                                            <div className="p-5 text-center bg-black/80">
-                                                <div className="text-[#D4AF37] font-black text-xs mb-4 uppercase tracking-tighter h-8 flex items-center justify-center">{mat}</div>
-                                                <button onClick={() => setPdfAtivo({ nome: mat, url: `pdf/${pdf}` })} 
-                                                        className="w-full bg-[#D4AF37] text-black font-black py-3 rounded text-[10px] hover:bg-white transition-all uppercase">Acessar PDF</button>
-                                            </div>
+            if (status === 'materiais') return (
+                <div className="militar-gradient min-h-screen flex flex-col">
+                    <HeaderFenix />
+                    <div className="p-6">
+                        <header className="flex justify-between items-center mb-10 max-w-7xl mx-auto">
+                            <h1 className="text-[#D4AF37] font-black text-2xl italic uppercase">{escolaSel} - Materiais</h1>
+                            <button onClick={() => setStatus('central')} className="bg-white text-black px-6 py-2 font-black rounded text-xs">VOLTAR</button>
+                        </header>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                            {CONFIG_ESCOLAS[escolaSel].materias.map((mat, i) => {
+                                const slugEscola = CONFIG_ESCOLAS[escolaSel].slug;
+                                const nomeMateria = mat.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_');
+
+                                let thumb;
+                                if (mat === "MANUAL") {
+                                    thumb = "capa_manual_cmrj.png";
+                                } else {
+                                    thumb = `card_${nomeMateria}_${slugEscola}.png`;
+                                }
+
+                                const pdf = (mat === "MANUAL") ? 'manual_cmrj.pdf' : `${nomeMateria}_${slugEscola}.pdf`;
+                                
+
+                                return (
+                                    <div key={i} className="bg-black/60 border border-[#D4AF37]/20 rounded-2xl overflow-hidden flex flex-col group hover:border-[#D4AF37] transition-all">
+                                        <div className="h-[200px] bg-cover bg-center transition-transform group-hover:scale-105" 
+                                             style={{backgroundImage: `url(${PNG_URL}${thumb})`, backgroundColor: '#111'}}></div>
+                                        <div className="p-5 text-center bg-black/80">
+                                            <div className="text-[#D4AF37] font-black text-[10px] mb-4 uppercase h-8 flex items-center justify-center">{mat}</div>
+                                            <button onClick={() => setPdfAtivo({ nome: mat, url: `pdf/${pdf}` })} 
+                                                    className="w-full bg-[#D4AF37] text-black font-black py-3 rounded text-[10px] hover:bg-white transition-all uppercase">Estudar PDF</button>
                                         </div>
-                                    );
-                                })}
-                            </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-                );
-
-                if (status === 'videos') return (
-                    <div className="min-h-screen flex flex-col">
-                        <HeaderUniversal />
-                        <div className="p-6">
-                            <header className="flex justify-between items-center mb-10 max-w-6xl mx-auto">
-                                <h1 className="text-[#D4AF37] font-black text-2xl italic uppercase">🎬 CINE FÊNIX</h1>
-                                <button onClick={() => setStatus('central')} className="bg-white text-black px-6 py-2 font-black rounded text-xs">VOLTAR</button>
-                            </header>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto pb-20">
-                                {[
+                </div>
+            );
+            if (status === 'videos') return (
+                <div className="militar-gradient min-h-screen flex flex-col">
+                    <HeaderFenix />
+                    <div className="p-6 max-w-6xl mx-auto">
+                        <header className="flex justify-between items-center mb-10">
+                            <h1 className="text-[#D4AF37] font-black text-2xl italic uppercase">🎬 CINE FÊNIX</h1>
+                            <button onClick={() => setStatus('central')} className="bg-white text-black px-6 py-2 font-black rounded text-xs">VOLTAR</button>
+                        </header>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {[
                                     { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
                                     { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" },
                                     { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
@@ -297,10 +320,10 @@
                                     { t: "EXÉRCITO BRASILEIRO", id: "H0Gssr6mZbw" },
                                     { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }
                                 ].map((v, i) => (
-                                    <div key={i} className="bg-black/40 p-4 rounded-xl border border-[#D4AF37]/20 shadow-xl">
-                                        <h3 className="text-[#D4AF37] font-bold mb-4 uppercase text-[10px] tracking-widest">{v.t}</h3>
+                                    <div key={i} className="bg-black/40 p-4 rounded-xl border border-[#D4AF37]/20">
+                                        <h3 className="text-[#D4AF37] font-bold mb-3 uppercase text-[10px]">{v.t}</h3>
                                         <div className="aspect-video">
-                                            <iframe className="w-full h-full rounded shadow-inner" src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
+                                            <iframe className="w-full h-full rounded" src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
                                         </div>
                                     </div>
                                 ))}
@@ -310,24 +333,32 @@
                 );
             };
 
-            return (
-                <div className="militar-gradient relative min-h-screen">
-                    {renderContent()}
-                    {pdfAtivo && (
-                        <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col p-4">
-                            <div className="flex justify-between items-center mb-4 bg-[#000814] p-4 border border-[#D4AF37]/30 rounded">
-                                <h2 className="text-[#D4AF37] font-black uppercase text-xs">VISUALIZANDO: {pdfAtivo.nome}</h2>
-                                <button onClick={() => setPdfAtivo(null)} className="bg-red-600 text-white px-8 py-2 rounded font-black uppercase text-xs">Fechar</button>
-                            </div>
-                            <iframe src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + pdfAtivo.url)}&embedded=true`} className="flex-1 w-full bg-white rounded" />
-                        </div>
-                    )}
-                </div>
-            );
+            return null;
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(
+            <div className="relative min-h-screen">
+                <App />
+                {/* MODAL GLOBAL PARA PDF */}
+                <PdfViewer pdf={pdfAtivo} setPdfAtivo={setPdfAtivo} />
+            </div>
+        );
+
+        function PdfViewer({ pdf, setPdfAtivo }) {
+            if (!pdf) return null;
+            const urlCompleta = `https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + pdf.url)}&embedded=true`;
+            return (
+                <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col p-4">
+                    <div className="flex justify-between items-center mb-4 bg-[#000814] p-4 border border-[#D4AF37]/30 rounded">
+                        <h2 className="text-[#D4AF37] font-black uppercase text-xs">VISUALIZANDO: {pdf.nome}</h2>
+                        <button onClick={() => setPdfAtivo(null)} className="bg-red-600 text-white px-8 py-2 rounded font-black uppercase text-xs">FECHAR</button>
+                    </div>
+                    <iframe src={urlCompleta} className="flex-1 w-full bg-white rounded" />
+                </div>
+            );
+        }
     </script>
 </body>
 </html>
+
