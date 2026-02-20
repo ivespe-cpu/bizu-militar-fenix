@@ -261,13 +261,7 @@
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(
-            <div className="relative min-h-screen">
-                <App />
-                {/* MODAL GLOBAL PARA PDF */}
-                <PdfViewer pdf={pdfAtivo} setPdfAtivo={setPdfAtivo} />
-            </div>
-        );
+root.render(<App />);
 
         function PdfViewer({ pdf, setPdfAtivo }) {
             if (!pdf) return null;
