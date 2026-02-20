@@ -1,58 +1,38 @@
 import React, { useState } from "react";
-import {
-  Flame,
-  ChevronLeft,
-  Download,
-  BookOpen
-} from "lucide-react";
+import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
 
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
-const BASE_IMG =
-  "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
-
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
     banner: "cn.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
+    materias: [
+      "MATEMÁTICA",
+      "PORTUGUÊS",
+      "INGLÊS",
+      "HISTÓRIA",
+      "GEOGRAFIA",
+      "FÍSICA",
+      "QUÍMICA",
+      "BIOLOGIA",
+    ],
   },
-  "EPCAR": {
-    slug: "epcar",
-    banner: "epcar.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
-  },
-  "CMRJ": {
+  "CMRJ – 6º ANO": {
     slug: "cmrj",
     banner: "cmrj.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"]
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"],
   },
-  "ESPÇEX": {
-    slug: "espcex",
-    banner: "espcex.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
+  EPCAR: {
+    slug: "epcar",
+    banner: "epcar.jpg",
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"],
   },
-  "EEAR": {
-    slug: "eear",
-    banner: "eear1.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
-  },
-  "ESA": {
-    slug: "esa",
-    banner: "esa.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
-  }
 };
 
-const BASE_IMG =
-  "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/img";
-const BASE_PDF =
-  "https://raw.githubusercontent.com/ivespe-cpu/bizu-militar-fenix/main/pdf";
-
-/* ==============================
-   COMPONENTE PRINCIPAL
-============================== */
+const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
+const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/pdf";
 
 export default function Dashboard() {
   const [moduloAtivo, setModuloAtivo] = useState("menu");
@@ -63,7 +43,6 @@ export default function Dashboard() {
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-
     const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
     window.open(`${BASE_PDF}/${mat}_${slug}.pdf`, "_blank");
   };
@@ -72,134 +51,90 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#050505] text-white">
 
       {/* HEADER */}
-      <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center gap-3">
+      <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center gap-4">
         <Flame className="text-orange-500" />
-        <h1 className="font-black italic text-xl">
-          BIZÚ MILITAR FÊNIX
-        </h1>
+        <h1 className="font-black italic text-xl">BIZÚ MILITAR FÊNIX</h1>
       </header>
 
       <main className="p-10 max-w-7xl mx-auto">
 
         {/* MENU DE ESCOLAS */}
         {moduloAtivo === "menu" && (
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-  {Object.keys(CONFIG_ESCOLAS).map((escola) => (
-    <button
-      key={escola}
-      onClick={() => {
-        setEscolaSelecionada(escola);
-        setModuloAtivo("apostilas");
-      }}
-      className="relative h-48 rounded-3xl overflow-hidden border-2 border-yellow-500 hover:scale-105 transition"
-      style={{
-        backgroundImage: `url(${BASE_IMG}/${CONFIG_ESCOLAS[escola].banner})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-    >
-      {/* camada escura */}
-      <div className="absolute inset-0 bg-black/60"></div>
-
-      {/* texto */}
-      <span className="relative z-10 text-yellow-400 font-black text-xl tracking-widest">
-        {escola}
-      </span>
-    </button>
-  ))}
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
+              <button
+                key={nome}
+                onClick={() => {
+                  setEscolaSelecionada(nome);
+                  setModuloAtivo("apostilas");
+                }}
+                className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
+                style={{
+                  backgroundImage: `url(${BASE_IMG}/${dados.banner})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="absolute inset-0 bg-black/60"></div>
+                <div className="relative z-10 h-full flex flex-col items-center justify-center">
+                  <h2 className="text-xl font-black text-orange-400 text-center">
+                    {nome}
+                  </h2>
+                </div>
+              </button>
+            ))}
+          </div>
         )}
 
         {/* APOSTILAS */}
-        {moduloAtivo === "apostilas" && escolaSelecionada && (
+        {moduloAtivo === "apostilas" && (
           <>
             <button
               onClick={() => setModuloAtivo("menu")}
-              className="mb-8 flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full"
+              className="mb-6 flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full"
             >
               <ChevronLeft size={16} /> Voltar
             </button>
 
-            <h2 className="text-3xl font-black mb-8">
-              {escolaSelecionada}
-            </h2>
+            <h2 className="text-2xl font-black mb-6">{escolaSelecionada}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {CONFIG_ESCOLAS[escolaSelecionada].materias.map(
-                (materia) => {
-                  const mat = materia
-                    .toLowerCase()
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "");
+              {CONFIG_ESCOLAS[escolaSelecionada].materias.map((materia) => {
+                const mat = materia
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "");
+                const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
+                const cardImg = `${BASE_IMG}/card_${mat}_${slug}.png`;
 
-                  const slug =
-                    CONFIG_ESCOLAS[escolaSelecionada].slug;
-
-                  const cardImg = `${BASE_IMG}/card_${mat}_${slug}.png`;
-
-                  return (
+                return (
+                  <div
+                    key={materia}
+                    className="rounded-3xl overflow-hidden bg-[#0f172a] border border-white/10"
+                  >
                     <div
-                      key={materia}
-                      className="rounded-3xl overflow-hidden bg-[#0f172a] border border-white/10"
+                      className="h-40 bg-center bg-cover flex items-center justify-center"
+                      style={{ backgroundImage: `url(${cardImg})` }}
                     >
-                      <div
-                        className="h-48 bg-center bg-cover flex items-center justify-center"
-                        style={{
-                          backgroundImage: `url(${cardImg})`
-                        }}
-                      >
-                        <BookOpen
-                          size={48}
-                          className="text-white/30"
-                        />
-                      </div>
-
-                      <div className="p-5">
-                        <h3 className="font-black mb-4">
-                          {materia}
-                        </h3>
-
-                        <button
-                          onClick={() => abrirPDF(materia)}
-                          className="w-full bg-orange-600 text-black font-black py-3 rounded-xl flex items-center justify-center gap-2"
-                        >
-                          <Download size={16} /> Estudar PDF
-                        </button>
-                      </div>
+                      <BookOpen size={48} className="text-white/30" />
                     </div>
-                  );
-                }
-              )}
+
+                    <div className="p-5">
+                      <h3 className="font-black mb-4">{materia}</h3>
+                      <button
+                        onClick={() => abrirPDF(materia)}
+                        className="w-full bg-orange-600 text-black font-black py-3 rounded-xl flex items-center justify-center gap-2"
+                      >
+                        <Download size={16} /> Estudar PDF
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </>
         )}
       </main>
     </div>
-  );
-}
-
-/* ==============================
-   CARD DE ESCOLA (MENU)
-============================== */
-
-function MenuCard({ label, image, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className="relative h-56 rounded-[35px] overflow-hidden border-2 border-yellow-600 hover:-translate-y-2 transition-all"
-      style={{
-        backgroundImage: `url(${image})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-    >
-      <div className="absolute inset-0 bg-black/60"></div>
-
-      <div className="relative z-10 h-full flex items-center justify-center">
-        <span className="text-yellow-400 font-black text-lg tracking-widest text-center px-4">
-          {label}
-        </span>
-      </div>
-    </button>
   );
 }
