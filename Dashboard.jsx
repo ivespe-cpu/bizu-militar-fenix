@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
-const BASE_IMG =
-  "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
+import { ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
+
 /* ==============================
-   CONFIGURAÇÃO CENTRAL
+   CONSTANTES GLOBAIS
 ============================== */
 const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
 const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/pdf";
