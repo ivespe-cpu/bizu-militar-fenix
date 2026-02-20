@@ -115,15 +115,45 @@ export default function Dashboard() {
 
 /* ==============================
    CARD DE ESCOLA
-============================== */
-function MenuCard({ label, image, onClick }) {
+function MenuCard({ label, icon, onClick, color }) {
+  const colors = { 
+    orange: 'border-orange-600',
+    blue: 'border-blue-600',
+    green: 'border-green-600',
+    yellow: 'border-yellow-600'
+  };
+
+  // 🔥 IMAGENS DE FUNDO DOS BOTÕES
+  const backgroundImages = {
+    "COLÉGIO NAVAL": "/cn.jpg",
+    "CMRJ": "/cmrj.jpg",
+    "CMRJ - 6º ANO": "/cmrj.jpg",
+    "EPCAR": "/epcar.jpg",
+    "ESPÇEX": "/espcex.jpg",
+    "EEAR": "/eear.jpg",
+    "ESA": "/esa.jpg"
+  };
+
   return (
     <button
       onClick={onClick}
-      className="h-48 rounded-3xl bg-cover bg-center border border-white/10 hover:scale-105 transition flex items-end p-6 font-black"
-      style={{ backgroundImage: `url(${image})` }}
+      className={`relative p-8 rounded-[35px] border-2 transition-all flex flex-col items-center justify-center gap-4 hover:-translate-y-2 overflow-hidden ${colors[color]}`}
+      style={{
+        backgroundImage: `url(${backgroundImages[label]})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
     >
-      {label}
+      {/* CAMADA ESCURA PARA DAR CONTRASTE */}
+      <div className="absolute inset-0 bg-black/60"></div>
+
+      <div className="relative z-10 p-4 bg-black/40 rounded-2xl border border-white/10">
+        {React.cloneElement(icon, { size: 32 })}
+      </div>
+
+      <span className="relative z-10 text-sm font-black tracking-widest text-yellow-400 uppercase text-center">
+        {label}
+      </span>
     </button>
   );
 }
