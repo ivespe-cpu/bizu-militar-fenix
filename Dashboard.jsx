@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from 'lucide-react';
-const [pdfAtivo, setPdfAtivo] = React.useState(null);
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
