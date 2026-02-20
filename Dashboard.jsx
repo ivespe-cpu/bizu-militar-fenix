@@ -4,6 +4,7 @@ import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from "l
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
+const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
@@ -61,30 +62,29 @@ export default function Dashboard() {
         {/* MENU DE ESCOLAS */}
         {moduloAtivo === "menu" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
-              <button
-                key={nome}
-                onClick={() => {
-                  setEscolaSelecionada(nome);
-                  setModuloAtivo("apostilas");
-                }}
-                className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
-                style={{
-                  backgroundImage: `url(${BASE_IMG}/${dados.banner})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
-                <div className="absolute inset-0 bg-black/60"></div>
-                <div className="relative z-10 h-full flex flex-col items-center justify-center">
-                  <h2 className="text-xl font-black text-orange-400 text-center">
-                    {nome}
-                  </h2>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
+           {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
+  <button
+    key={nome}
+    onClick={() => {
+      setEscolaSelecionada(nome);
+      setModuloAtivo("apostilas");
+    }}
+    className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
+    style={{
+      backgroundImage: `url(${BASE_IMG}/${dados.banner})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+  >
+    <div className="absolute inset-0 bg-black/60"></div>
+
+    <div className="relative z-10 h-full flex items-center justify-center">
+      <h2 className="text-xl font-black text-orange-400 text-center">
+        {nome}
+      </h2>
+    </div>
+  </button>
+))}
 
         {/* APOSTILAS */}
         {moduloAtivo === "apostilas" && (
