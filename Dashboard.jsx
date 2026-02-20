@@ -6,6 +6,8 @@ const BASE_IMG =
    CONFIGURAÇÃO CENTRAL
 ============================== */
 const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
+const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/pdf";
+
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
@@ -32,9 +34,6 @@ const CONFIG_ESCOLAS = {
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"],
   },
 };
-
-const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
-const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/pdf";
 
 export default function Dashboard() {
   const [moduloAtivo, setModuloAtivo] = useState("menu");
