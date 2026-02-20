@@ -1,182 +1,110 @@
-import React, { useState } from "react";
-import {
-  Flame,
-  Anchor,
-  Landmark,
-  Zap,
-  BookOpen,
-  ChevronLeft,
-  Download
-} from "lucide-react";
+import React, { useState } from 'react';
+import { Anchor, Landmark, Zap, ChevronLeft, Download, Flame, BookOpen } from 'lucide-react';
 
-// ==========================================
-// ARSENAL DE CONFIGURAÇÃO (ESCOLAS)
-// ==========================================
+/* ==============================
+   CONFIGURAÇÃO CENTRAL
+============================== */
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
-    slug: "colegio_naval",
-    materias: [
-      "MATEMÁTICA",
-      "PORTUGUÊS",
-      "INGLÊS",
-      "HISTÓRIA",
-      "GEOGRAFIA",
-      "FÍSICA",
-      "QUÍMICA",
-      "BIOLOGIA"
-    ]
+    slug: "cn",
+    banner: "cn.jpg",
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA", "BIOLOGIA"]
   },
   "CMRJ": {
     slug: "cmrj",
+    banner: "cmrj.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"]
   },
   "EPCAR": {
     slug: "epcar",
+    banner: "epcar.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"]
   }
 };
 
-export default function BizuMilitarFenix() {
-  // ===============================
-  // ESTADOS (CÉREBRO DO SISTEMA)
-  // ===============================
+const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizu-militar-fenix/main/img";
+const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizu-militar-fenix/main/pdf";
+
+export default function Dashboard() {
   const [moduloAtivo, setModuloAtivo] = useState("menu");
   const [escolaSelecionada, setEscolaSelecionada] = useState("COLÉGIO NAVAL");
 
-  const aluno = { nome: "RECRUTA", pontos: 450 };
-
-  // ===============================
-  // ABRIR MATERIAL (PDF)
-  // ===============================
-  const handleAcessarMaterial = (materia) => {
-    const materiaClean = materia
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-
-    const escolaClean = CONFIG_ESCOLAS[escolaSelecionada].slug;
-
-    const url = `https://raw.githubusercontent.com/ivespe-cpu/bizu-militar-fenix/main/pdf/${materiaClean}_${escolaClean}.pdf`;
-
-    window.open(url, "_blank");
+  const abrirPDF = (materia) => {
+    const mat = materia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
+    window.open(`${BASE_PDF}/${mat}_${slug}.pdf`, "_blank");
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-[#0f172a] border-b-4 border-orange-600 p-5">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="bg-orange-600 p-3 rounded-2xl animate-pulse">
-              <Flame size={28} />
-            </div>
-            <div>
-              <h1 className="text-2xl font-black italic">
-                BIZÚ MILITAR <span className="text-orange-500">FÊNIX</span>
-              </h1>
-              <p className="text-xs text-orange-400 font-bold tracking-widest">
-                CENTRO DE COMANDO
-              </p>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#050505] text-white">
 
-          <div className="flex gap-3">
-            <div className="bg-black/40 px-4 py-2 rounded-xl text-xs font-black text-orange-400">
-              {escolaSelecionada}
-            </div>
-            <div className="bg-black/40 px-4 py-2 rounded-xl text-xs font-black text-green-400">
-              {aluno.pontos} XP
-            </div>
-          </div>
-        </div>
+      {/* HEADER */}
+      <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center gap-4">
+        <Flame className="text-orange-500" />
+        <h1 className="font-black italic text-xl">BIZÚ MILITAR FÊNIX</h1>
       </header>
 
-      <main className="max-w-7xl mx-auto p-8">
-        {/* ================= MENU DE ESCOLAS ================= */}
+      <main className="p-10 max-w-7xl mx-auto">
+
+        {/* MENU DE ESCOLAS */}
         {moduloAtivo === "menu" && (
-          <>
-            <div className="mb-12 border-l-8 border-orange-600 pl-6">
-              <h2 className="text-5xl font-black italic">
-                Centro de Comando
-              </h2>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">
-                Selecione sua frente de batalha
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Object.keys(CONFIG_ESCOLAS).map((escola) => (
               <MenuCard
-                label="COLÉGIO NAVAL"
-                icon={<Anchor />}
-                color="orange"
+                key={escola}
+                label={escola}
+                image={`${BASE_IMG}/${CONFIG_ESCOLAS[escola].banner}`}
                 onClick={() => {
-                  setEscolaSelecionada("COLÉGIO NAVAL");
+                  setEscolaSelecionada(escola);
                   setModuloAtivo("apostilas");
                 }}
               />
-
-              <MenuCard
-                label="CMRJ - 6º ANO"
-                icon={<Landmark />}
-                color="green"
-                onClick={() => {
-                  setEscolaSelecionada("CMRJ");
-                  setModuloAtivo("apostilas");
-                }}
-              />
-
-              <MenuCard
-                label="EPCAR"
-                icon={<Zap />}
-                color="blue"
-                onClick={() => {
-                  setEscolaSelecionada("EPCAR");
-                  setModuloAtivo("apostilas");
-                }}
-              />
-            </div>
-          </>
+            ))}
+          </div>
         )}
 
-        {/* ================= APOSTILAS ================= */}
+        {/* APOSTILAS */}
         {moduloAtivo === "apostilas" && (
           <>
-            <div className="flex justify-between items-center mb-10">
-              <button
-                onClick={() => setModuloAtivo("menu")}
-                className="flex items-center gap-2 bg-white/10 hover:bg-orange-600 px-6 py-3 rounded-full text-xs font-black"
-              >
-                <ChevronLeft size={16} /> VOLTAR
-              </button>
+            <button
+              onClick={() => setModuloAtivo("menu")}
+              className="mb-6 flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full"
+            >
+              <ChevronLeft size={16} /> Voltar
+            </button>
 
-              <h2 className="text-2xl font-black italic text-orange-500">
-                Apostilas — {escolaSelecionada}
-              </h2>
-            </div>
+            <h2 className="text-2xl font-black mb-6">{escolaSelecionada}</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {CONFIG_ESCOLAS[escolaSelecionada].materias.map((materia) => (
-                <div
-                  key={materia}
-                  className="bg-[#0f172a] rounded-[35px] border border-white/10 overflow-hidden"
-                >
-                  <div className="h-44 bg-slate-900 flex flex-col items-center justify-center border-b-4 border-orange-600">
-                    <BookOpen size={48} className="text-orange-500/40" />
-                    <span className="mt-2 text-xl font-black italic">
-                      {materia}
-                    </span>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {CONFIG_ESCOLAS[escolaSelecionada].materias.map((materia) => {
+                const mat = materia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
+                const cardImg = `${BASE_IMG}/card_${mat}_${slug}.png`;
 
-                  <div className="p-6">
-                    <button
-                      onClick={() => handleAcessarMaterial(materia)}
-                      className="w-full bg-white text-black hover:bg-orange-600 hover:text-white py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2"
+                return (
+                  <div
+                    key={materia}
+                    className="rounded-3xl overflow-hidden bg-[#0f172a] border border-white/10"
+                  >
+                    <div
+                      className="h-48 bg-center bg-cover flex items-center justify-center"
+                      style={{ backgroundImage: `url(${cardImg})` }}
                     >
-                      <Download size={18} /> ACESSAR MATERIAL
-                    </button>
+                      <BookOpen size={48} className="text-white/30" />
+                    </div>
+
+                    <div className="p-5">
+                      <h3 className="font-black mb-4">{materia}</h3>
+                      <button
+                        onClick={() => abrirPDF(materia)}
+                        className="w-full bg-orange-600 text-black font-black py-3 rounded-xl flex items-center justify-center gap-2"
+                      >
+                        <Download size={16} /> Estudar PDF
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </>
         )}
@@ -185,27 +113,17 @@ export default function BizuMilitarFenix() {
   );
 }
 
-// ==========================================
-// COMPONENTE: CARTÃO DE MENU
-// ==========================================
-function MenuCard({ label, icon, onClick, color }) {
-  const colors = {
-    orange: "border-orange-600 text-orange-500",
-    green: "border-green-600 text-green-500",
-    blue: "border-blue-600 text-blue-500"
-  };
-
+/* ==============================
+   CARD DE ESCOLA
+============================== */
+function MenuCard({ label, image, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`bg-[#0f172a] p-8 rounded-[35px] border-2 ${colors[color]} transition hover:-translate-y-2 flex flex-col items-center gap-4`}
+      className="h-48 rounded-3xl bg-cover bg-center border border-white/10 hover:scale-105 transition flex items-end p-6 font-black"
+      style={{ backgroundImage: `url(${image})` }}
     >
-      <div className="p-4 bg-black/40 rounded-2xl">
-        {React.cloneElement(icon, { size: 32 })}
-      </div>
-      <span className="text-xs font-black tracking-widest uppercase">
-        {label}
-      </span>
+      {label}
     </button>
   );
 }
