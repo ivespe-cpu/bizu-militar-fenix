@@ -9,17 +9,19 @@ import {
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
+const BASE_IMG =
+  "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
 
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
     banner: "cn.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA"]
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
   },
   "EPCAR": {
     slug: "epcar",
     banner: "epcar.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"]
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
   },
   "CMRJ": {
     slug: "cmrj",
@@ -29,17 +31,17 @@ const CONFIG_ESCOLAS = {
   "ESPÇEX": {
     slug: "espcex",
     banner: "espcex.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS"]
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
   },
   "EEAR": {
     slug: "eear",
     banner: "eear1.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS"]
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
   },
   "ESA": {
     slug: "esa",
     banner: "esa.jpg",
-    materias: ["MATEMÁTICA", "PORTUGUÊS"]
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "QUÍMICA", "FISICA!, "BIOLOGIA"]
   }
 };
 
@@ -81,19 +83,31 @@ export default function Dashboard() {
 
         {/* MENU DE ESCOLAS */}
         {moduloAtivo === "menu" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {Object.keys(CONFIG_ESCOLAS).map((escola) => (
-              <MenuCard
-                key={escola}
-                label={escola}
-                image={`${BASE_IMG}/${CONFIG_ESCOLAS[escola].banner}`}
-                onClick={() => {
-                  setEscolaSelecionada(escola);
-                  setModuloAtivo("apostilas");
-                }}
-              />
-            ))}
-          </div>
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  {Object.keys(CONFIG_ESCOLAS).map((escola) => (
+    <button
+      key={escola}
+      onClick={() => {
+        setEscolaSelecionada(escola);
+        setModuloAtivo("apostilas");
+      }}
+      className="relative h-48 rounded-3xl overflow-hidden border-2 border-yellow-500 hover:scale-105 transition"
+      style={{
+        backgroundImage: `url(${BASE_IMG}/${CONFIG_ESCOLAS[escola].banner})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+    >
+      {/* camada escura */}
+      <div className="absolute inset-0 bg-black/60"></div>
+
+      {/* texto */}
+      <span className="relative z-10 text-yellow-400 font-black text-xl tracking-widest">
+        {escola}
+      </span>
+    </button>
+  ))}
+</div>
         )}
 
         {/* APOSTILAS */}
