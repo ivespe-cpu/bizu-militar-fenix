@@ -257,8 +257,43 @@
                 </div>
             );
 
-            return null;
-        }
+           return (
+  <>
+    {status === 'login' && (
+      <div className="militar-gradient flex items-center justify-center p-6">
+        {/* LOGIN – MANTÉM SEU CÓDIGO */}
+      </div>
+    )}
+
+    {status === 'qg' && (
+      <div className="militar-gradient flex flex-col min-h-screen">
+        {/* QG – MANTÉM SEU CÓDIGO */}
+      </div>
+    )}
+
+    {status === 'central' && (
+      <div className="militar-gradient min-h-screen flex flex-col">
+        {/* CENTRAL – MANTÉM SEU CÓDIGO */}
+      </div>
+    )}
+
+    {status === 'materiais' && (
+      <div className="militar-gradient min-h-screen flex flex-col">
+        {/* MATERIAIS – MANTÉM SEU CÓDIGO */}
+      </div>
+    )}
+
+    {status === 'videos' && (
+      <div className="militar-gradient min-h-screen flex flex-col">
+        {/* VÍDEOS – MANTÉM SEU CÓDIGO */}
+      </div>
+    )}
+
+    {/* 🔥 PDF VIEWER AGORA NO LUGAR CERTO */}
+    <PdfViewer pdf={pdfAtivo} setPdfAtivo={setPdfAtivo} />
+  </>
+);
+}
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
