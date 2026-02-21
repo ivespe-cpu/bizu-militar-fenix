@@ -73,7 +73,7 @@ export default function Dashboard() {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
     const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
-    window.open(`/pdf/${mat}_${slug}.pdf`, "_blank");
+    window.open(`${BASE_PDF}/${mat}_${slug}.pdf`, "_blank");
   };
 
   return (
@@ -99,10 +99,10 @@ export default function Dashboard() {
                 }}
                 className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
                 style={{
-                  backgroundImage: `url(${dados.banner})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
+  backgroundImage: `url(${BASE_IMG}/${dados.banner})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+}}
               >
                 {/* camada escura */}
                 <div className="absolute inset-0 bg-black/60"></div>
@@ -136,7 +136,7 @@ export default function Dashboard() {
                   .normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, "");
                 const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
-                const cardImg = `/png/card_${mat}_${slug}.png`;
+                const cardImg = `png/card_${mat}_${slug}.png`;
 
                 return (
                   <div
