@@ -8,7 +8,7 @@ const PUBLIC = "/bizu-militar-fenix";
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
-    banner: "cn.jpg",
+    banner: "./jpg/cn.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -22,17 +22,17 @@ const CONFIG_ESCOLAS = {
   },
   "CMRJ – 6º ANO": {
     slug: "cmrj",
-    banner: "cmrj.jpg",
+    banner: "./jpg/cmrj.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"],
   },
   EPCAR: {
     slug: "epcar",
-    banner: "epcar.jpg",
+    banner: "./jpg/epcar.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"],
   },
   EsPCEX: {
     slug: "espcex",
-    banner: "espcex.jpg",
+    banner: "./jpg/espcex.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -45,12 +45,12 @@ const CONFIG_ESCOLAS = {
   },
   EEAR: {
     slug: "eear",
-    banner: "eear1.jpg",
+    banner: "./jpg/eear1.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"],
   },
   ESA: {
     slug: "esa",
-    banner: "esa.jpg",
+    banner: "./jpg/esa.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
