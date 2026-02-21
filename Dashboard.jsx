@@ -7,7 +7,7 @@ import { ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
-    banner: "/jpg/cn.jpg",
+    banner: "cn.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -21,17 +21,17 @@ const CONFIG_ESCOLAS = {
   },
   "CMRJ – 6º ANO": {
     slug: "cmrj",
-    banner: "/jpg/cmrj.jpg",
+    banner: "cmrj.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"],
   },
   EPCAR: {
     slug: "epcar",
-    banner: "/jpg/epcar.jpg",
+    banner: "epcar.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"],
   },
   EsPCEX: {
     slug: "espcex",
-    banner: "/jpg/espcex.jpg",
+    banner: "espcex.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -44,12 +44,12 @@ const CONFIG_ESCOLAS = {
   },
   EEAR: {
     slug: "eear",
-    banner: "/jpg/eear.jpg",
+    banner: "eear1.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"],
   },
   ESA: {
     slug: "esa",
-    banner: "/jpg/esa.jpg",
+    banner: "esa.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -59,6 +59,9 @@ const CONFIG_ESCOLAS = {
     ],
   },
 };
+
+const BASE_IMG = "jpg";
+const BASE_PDF = "pdf";
 
 export default function Dashboard() {
   const [moduloAtivo, setModuloAtivo] = useState("menu");
