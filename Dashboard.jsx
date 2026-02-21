@@ -4,6 +4,7 @@ import { ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
 /* ==============================
    CONFIGURAÇÃO CENTRAL
 ============================== */
+const PUBLIC = "/bizu-militar-fenix";
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
@@ -98,12 +99,11 @@ export default function Dashboard() {
       setModuloAtivo("apostilas");
     }}
     className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
-    style={{
-      backgroundImage: `url(${BASE_IMG}/${dados.banner})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}
+   style={{
+  backgroundImage: `url(${PUBLIC}/jpg/${dados.banner})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+}}
   >
     {/* camada escura */}
     <div className="absolute inset-0 bg-black/60"></div>
