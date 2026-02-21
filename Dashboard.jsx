@@ -2,15 +2,12 @@ import React, { useState } from "react";
 import { ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
 
 /* ==============================
-   CONSTANTES GLOBAIS
+   CONFIGURAÇÃO CENTRAL
 ============================== */
-const BASE_IMG = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/jpg";
-const BASE_PDF = "https://raw.githubusercontent.com/ivespe-cpu/bizufenix/main/pdf";
-
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
-    banner: "cn.jpg",
+    banner: "/jpg/cn.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -24,13 +21,42 @@ const CONFIG_ESCOLAS = {
   },
   "CMRJ – 6º ANO": {
     slug: "cmrj",
-    banner: "cmrj.jpg",
+    banner: "/jpg/cmrj.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"],
   },
   EPCAR: {
     slug: "epcar",
-    banner: "epcar.jpg",
+    banner: "/jpg/epcar.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"],
+  },
+  EsPCEX: {
+    slug: "espcex",
+    banner: "/jpg/espcex.jpg",
+    materias: [
+      "MATEMÁTICA",
+      "PORTUGUÊS",
+      "INGLÊS",
+      "HISTÓRIA",
+      "GEOGRAFIA",
+      "FÍSICA",
+      "QUÍMICA",
+    ],
+  },
+  EEAR: {
+    slug: "eear",
+    banner: "/jpg/eear.jpg",
+    materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"],
+  },
+  ESA: {
+    slug: "esa",
+    banner: "/jpg/esa.jpg",
+    materias: [
+      "MATEMÁTICA",
+      "PORTUGUÊS",
+      "INGLÊS",
+      "HISTÓRIA",
+      "GEOGRAFIA",
+    ],
   },
 };
 
@@ -44,7 +70,7 @@ export default function Dashboard() {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
     const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
-    window.open(`${BASE_PDF}/${mat}_${slug}.pdf`, "_blank");
+    window.open(`/pdf/${mat}_${slug}.pdf`, "_blank");
   };
 
   return (
@@ -59,34 +85,34 @@ export default function Dashboard() {
       <main className="p-10 max-w-7xl mx-auto">
 
         {/* MENU DE ESCOLAS */}
-       {moduloAtivo === "menu" && (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
-      <button
-        key={nome}
-        onClick={() => {
-          setEscolaSelecionada(nome);
-          setModuloAtivo("apostilas");
-        }}
-        className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
-        style={{
-          backgroundImage: `url(${BASE_IMG}/${dados.banner})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* camada escura */}
-        <div className="absolute inset-0 bg-black/60"></div>
+        {moduloAtivo === "menu" && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
+              <button
+                key={nome}
+                onClick={() => {
+                  setEscolaSelecionada(nome);
+                  setModuloAtivo("apostilas");
+                }}
+                className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
+                style={{
+                  backgroundImage: `url(${dados.banner})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                {/* camada escura */}
+                <div className="absolute inset-0 bg-black/60"></div>
 
-        <div className="relative z-10 h-full flex items-center justify-center">
-          <h2 className="text-xl font-black text-orange-400 text-center">
-            {nome}
-          </h2>
-        </div>
-      </button>
-    ))}
-  </div>
-)}
+                <div className="relative z-10 h-full flex items-center justify-center">
+                  <h2 className="text-xl font-black text-orange-400 text-center">
+                    {nome}
+                  </h2>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* APOSTILAS */}
         {moduloAtivo === "apostilas" && (
@@ -107,7 +133,7 @@ export default function Dashboard() {
                   .normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, "");
                 const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
-                const cardImg = `${BASE_IMG}/card_${mat}_${slug}.png`;
+                const cardImg = `/png/card_${mat}_${slug}.png`;
 
                 return (
                   <div
