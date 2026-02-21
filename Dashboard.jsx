@@ -8,7 +8,7 @@ const PUBLIC = "/bizu-militar-fenix";
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
-    banner: "./jpg/cn.jpg",
+   banner: "/bizu-militar-fenix/jpg/cn.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -22,17 +22,17 @@ const CONFIG_ESCOLAS = {
   },
   "CMRJ – 6º ANO": {
     slug: "cmrj",
-    banner: "./jpg/cmrj.jpg",
+    banner: "/bizu-militar-fenix/jpg/cmrj.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"],
   },
   EPCAR: {
     slug: "epcar",
-    banner: "./jpg/epcar.jpg",
+    banner: "/bizu-militar-fenix/jpg/epcar.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"],
   },
   EsPCEX: {
     slug: "espcex",
-    banner: "./jpg/espcex.jpg",
+    banner: "/bizu-militar-fenix/jpg/espcex.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -45,12 +45,12 @@ const CONFIG_ESCOLAS = {
   },
   EEAR: {
     slug: "eear",
-    banner: "./jpg/eear1.jpg",
+    banner: "/bizu-militar-fenix/jpg/eear1.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"],
   },
   ESA: {
     slug: "esa",
-    banner: "./jpg/esa.jpg",
+    banner: "/bizu-militar-fenix/jpg/esa.jpg",
     materias: [
       "MATEMÁTICA",
       "PORTUGUÊS",
@@ -99,9 +99,9 @@ export default function Dashboard() {
   }}
   className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
   style={{
-    backgroundImage: `url(/bizu-militar-fenix/jpg/${dados.banner})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+  backgroundImage: `url(${dados.banner})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
   }}
 >
