@@ -92,20 +92,20 @@ export default function Dashboard() {
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
    {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
 <button
- <button
   key={nome}
   onClick={() => {
     setEscolaSelecionada(nome);
     setModuloAtivo("apostilas");
   }}
-  className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition bg-black"
+  className="relative h-56 rounded-3xl overflow-hidden border-2 border-orange-600 hover:scale-105 transition"
 >
-  <img
-    src={`/bizu-militar-fenix/jpg/${dados.banner}`}
-    alt={nome}
-    className="absolute inset-0 w-full h-full object-cover opacity-60"
-  />
-  <div className="absolute inset-0 bg-black/60"></div>
+  <div
+    className="absolute inset-0"
+    style={{
+      background: `url(https://ivespe-cpu.github.io/bizu-militar-fenix/jpg/${dados.banner}) center / cover no-repeat`,
+      filter: "brightness(0.45)",
+    }}
+  ></div>
 
   <div className="relative z-10 h-full flex items-center justify-center">
     <h2 className="text-xl font-black text-orange-400 text-center">
