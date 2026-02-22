@@ -24,8 +24,6 @@
 
     <script type="text/babel">
         const { useState } = React;
-        
-        // ENDEREÇO DA SUA OPERAÇÃO NO GITHUB
         const BASE_URL = "https://ivespe-cpu.github.io/bizu-militar-fenix";
 
         const CONFIG_ESCOLAS = {
@@ -33,7 +31,7 @@
             "CMRJ": { slug: "cmrj", materias: ["MATEMÁTICA", "PORTUGUÊS"] },
             "EPCAR": { slug: "epcar", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"] },
             "EsPCEX": { slug: "espcex", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA"] },
-            "EEAR": { slug: "eear", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"] },
+            "EEAR": { slug: "eear1", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"] },
             "ESA": { slug: "esa", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA"] }
         };
 
@@ -50,18 +48,16 @@
             const [matricula, setMatricula] = useState('');
             const [escolaSel, setEscolaSel] = useState(null);
 
-            const formatarMateria = (m) => m.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const formatarParaLink = (texto) => {
+                return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+            };
 
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
                 const m = matricula.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === m);
-                if (aluno) {
-                    setUser(aluno);
-                    setStatus('qg');
-                } else {
-                    alert("MATRÍCULA NÃO ENCONTRADA NO PELOTÃO!");
-                }
+                if (aluno) { setUser(aluno); setStatus('qg'); }
+                else { alert("ACESSO NEGADO!"); }
             };
 
             if (status === 'login') return (
@@ -71,14 +67,11 @@
                             <source src={`${BASE_URL}/video/logo_bizu2.mp4`} type="video/mp4" />
                         </video>
                         <form onSubmit={handleLogin}>
-                            <input 
-                                type="text" 
-                                value={matricula} 
-                                onChange={(e) => setMatricula(e.target.value)}
+                            <input type="text" value={matricula} onChange={(e) => setMatricula(e.target.value)}
                                 className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl outline-none focus:border-orange-600" 
-                                placeholder="DIGITE SUA MATRÍCULA" 
+                                placeholder="SUA MATRÍCULA" 
                             />
-                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg">AUTENTICAR</button>
+                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg">ENTRAR</button>
                         </form>
                     </div>
                 </div>
@@ -86,36 +79,32 @@
 
             if (status === 'qg') return (
                 <div className="min-h-screen bg-[#050505]">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between">
-                        <h1 className="font-black italic text-xl text-orange-500">QG BIZÚ MILITAR</h1>
+                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between shadow-xl">
+                        <h1 className="font-black italic text-xl text-orange-500 uppercase">QG BIZÚ MILITAR</h1>
                         <div className="text-right">
-                            <p className="text-white font-bold text-xs">BEM-VINDO, {user?.p}</p>
+                            <p className="text-white font-bold text-xs uppercase">{user?.p}</p>
                             <button onClick={() => setStatus('login')} className="text-red-500 text-[10px] font-black uppercase">Sair</button>
                         </div>
                     </header>
-
                     <main className="p-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
                         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
                             {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
-                                <button 
-                                    key={nome}
-                                    onClick={() => { setEscolaSel(nome); setStatus('materiais'); }}
+                                <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('materiais'); }}
                                     className="relative h-48 rounded-3xl overflow-hidden group border-2 border-white/5 hover:border-orange-600 transition-all"
                                 >
-                                    <div className="absolute inset-0 bg-center bg-cover"
-                                         style={{ backgroundImage: `url(${BASE_URL}/jpg/${dados.slug}.jpg)` }}>
+                                    <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${BASE_URL}/jpg/${dados.slug}.jpg)` }}>
                                         <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40"></div>
                                     </div>
                                     <h2 className="relative z-10 text-2xl font-black text-white italic">{nome}</h2>
                                 </button>
                             ))}
                         </div>
-                        <div className="bg-[#0f172a] rounded-3xl p-6 h-fit border border-white/5">
-                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase">Ranking</h3>
+                        <div className="bg-[#0f172a] rounded-3xl p-6 border border-white/5 shadow-2xl h-fit">
+                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase text-sm tracking-widest">Ranking</h3>
                             {ALUNOS_DB.map((a, i) => (
-                                <div key={i} className="flex justify-between p-2 text-[10px] border-b border-white/5">
-                                    <span>{a.p}</span>
-                                    <span className="text-orange-400 font-bold">{a.pts}</span>
+                                <div key={i} className="flex justify-between p-2 text-[10px] border-b border-white/5 bg-white/5 mb-1 rounded">
+                                    <span className="font-bold">{a.p}</span>
+                                    <span className="text-orange-400 font-black">{a.pts}</span>
                                 </div>
                             ))}
                         </div>
@@ -127,32 +116,39 @@
                 const escola = CONFIG_ESCOLAS[escolaSel];
                 return (
                     <div className="min-h-screen bg-[#050505]">
-                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between">
+                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between shadow-xl">
                             <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
-                            <button onClick={() => setStatus('qg')} className="bg-white text-black px-4 py-1 rounded font-bold">VOLTAR</button>
+                            <button onClick={() => setStatus('qg')} className="bg-white text-black px-6 py-2 rounded-lg font-black text-xs hover:bg-orange-500">VOLTAR</button>
                         </header>
                         <main className="p-8 max-w-7xl mx-auto">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {escola.materias.map((materia) => (
-                                    <div key={materia} className="bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 card-shadow transition-all hover:scale-105">
-                                        <div className="h-48 bg-black">
-                                            <img 
-                                                src={`${BASE_URL}/png/card_${formatarMateria(materia)}_${escola.slug}.png`} 
-                                                className="w-full h-full object-contain"
-                                                alt={materia}
-                                                onError={(e) => { e.target.src = "https://via.placeholder.com/300x400?text=CAPA+EM+BREVE"; }}
-                                            />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {escola.materias.map((materia) => {
+                                    const nomePadrao = formatarParaLink(materia);
+                                    const linkIMG = `${BASE_URL}/png/card_${nomePadrao}_${escola.slug.replace('1','')}.png`;
+                                    // Obs: O replace('1','') no slug garante que a imagem do card busque 'cn' ou 'eear' mesmo que o slug do botão seja 'eear1'
+
+                                    return (
+                                        <div key={materia} className="bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 card-shadow transition-all hover:scale-105 group">
+                                            <div className="h-56 bg-black overflow-hidden">
+                                                <img 
+                                                    src={linkIMG} 
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    alt={materia}
+                                                    onError={(e) => { e.target.src = "https://via.placeholder.com/300x400?text=CAPA+EM+BREVE"; }}
+                                                />
+                                            </div>
+                                            <div className="p-5 text-center">
+                                                <h3 className="font-black text-xs mb-4 uppercase text-orange-100 h-8 flex items-center justify-center">{materia}</h3>
+                                                <button 
+                                                    onClick={() => window.open(`${BASE_URL}/pdf/${nomePadrao}_${escola.slug.replace('1','')}.pdf`, '_blank')}
+                                                    className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-orange-500"
+                                                >
+                                                    LER APOSTILA
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="p-4">
-                                            <button 
-                                                onClick={() => window.open(`${BASE_URL}/pdf/${formatarMateria(materia)}_${escola.slug}.pdf`, '_blank')}
-                                                className="w-full bg-orange-600 text-black font-black py-2 rounded-xl text-sm"
-                                            >
-                                                LER APOSTILA
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </main>
                     </div>
