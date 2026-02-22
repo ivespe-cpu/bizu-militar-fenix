@@ -9,35 +9,28 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        :root { --azul-marinho: #050505; --dourado: #D4AF37; --laranja-fenix: #ea580c; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Inter', sans-serif; }
+        :root { --azul-marinho: #050505; --dourado: #D4AF37; --laranja: #ea580c; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .militar-gradient { background: radial-gradient(circle at top, #1e293b 0%, #050505 100%); min-height: 100vh; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--laranja-fenix); border-radius: 10px; }
-
         .btn-ouro { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; }
         .btn-ouro:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+        .card-shadow { box-shadow: 0 0 15px rgba(234, 88, 12, 0.1); }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        // Caminho base do seu GitHub Pages
+        const { useState } = React;
+        
+        // ENDEREÇO DA SUA OPERAÇÃO NO GITHUB
         const BASE_URL = "https://ivespe-cpu.github.io/bizu-militar-fenix";
 
-        /* ==============================
-           CONFIGURAÇÃO DE DADOS
-        ============================== */
         const CONFIG_ESCOLAS = {
             "COLÉGIO NAVAL": { slug: "cn", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA", "BIOLOGIA"] },
-            "CMRJ – 6º ANO": { slug: "cmrj", materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"] },
+            "CMRJ": { slug: "cmrj", materias: ["MATEMÁTICA", "PORTUGUÊS"] },
             "EPCAR": { slug: "epcar", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"] },
             "EsPCEX": { slug: "espcex", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA"] },
             "EEAR": { slug: "eear", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"] },
@@ -46,151 +39,120 @@
 
         const ALUNOS_DB = [
             { m: "esp0815", p: "COMANDANTE", pts: "∞" },
+            { m: "alm170", p: "SG. MOURA", pts: 1450 },
             { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 },
-            { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
             { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }
-            // ... outros alunos podem ser adicionados aqui
         ];
 
-        /* ==============================
-           COMPONENTES AUXILIARES
-        ============================== */
-        const Icon = ({ name, size = 24, className = "" }) => {
-            const LucideIcon = lucide[name];
-            return LucideIcon ? <LucideIcon size={size} className={className} /> : null;
-        };
-
-        /* ==============================
-           COMPONENTE PRINCIPAL (APP)
-        ============================== */
         function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
             const [matricula, setMatricula] = useState('');
             const [escolaSel, setEscolaSel] = useState(null);
 
-            const formatarParaArquivo = (texto) => {
-                return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
-            };
+            const formatarMateria = (m) => m.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
                 const m = matricula.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === m);
-                if (aluno || m === "admin") {
-                    setUser(aluno || {p: "ADMIN", pts: "0"});
+                if (aluno) {
+                    setUser(aluno);
                     setStatus('qg');
                 } else {
-                    alert("ACESSO NEGADO! Verifique sua matrícula.");
+                    alert("MATRÍCULA NÃO ENCONTRADA NO PELOTÃO!");
                 }
             };
 
-            // --- TELA DE LOGIN ---
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-4 militar-gradient">
                     <div className="max-w-md w-full bg-black/80 p-8 rounded-3xl border-2 border-orange-600/30 shadow-2xl text-center">
-                        {/* VÍDEO DA FÊNIX */}
-                        <video className="w-full rounded-2xl mb-6 border border-orange-600/20 shadow-[0_0_20px_rgba(234,88,12,0.2)]" autoPlay loop muted playsInline>
+                        <video className="w-full rounded-2xl mb-6 border border-orange-600/20" autoPlay loop muted playsInline>
                             <source src={`${BASE_URL}/video/logo_bizu2.mp4`} type="video/mp4" />
                         </video>
-                        <h1 className="text-2xl font-black italic text-orange-500 mb-6">BIZÚ MILITAR FÊNIX</h1>
                         <form onSubmit={handleLogin}>
                             <input 
-                                type="password" 
+                                type="text" 
                                 value={matricula} 
                                 onChange={(e) => setMatricula(e.target.value)}
-                                className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl focus:border-orange-600 outline-none transition-all" 
+                                className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl outline-none focus:border-orange-600" 
                                 placeholder="DIGITE SUA MATRÍCULA" 
                             />
-                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg shadow-lg">AUTENTICAR</button>
+                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg">AUTENTICAR</button>
                         </form>
                     </div>
                 </div>
             );
 
-            // --- TELA QG (MENU DE ESCOLAS) ---
             if (status === 'qg') return (
                 <div className="min-h-screen bg-[#050505]">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between shadow-xl">
-                        <div className="flex items-center gap-3">
-                            <Icon name="Flame" className="text-orange-500" />
-                            <h1 className="font-black italic text-xl">QG FÊNIX</h1>
-                        </div>
+                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between">
+                        <h1 className="font-black italic text-xl text-orange-500">QG BIZÚ MILITAR</h1>
                         <div className="text-right">
-                            <p className="text-orange-400 font-bold text-xs uppercase">{user?.p}</p>
-                            <button onClick={() => setStatus('login')} className="text-red-500 text-[10px] font-black hover:underline">LOGOUT</button>
+                            <p className="text-white font-bold text-xs">BEM-VINDO, {user?.p}</p>
+                            <button onClick={() => setStatus('login')} className="text-red-500 text-[10px] font-black uppercase">Sair</button>
                         </div>
                     </header>
 
                     <main className="p-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
-                        {/* GRID DE ESCOLAS */}
                         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
                             {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
                                 <button 
                                     key={nome}
-                                    onClick={() => { setEscolaSel(nome); setStatus('dashboard'); }}
+                                    onClick={() => { setEscolaSel(nome); setStatus('materiais'); }}
                                     className="relative h-48 rounded-3xl overflow-hidden group border-2 border-white/5 hover:border-orange-600 transition-all"
                                 >
-                                    <div className="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110"
+                                    <div className="absolute inset-0 bg-center bg-cover"
                                          style={{ backgroundImage: `url(${BASE_URL}/jpg/${dados.slug}.jpg)` }}>
                                         <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40"></div>
                                     </div>
-                                    <h2 className="relative z-10 text-2xl font-black text-white italic drop-shadow-2xl">{nome}</h2>
+                                    <h2 className="relative z-10 text-2xl font-black text-white italic">{nome}</h2>
                                 </button>
                             ))}
                         </div>
-
-                        {/* RANKING LATERAL */}
-                        <div className="bg-[#0f172a] rounded-3xl border border-white/5 p-6 h-fit shadow-2xl">
-                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase tracking-tighter">Ranking de Elite</h3>
-                            <div className="space-y-3">
-                                {ALUNOS_DB.slice(0, 5).map((a, i) => (
-                                    <div key={i} className="flex justify-between items-center p-3 bg-white/5 rounded-xl border-l-4 border-orange-600">
-                                        <span className="text-[10px] font-bold">{a.p}</span>
-                                        <span className="text-orange-400 font-black text-xs">{a.pts}</span>
-                                    </div>
-                                ))}
-                            </div>
+                        <div className="bg-[#0f172a] rounded-3xl p-6 h-fit border border-white/5">
+                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase">Ranking</h3>
+                            {ALUNOS_DB.map((a, i) => (
+                                <div key={i} className="flex justify-between p-2 text-[10px] border-b border-white/5">
+                                    <span>{a.p}</span>
+                                    <span className="text-orange-400 font-bold">{a.pts}</span>
+                                </div>
+                            ))}
                         </div>
                     </main>
                 </div>
             );
 
-            // --- TELA DASHBOARD (MATÉRIAS) ---
-            if (status === 'dashboard') {
+            if (status === 'materiais') {
                 const escola = CONFIG_ESCOLAS[escolaSel];
                 return (
                     <div className="min-h-screen bg-[#050505]">
-                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center gap-4">
-                            <button onClick={() => setStatus('qg')} className="bg-white/10 p-2 rounded-full hover:bg-white/20">
-                                <Icon name="ChevronLeft" />
-                            </button>
-                            <h1 className="font-black italic text-xl uppercase">{escolaSel}</h1>
+                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between">
+                            <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
+                            <button onClick={() => setStatus('qg')} className="bg-white text-black px-4 py-1 rounded font-bold">VOLTAR</button>
                         </header>
-
-                        <main className="p-10 max-w-7xl mx-auto">
+                        <main className="p-8 max-w-7xl mx-auto">
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {escola.materias.map((materia) => {
-                                    const matFile = formatarParaArquivo(materia);
-                                    const cardImg = `${BASE_URL}/png/card_${matFile}_${escola.slug}.png`;
-                                    
-                                    return (
-                                        <div key={materia} className="bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 shadow-2xl hover:border-orange-600/50 transition-all">
-                                            <div className="h-40 bg-center bg-cover relative" style={{ backgroundImage: `url(${cardImg})`, backgroundColor: '#1e293b' }}>
-                                                <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent"></div>
-                                            </div>
-                                            <div className="p-5">
-                                                <h3 className="font-black text-sm mb-4 uppercase text-orange-100">{materia}</h3>
-                                                <button 
-                                                    onClick={() => window.open(`${BASE_URL}/pdf/${matFile}_${escola.slug}.pdf`, '_blank')}
-                                                    className="w-full bg-orange-600 hover:bg-orange-500 text-black font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-transform active:scale-95"
-                                                >
-                                                    <Icon name="Download" size={16} /> ACESSAR BIZÚ
-                                                </button>
-                                            </div>
+                                {escola.materias.map((materia) => (
+                                    <div key={materia} className="bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 card-shadow transition-all hover:scale-105">
+                                        <div className="h-48 bg-black">
+                                            <img 
+                                                src={`${BASE_URL}/png/card_${formatarMateria(materia)}_${escola.slug}.png`} 
+                                                className="w-full h-full object-contain"
+                                                alt={materia}
+                                                onError={(e) => { e.target.src = "https://via.placeholder.com/300x400?text=CAPA+EM+BREVE"; }}
+                                            />
                                         </div>
-                                    );
-                                })}
+                                        <div className="p-4">
+                                            <button 
+                                                onClick={() => window.open(`${BASE_URL}/pdf/${formatarMateria(materia)}_${escola.slug}.pdf`, '_blank')}
+                                                className="w-full bg-orange-600 text-black font-black py-2 rounded-xl text-sm"
+                                            >
+                                                LER APOSTILA
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </main>
                     </div>
