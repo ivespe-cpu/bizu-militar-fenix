@@ -113,7 +113,7 @@ export default function Dashboard() {
     </h2>
   </div>
 </button>
-))}
+
         {/* APOSTILAS */}
         {moduloAtivo === "apostilas" && (
           <>
