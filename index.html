@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIZÚ MILITAR FÊNIX - PLATAFORMA DE ELITE</title>
-    
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         :root { --azul-marinho: #050505; --dourado: #D4AF37; --laranja: #ea580c; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: sans-serif; }
         .militar-gradient { background: radial-gradient(circle at top, #1e293b 0%, #050505 100%); min-height: 100vh; }
         .btn-ouro { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; }
         .btn-ouro:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
-        .card-shadow { box-shadow: 0 0 15px rgba(234, 88, 12, 0.1); }
+        /* Brilho nos cards */
+        .card-militar { border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; background: #0f172a; }
+        .card-militar:hover { border-color: var(--laranja); box-shadow: 0 0 20px rgba(234, 88, 12, 0.2); }
     </style>
 </head>
 <body>
@@ -48,59 +48,57 @@
             const [matricula, setMatricula] = useState('');
             const [escolaSel, setEscolaSel] = useState(null);
 
-            const formatarParaLink = (texto) => {
-                return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
-            };
+            const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
 
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
                 const m = matricula.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === m);
                 if (aluno) { setUser(aluno); setStatus('qg'); }
-                else { alert("ACESSO NEGADO!"); }
+                else { alert("MATRÍCULA NÃO CADASTRADA!"); }
             };
 
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-4 militar-gradient">
-                    <div className="max-w-md w-full bg-black/80 p-8 rounded-3xl border-2 border-orange-600/30 shadow-2xl text-center">
-                        <video className="w-full rounded-2xl mb-6 border border-orange-600/20" autoPlay loop muted playsInline>
+                    <div className="max-w-md w-full bg-black/80 p-8 rounded-3xl border-2 border-orange-600/30 text-center">
+                        <video className="w-full rounded-2xl mb-6 border border-orange-600/20 shadow-lg" autoPlay loop muted playsInline>
                             <source src={`${BASE_URL}/video/logo_bizu2.mp4`} type="video/mp4" />
                         </video>
                         <form onSubmit={handleLogin}>
                             <input type="text" value={matricula} onChange={(e) => setMatricula(e.target.value)}
-                                className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl outline-none focus:border-orange-600" 
+                                className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl outline-none focus:border-orange-500" 
                                 placeholder="SUA MATRÍCULA" 
                             />
-                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg">ENTRAR</button>
+                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg">ENTRAR NO QG</button>
                         </form>
                     </div>
                 </div>
             );
 
             if (status === 'qg') return (
-                <div className="min-h-screen bg-[#050505]">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between shadow-xl">
-                        <h1 className="font-black italic text-xl text-orange-500 uppercase">QG BIZÚ MILITAR</h1>
+                <div className="min-h-screen">
+                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center shadow-2xl">
+                        <h1 className="font-black italic text-xl text-orange-500">BIZÚ MILITAR FÊNIX</h1>
                         <div className="text-right">
-                            <p className="text-white font-bold text-xs uppercase">{user?.p}</p>
+                            <span className="text-xs font-bold block">{user?.p}</span>
                             <button onClick={() => setStatus('login')} className="text-red-500 text-[10px] font-black uppercase">Sair</button>
                         </div>
                     </header>
                     <main className="p-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
                         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {Object.entries(CONFIG_ESCOLAS).map(([nome, dados]) => (
+                            {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
                                 <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('materiais'); }}
                                     className="relative h-48 rounded-3xl overflow-hidden group border-2 border-white/5 hover:border-orange-600 transition-all"
                                 >
-                                    <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${BASE_URL}/jpg/${dados.slug}.jpg)` }}>
-                                        <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40"></div>
+                                    <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
+                                        <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all"></div>
                                     </div>
-                                    <h2 className="relative z-10 text-2xl font-black text-white italic">{nome}</h2>
+                                    <span className="relative z-10 text-2xl font-black italic">{nome}</span>
                                 </button>
                             ))}
                         </div>
-                        <div className="bg-[#0f172a] rounded-3xl p-6 border border-white/5 shadow-2xl h-fit">
-                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase text-sm tracking-widest">Ranking</h3>
+                        <div className="bg-[#0f172a] rounded-3xl p-6 border border-white/5 shadow-xl h-fit">
+                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase text-sm">Ranking do Pelotão</h3>
                             {ALUNOS_DB.map((a, i) => (
                                 <div key={i} className="flex justify-between p-2 text-[10px] border-b border-white/5 bg-white/5 mb-1 rounded">
                                     <span className="font-bold">{a.p}</span>
@@ -114,41 +112,46 @@
 
             if (status === 'materiais') {
                 const escola = CONFIG_ESCOLAS[escolaSel];
+                const slugLimpo = escola.slug.replace('1','');
+                
                 return (
-                    <div className="min-h-screen bg-[#050505]">
-                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex items-center justify-between shadow-xl">
+                    <div className="min-h-screen">
+                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
                             <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
                             <button onClick={() => setStatus('qg')} className="bg-white text-black px-6 py-2 rounded-lg font-black text-xs hover:bg-orange-500">VOLTAR</button>
                         </header>
-                        <main className="p-8 max-w-7xl mx-auto">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                {escola.materias.map((materia) => {
-                                    const nomePadrao = formatarParaLink(materia);
-                                    const linkIMG = `${BASE_URL}/png/card_${nomePadrao}_${escola.slug.replace('1','')}.png`;
-                                    // Obs: O replace('1','') no slug garante que a imagem do card busque 'cn' ou 'eear' mesmo que o slug do botão seja 'eear1'
+                        
+                        {/* BOTÕES DE RECURSOS EXTRAS (BASEADO NO SEU PRINT) */}
+                        <div className="flex flex-wrap justify-center gap-4 p-6 bg-black/30">
+                            <button onClick={() => window.open(`${BASE_URL}/pdf/edital2023${slugLimpo}.pdf`)} className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-[10px] font-bold border border-white/20">📜 EDITAIS</button>
+                            <button onClick={() => window.open(`${BASE_URL}/pdf/prova2023${slugLimpo}_mat_ingles.pdf`)} className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-[10px] font-bold border border-white/20">📝 PROVAS ANTERIORES</button>
+                            <button onClick={() => window.open(`${BASE_URL}/pdf/gabarito2024${slugLimpo}.pdf`)} className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-[10px] font-bold border border-white/20">✅ GABARITOS</button>
+                        </div>
 
-                                    return (
-                                        <div key={materia} className="bg-[#0f172a] rounded-3xl overflow-hidden border border-white/5 card-shadow transition-all hover:scale-105 group">
-                                            <div className="h-56 bg-black overflow-hidden">
-                                                <img 
-                                                    src={linkIMG} 
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    alt={materia}
-                                                    onError={(e) => { e.target.src = "https://via.placeholder.com/300x400?text=CAPA+EM+BREVE"; }}
-                                                />
-                                            </div>
-                                            <div className="p-5 text-center">
-                                                <h3 className="font-black text-xs mb-4 uppercase text-orange-100 h-8 flex items-center justify-center">{materia}</h3>
-                                                <button 
-                                                    onClick={() => window.open(`${BASE_URL}/pdf/${nomePadrao}_${escola.slug.replace('1','')}.pdf`, '_blank')}
-                                                    className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-orange-500"
-                                                >
-                                                    LER APOSTILA
-                                                </button>
-                                            </div>
+                        <main className="p-8 max-w-7xl mx-auto">
+                            <h2 className="text-center text-white/40 text-[10px] font-black tracking-[0.3em] mb-8 uppercase">Apostilas Operacionais</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {escola.materias.map((m) => (
+                                    <div key={m} className="card-militar rounded-3xl overflow-hidden group">
+                                        <div className="h-64 bg-black p-4 flex items-center justify-center">
+                                            <img 
+                                                src={`${BASE_URL}/png/card_${formatar(m)}_${slugLimpo}.png`} 
+                                                className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500 shadow-2xl"
+                                                alt={m}
+                                                onError={(e) => { e.target.src = "https://via.placeholder.com/300x450?text=CAPA+EM+BREVE"; }}
+                                            />
                                         </div>
-                                    );
-                                })}
+                                        <div className="p-5 text-center bg-black/20">
+                                            <h3 className="font-black text-[11px] mb-4 uppercase text-orange-100">{m}</h3>
+                                            <button 
+                                                onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${slugLimpo}.pdf`, '_blank')}
+                                                className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-white transition-colors"
+                                            >
+                                                LER APOSTILA
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </main>
                     </div>
