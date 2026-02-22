@@ -5,6 +5,7 @@ import { ChevronLeft, Download, Flame, BookOpen } from "lucide-react";
    CONFIGURAÇÃO CENTRAL
 ============================== */
 const PUBLIC = "/bizu-militar-fenix";
+const BASE_IMG = "jpg";
 const CONFIG_ESCOLAS = {
   "COLÉGIO NAVAL": {
     slug: "cn",
