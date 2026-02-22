@@ -11,8 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        :root { --azul-marinho: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        :root { --verde-oliva: #001233; --dourado-ouro: #D4AF37; --vermelho-tatico: #bc0000; }
+        body { background-color: var(--verde-musgo); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
         .militar-gradient { background: linear-gradient(135deg, #001233 0%, #000814 100%); min-height: 100vh; }
         .linha-vermelha { height: 4px; background: repeating-linear-gradient(45deg, var(--vermelho-tatico), var(--vermelho-tatico) 10px, #7b0000 10px, #7b0000 20px); width: 100%; }
         
@@ -152,20 +152,21 @@ useEffect(() => {
                 setPdfAtivo({ url: `pdf/${matClean}_${escolaClean}.pdf`, nome: `${materia} - ${escolaSel}` });
             };
 
-            const renderContent = () => {
+                       const renderContent = () => {
                 if (status === 'login') return (
                     <div className="min-h-screen flex items-center justify-center p-6">
-                        <div className="max-w-md w-full bg-black/80 p-8 rounded-2xl border-2 border-[#D4AF37]/30 text-center">
+                        <div className="max-w-md w-full bg-black/80 p-8 rounded-2xl border-2 border-[#D4AF37]/30 shadow-2xl text-center">
                             <video className="w-full rounded mb-6 border border-[#D4AF37]/20" autoPlay loop muted playsInline>
-                                <source src={BASE_URL + "video/bizu8.mp4"} type="video/mp4" />
+                                <source src={BASE_URL + "bizu8.mp4"} type="video/mp4" />
                             </video>
                             <div className="linha-vermelha mb-8"></div>
                             <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
-                                   className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono" placeholder="MATRÍCULA" />
+                                   className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono focus:outline-none focus:border-[#D4AF37]" placeholder="MATRÍCULA" />
                             <button onClick={handleLogin} className="w-full btn-material">AUTENTICAR</button>
                         </div>
                     </div>
                 );
+
 
                 if (status === 'qg') return (
                     <div className="min-h-screen">
