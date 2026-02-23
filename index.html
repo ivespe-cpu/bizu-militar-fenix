@@ -13,37 +13,34 @@
         body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
         .militar-gradient { background: radial-gradient(circle at top, #1e293b 0%, #050505 100%); min-height: 100vh; }
         
-        /* BOTÕES DOURADOS MODERNOS */
-        .btn-ouro { 
-            background: transparent; 
-            border: 2px solid var(--dourado); 
-            color: var(--dourado); 
-            font-weight: 900; 
-            transition: 0.3s; 
-        }
-        .btn-ouro:hover { 
-            background: var(--dourado); 
-            color: black;
-            transform: scale(1.05); 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); 
-        }
+        .btn-ouro { background: transparent; border: 2px solid var(--dourado); color: var(--dourado); font-weight: 900; transition: 0.3s; cursor: pointer; }
+        .btn-ouro:hover { background: var(--dourado); color: black; transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
         
-        .btn-ouro-solido { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; }
+        .btn-ouro-solido { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; cursor: pointer; }
         .btn-ouro-solido:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
 
+        .btn-material { background: var(--laranja); color: white; font-weight: 900; padding: 12px; border-radius: 8px; width: 100%; transition: 0.3s; }
+        .btn-material:hover { background: #c2410c; transform: translateY(-2px); }
+
+        .card-escola { 
+            height: 200px; border-radius: 15px; background-size: cover; background-position: center;
+            position: relative; overflow: hidden; cursor: pointer; border: 2px solid rgba(255,255,255,0.1);
+        }
+        .card-escola::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,0.6); transition: 0.3s; }
+        .card-escola:hover::before { background: rgba(0,0,0,0.3); }
+        .sigla-txt { position: relative; z-index: 10; font-size: 1.5rem; font-weight: 900; italic: true; display: flex; align-items: center; justify-content: center; h-full; height: 100%; text-shadow: 2px 2px 10px black; }
+
         .card-operacional { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-        .card-operacional:hover { border-color: var(--laranja); }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: var(--laranja); border-radius: 10px; }
+        .motion-header { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--laranja); }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-       const { useState, useEffect } = React;
+        const { useState, useEffect } = React;
         const BASE_URL = "https://ivespe-cpu.github.io/bizu-militar-fenix";
 
         const CONFIG_ESCOLAS = {
@@ -54,67 +51,21 @@
             "EEAR": { slug: "eear1", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"] },
             "ESA": { slug: "esa", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA"] }
         };
-const REPOSITORIO_EXTRAS = {
-            "cn": {
-                edital: ["edital2023cn.pdf"],
-                provas_anteriores: ["prova2025cn_mat_ingles.pdf"],
-                gabaritos: ["gabarito2025cn.pdf"]
-            },
-            "cmrj": {
-                edital: ["edital_cmrj.pdf"],
-                provas_anteriores: [],
-                gabaritos: []
-            }
-        };
-       const ALUNOS_DB = [
+
+        const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
-            { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
-            { m: "bbs203", p: "SD. BERNARDO", pts: 900 }, { m: "cvs208", p: "CB. CAMILA", pts: 1050 },
-            { m: "dva194", p: "CB. ALBUQUERQUE", pts: 1300 }, { m: "esp192", p: "SG. PEIXOTO", pts: 1250 },
-            { m: "egc228", p: "CB. ENZO", pts: 850 }, { m: "gsp187", p: "SG. GABRIELLE PEREIRA", pts: 1400 },
-            { m: "gac174", p: "SG. GABRIELLY COUTINHO", pts: 1350 }, { m: "gem240", p: "SD.MICAELA", pts: 950 },
-            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "hls197", p: "CB. SALES", pts: 1150 },
-            { m: "icg127", p: "SG. GRANADO", pts: 1600 }, { m: "iws159", p: "SG. LIMA", pts: 1550 },
-            { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
-            { m: "jva190", p: "SG. ANDRADE", pts: 1480 }, { m: "jhs198", p: "CB. JOSUÉ", pts: 1120 },
-            { m: "jcm166", p: "SG. JUNIO", pts: 1420 }, { m: "kfs245", p: "CB. FONTES", pts: 1080 },
-            { m: "lgb226", p: "CB. BELTRON", pts: 1190 }, { m: "lod225", p: "CB. FADINI", pts: 1170 },
-            { m: "lse165", p: "SG. ELEUTHÉRIO", pts: 1510 }, { m: "lfs220", p: "CB. LUIZ FERNANDO", pts: 1030 },
-            { m: "lmc184", p: "SG. COSTA", pts: 1800 }, { m: "mps144", p: "SG. PEÇANHA", pts: 1750 },
-            { m: "mis133", p: "SG. IRENO", pts: 1320 }, { m: "nmp214", p: "CB. NATHAN", pts: 800 },
-            { m: "nab161", p: "SG. NICOLLAS ARTHUR", pts: 1580 }, { m: "nvo148", p: "SG. NICOLY VICTORIA", pts: 1570 },
-            { m: "php105", p: "SUB.TEN. PAULO", pts: 1910 }, { m: "pha219", p: "CB. PEDRO HENRIQUE", pts: 1180 },
-            { m: "pho188", p: "SG. DE PAULA", pts: 1410 }, { m: "phm185", p: "SG. PEDRO RIBEIRO", pts: 1430 },
-            { m: "phc232", p: "SD. PIETRO", pts: 920 }, { m: "rsb130", p: "SG. BARBOSA", pts: 1620 },
-            { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
-            { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
+            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 },
+            { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 }
         ];
 
-        
         const QUESTOES_DB = {
             "COLÉGIO NAVAL": [
-                { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." },
-                { q: "Qual o resto da divisão de 38 por 7?", opts: ["1", "2", "3", "5"], correta: 2, bizu: "38 = 7*5 + 3. Resto é 3." }
-            ],
-            "ESA": [
-                { q: "Qual o valor de x na equação 2^x = 128?", opts: ["5", "6", "7", "8"], correta: 2, bizu: "Fatorando 128: 2^7 = 128." }
+                { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." }
             ]
         };
 
-                const VIDEOS_DB = [
-            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" }, { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
-            { t: "INSTITUCIONAL", id: "H0Gssr6mZbw" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
-            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
-        ];
-
-
-        const FRASES = [
-            "Coragem não é não ter medo, e sim, seguir em frente.",
-            "Os fortes agem, avançam e deixam um legado.", 
-            "A limitação está apenas na sua mente.",
-            "Grandes batalhas só são dadas a grandes guerreiros.",
-            "Vencer na vida não é um destino, é a sua escolha."
-        ];
+        const VIDEOS_DB = [{ t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }];
+        const FRASES = ["Coragem não é não ter medo, e sim, seguir em frente.", "Os fortes agem, avançam e deixam um legado."];
 
         function App() {
             const [status, setStatus] = useState('login'); 
@@ -122,72 +73,34 @@ const REPOSITORIO_EXTRAS = {
             const [senhaIn, setSenhaIn] = useState('');
             const [escolaSel, setEscolaSel] = useState('COLÉGIO NAVAL');
             const [fraseDia, setFraseDia] = useState('');
-            const [tipoDoc, setTipoDoc] = useState(''); 
             const [pdfAtivo, setPdfAtivo] = useState(null);
 
             useEffect(() => {
-                setFraseDia(FRASES_COMANDO[Math.floor(Math.random() * FRASES_COMANDO.length)]);
+                setFraseDia(FRASES[Math.floor(Math.random() * FRASES.length)]);
             }, [status]);
 
             const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
-
-            const abrirDocumentoExtra = (tipo) => {
-                const slug = CONFIG_ESCOLAS[escolaSel].slug;
-                const lista = REPOSITORIO_EXTRAS[slug]?.[tipo] || [];
-                
-                if (lista.length > 0) {
-                    const arquivo = lista[lista.length - 1]; // Pega o mais recente
-                    window.open(`${BASE_URL}/pdf/${arquivo}`, "_blank");
-                } else {
-                    // Fallback para nomes genéricos caso não esteja no mapeamento
-                    const slugLimpo = slug.replace('1','');
-                    window.open(`${BASE_URL}/pdf/${tipo}_${slugLimpo}.pdf`, "_blank");
-                }
-            };
 
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
                 const s = senhaIn.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === s);
-                
-                if (s === "esp0815") { 
-                    setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
+                if (s === "esp0815" || aluno) { 
+                    setUser(aluno || { p: "COMANDANTE", n: "Chefe" }); 
                     setStatus('qg'); 
-                } 
-                else if (s === "instrutor77") { 
-                    setUser({ p: "INSTRUTOR TÁTICO", pts: "9999", n: "INSTRUTOR" }); 
-                    setStatus('qg'); 
-                }
-                else if (aluno) { 
-                    setUser(aluno); 
-                    setStatus('qg'); 
-                } 
-                else {
-                    alert("ACESSO NEGADO! Verifique sua matrícula."); 
-                }
-            };
-
-            const formatName = (name) => name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '_');
-
-            const handleAbrirApostila = (materia) => {
-                const matClean = formatName(materia);
-                const escolaClean = CONFIG_ESCOLAS[escolaSel].slug;
-                setPdfAtivo({ url: `pdf/apostila_${matClean}_${escolaClean}.pdf`, nome: `${materia} - ${escolaSel}` });
+                } else { alert("ACESSO NEGADO!"); }
             };
 
             const renderContent = () => {
                 if (status === 'login') return (
                     <div className="min-h-screen flex items-center justify-center p-6">
                         <div className="max-w-md w-full bg-black/80 p-8 rounded-2xl border-2 border-[#D4AF37]/30 text-center">
-                            <video className="w-full rounded mb-6 border border-[#D4AF37]/20" autoPlay loop muted playsInline>
-                                <source src={BASE_URL + "video/bizu8.mp4"} type="video/mp4" />
-                            </video>
-                            <div className="linha-vermelha mb-8"></div>
+                            <h1 className="text-2xl font-black text-orange-500 mb-6 italic">BIZÚ MILITAR FÊNIX</h1>
                             <form onSubmit={handleLogin}>
                                 <input type="password" value={senhaIn} onChange={(e) => setSenhaIn(e.target.value)}
-                                    className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl font-mono focus:outline-none focus:border-[#D4AF37]" 
+                                    className="w-full p-4 mb-4 bg-white/5 border border-[#D4AF37]/20 rounded text-white text-center text-xl" 
                                     placeholder="MATRÍCULA" />
-                                <button type="submit" className="w-full btn-material">AUTENTICAR</button>
+                                <button type="submit" className="btn-material">AUTENTICAR</button>
                             </form>
                         </div>
                     </div>
@@ -195,22 +108,9 @@ const REPOSITORIO_EXTRAS = {
 
                 if (status === 'qg') return (
                     <div className="min-h-screen">
-                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-6 sticky top-0 z-50">
-                            <div className="flex items-center gap-4">
-                                <video className="motion-header" autoPlay loop muted playsInline>
-                                    <source src={BASE_URL + "video/logo_esquadrao.mp4"} type="video/mp4" />
-                                </video>
-                                <div className="hidden sm:block">
-                                    <h2 className="text-orange-500 font-black italic leading-tight">ESQUADRÃO FÊNIX</h2>
-                                    <p className="text-[10px] text-white tracking-widest uppercase">Prontos para o Combate</p>
-                                </div>
-                            </div>
-                            <div className="text-center">
-                                <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
-                                    BEM-VINDO(A) GUERREIRO(A) {user?.n || user?.p}!
-                                </h2>
-                            </div>
-                            <button onClick={() => setStatus('login')} className="text-red-500 font-bold border border-red-500/20 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">SAIR</button>
+                        <header className="bg-[#000814] border-b-2 border-[#D4AF37] p-4 flex items-center justify-between px-6">
+                            <h2 className="text-orange-500 font-black italic">ESQUADRÃO FÊNIX</h2>
+                            <button onClick={() => setStatus('login')} className="text-red-500 font-bold text-xs">SAIR</button>
                         </header>
                         <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2">
@@ -219,20 +119,20 @@ const REPOSITORIO_EXTRAS = {
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {Object.keys(CONFIG_ESCOLAS).map(escolaNome => (
-                                        <div key={escolaNome} onClick={() => {setEscolaSel(escolaNome); setStatus('escola');}} 
-                                            className="card-escola hover:scale-[1.02] transition-all" 
-                                            style={{backgroundImage: `url(${BASE_URL}jpg/${CONFIG_ESCOLAS[escolaNome].slug}.jpg)`}}>
+                                        <div key={escolaNome} onClick={() => {setEscolaSel(escolaNome); setStatus('menu_escola');}} 
+                                            className="card-escola" 
+                                            style={{backgroundImage: `url(${BASE_URL}/jpg/${CONFIG_ESCOLAS[escolaNome].slug}.jpg)`}}>
                                             <span className="sigla-txt">{escolaNome}</span>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                            <div className="bg-black/40 p-5 rounded-xl border border-[#D4AF37]/20 h-fit flex flex-col shadow-2xl">
+                            <div className="bg-black/40 p-5 rounded-xl border border-[#D4AF37]/20 h-fit">
                                 <h3 className="text-[#D4AF37] font-black text-center mb-4 uppercase">Ranking Pelotão</h3>
-                                <div className="space-y-2 overflow-y-auto max-h-[400px] custom-scroll pr-2">
-                                    {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
+                                <div className="space-y-2">
+                                    {ALUNOS_DB.sort((a,b) => b.pts - a.pts).slice(0,5).map((a, i) => (
                                         <div key={i} className="flex justify-between p-3 bg-white/5 rounded text-[11px] border-l-4 border-[#D4AF37]">
-                                            <span>{i+1}º {a.m}</span><span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
+                                            <span>{i+1}º {a.p}</span><span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
                                         </div>
                                     ))}
                                 </div>
@@ -240,166 +140,78 @@ const REPOSITORIO_EXTRAS = {
                         </main>
                     </div>
                 );
-           
 
-            if (status === 'menu_escola') return (
-                <div className="min-h-screen flex flex-col">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                        <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
-                        <button onClick={() => setStatus('qg')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">VOLTAR AO QG</button>
-                    </header>
-                    <main className="flex-1 flex items-center justify-center p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
-                            <button onClick={() => setStatus('simulado')} className="group p-10 bg-gradient-to-br from-red-600 to-red-900 rounded-3xl text-center hover:scale-105 transition-all shadow-2xl">
-                                <span className="block text-4xl mb-4">📝</span>
-                                <span className="font-black text-xl">SIMULADOS INTERATIVOS</span>
-                            </button>
-                            <button onClick={() => setStatus('materiais')} className="group p-10 bg-gradient-to-br from-blue-600 to-blue-900 rounded-3xl text-center hover:scale-105 transition-all shadow-2xl">
-                                <span className="block text-4xl mb-4">📚</span>
-                                <span className="font-black text-xl">BIBLIOTECA DE APOSTILAS</span>
-                            </button>
-                            <button onClick={() => setStatus('videos')} className="group p-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-3xl text-center hover:scale-105 transition-all shadow-2xl">
-                                <span className="block text-4xl mb-4">🎬</span>
-                                <span className="font-black text-xl">CINE FÊNIX (VÍDEOS)</span>
-                            </button>
-                        </div>
-                    </main>
-                </div>
-            );
-
-            /* =========================================================================
-               TELA DE MATERIAIS / BIBLIOTECA (AQUI ENTRA O CÓDIGO DO CMRJ)
-               ========================================================================= */
-            if (status === 'materiais') {
-                const escola = CONFIG_ESCOLAS[escolaSel];
-                const slugLimpo = escola.slug.replace('1','');
-                
-                return (
-                    <div className="min-h-screen">
+                if (status === 'menu_escola') return (
+                    <div className="min-h-screen flex flex-col">
                         <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                            <h1 className="font-black italic text-orange-500 uppercase">BIBLIOTECA: {escolaSel}</h1>
-                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">RECUAR</button>
+                            <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
+                            <button onClick={() => setStatus('qg')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">VOLTAR AO QG</button>
                         </header>
-                        
-                        <main className="p-8 max-w-7xl mx-auto">
-                            
-                            {/* BOTÕES DE ACESSO RÁPIDO - TOPO */}
-                            <div className="flex flex-wrap justify-center gap-4 mb-10">
-                                <button onClick={() => window.open(`${BASE_URL}/pdf/edital_${slugLimpo}.pdf`)} className="btn-ouro text-xs px-6 py-3 rounded-lg flex items-center gap-2">
-                                    📜 EDITAL
+                        <main className="flex-1 flex items-center justify-center p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+                                <button onClick={() => setStatus('simulado')} className="p-10 bg-gradient-to-br from-red-600 to-red-900 rounded-3xl text-center hover:scale-105 transition-all">
+                                    <span className="block text-4xl mb-4">📝</span><span className="font-black text-xl">SIMULADOS</span>
                                 </button>
-                                <button onClick={() => window.open(`${BASE_URL}/pdf/provas_anteriores_${slugLimpo}.pdf`)} className="btn-ouro text-xs px-6 py-3 rounded-lg flex items-center gap-2">
-                                    📝 PROVAS ANTERIORES
+                                <button onClick={() => setStatus('materiais')} className="p-10 bg-gradient-to-br from-blue-600 to-blue-900 rounded-3xl text-center hover:scale-105 transition-all">
+                                    <span className="block text-4xl mb-4">📚</span><span className="font-black text-xl">BIBLIOTECA</span>
                                 </button>
-                                <button onClick={() => window.open(`${BASE_URL}/pdf/gabaritos_${slugLimpo}.pdf`)} className="btn-ouro text-xs px-6 py-3 rounded-lg flex items-center gap-2">
-                                    ✅ GABARITOS
+                                <button onClick={() => setStatus('videos')} className="p-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-3xl text-center hover:scale-105 transition-all">
+                                    <span className="block text-4xl mb-4">🎬</span><span className="font-black text-xl">CINE FÊNIX</span>
                                 </button>
                             </div>
+                        </main>
+                    </div>
+                );
 
-                            {/* GRID DE APOSTILAS E MANUAIS */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                
-                                {/* CARD EXCLUSIVO: MANUAL DO ALUNO (SÓ APARECE SE FOR CMRJ) */}
-                                {escola.slug === 'cmrj' && (
-                                    <div className="card-operacional rounded-3xl overflow-hidden group border-2 border-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.3)]">
-                                        <div className="h-64 bg-black p-4 flex items-center justify-center relative">
-                                            <div className="absolute top-2 left-2 bg-orange-600 text-xs font-black px-2 py-1 rounded z-10">DESTAQUE</div>
-                                            <img src={`${BASE_URL}/png/manual_cmrj.png`} 
-                                                 className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all duration-500"
-                                                 onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=MANUAL+DO+ALUNO"} />
-                                        </div>
-                                        <div className="p-5 text-center bg-black/40">
-                                            <h3 className="font-black text-[11px] mb-4 uppercase text-orange-400">MANUAL DO ALUNO</h3>
-                                            <button onClick={() => window.open(`${BASE_URL}/pdf/manual_cmrj.pdf`)}
-                                                    className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-white transition-all">LER MANUAL</button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* CARDS DAS MATÉRIAS NORMAIS */}
-                                {escola.materias.map((m) => (
-                                    <div key={m} className="card-operacional rounded-3xl overflow-hidden group">
-                                        <div className="h-64 bg-black p-4 flex items-center justify-center">
-                                            <img src={`${BASE_URL}/png/card_${formatar(m)}_${slugLimpo}.png`} 
-                                                 className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all duration-500"
-                                                 onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=EM+BREVE"} />
-                                        </div>
-                                        <div className="p-5 text-center bg-black/40">
+                if (status === 'materiais') {
+                    const escola = CONFIG_ESCOLAS[escolaSel];
+                    const slugLimpo = escola.slug.replace('1','');
+                    return (
+                        <div className="min-h-screen">
+                            <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
+                                <h1 className="font-black italic text-orange-500 uppercase">BIBLIOTECA: {escolaSel}</h1>
+                                <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">RECUAR</button>
+                            </header>
+                            <main className="p-8 max-w-7xl mx-auto">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                    {escola.materias.map((m) => (
+                                        <div key={m} className="card-operacional rounded-3xl overflow-hidden p-5">
                                             <h3 className="font-black text-[11px] mb-4 uppercase text-orange-100">{m}</h3>
                                             <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${slugLimpo}.pdf`)}
-                                                    className="w-full bg-orange-600/20 border border-orange-600/50 text-orange-500 font-black py-3 rounded-xl text-xs hover:bg-orange-600 hover:text-black transition-all">LER APOSTILA</button>
+                                                className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs">LER APOSTILA</button>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </main>
-                    </div>
-                );
-            }
+                                    ))}
+                                </div>
+                            </main>
+                        </div>
+                    );
+                }
 
-            if (status === 'simulado') {
-                const questoes = QUESTOES_DB[escolaSel] || [];
-                return (
+                if (status === 'videos') return (
                     <div className="min-h-screen">
                         <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                            <h1 className="font-black italic text-orange-500 uppercase">MISSÃO DE COMBATE: {escolaSel}</h1>
-                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">CESSAR FOGO</button>
+                            <h1 className="font-black italic text-orange-500">CINE FÊNIX</h1>
+                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">VOLTAR</button>
                         </header>
-                        <main className="max-w-4xl mx-auto p-6 space-y-8">
-                            {questoes.length > 0 ? questoes.map((q, idx) => (
-                                <div key={idx} className="bg-[#0f172a] p-8 rounded-3xl border border-white/5 shadow-2xl">
-                                    <p className="text-xl font-bold mb-6 text-white/90">QUESTÃO {idx + 1}: {q.q}</p>
-                                    <div className="grid gap-3">
-                                        {q.opts.map((opt, i) => (
-                                            <button key={i} onClick={() => {
-                                                if(i === q.correta) alert("✅ NA MOSCA, GUERREIRO!");
-                                                else alert(`❌ NEGATIVO! \n\n💡 BIZU: ${q.bizu}`);
-                                            }} className="text-left p-4 bg-white/5 border border-white/10 hover:border-orange-500 rounded-xl transition-all group">
-                                                <span className="text-orange-500 font-black mr-4">{String.fromCharCode(65 + i)})</span> {opt}
-                                            </button>
-                                        ))}
+                        <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {VIDEOS_DB.map((v, i) => (
+                                <div key={i} className="bg-black/40 p-6 rounded-3xl border border-white/5">
+                                    <h3 className="text-orange-500 font-black mb-4 uppercase text-xs">{v.t}</h3>
+                                    <div className="video-container">
+                                        <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
                                     </div>
                                 </div>
-                            )) : <p className="text-center py-20 font-black text-white/20 uppercase tracking-widest text-2xl">Nenhum simulado disponível para esta escola ainda.</p>}
+                            ))}
                         </main>
                     </div>
                 );
+                
+                return null;
             }
 
-            if (status === 'videos') return (
-                <div className="min-h-screen">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                        <h1 className="font-black italic text-orange-500 uppercase">CINE FÊNIX</h1>
-                        <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">VOLTAR</button>
-                    </header>
-                    <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {VIDEOS_DB.map((v, i) => (
-                            <div key={i} className="bg-black/40 p-6 rounded-3xl border border-white/5 shadow-2xl">
-                                <h3 className="text-orange-500 font-black mb-4 uppercase text-xs tracking-widest">{v.t}</h3>
-                                <div className="video-container shadow-2xl">
-                                    <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
-                                </div>
-                            </div>
-                        ))}
-                    </main>
-                </div>
-            );
-        }
-
-      return (
+            return (
                 <div className="militar-gradient relative min-h-screen">
                     {renderContent()}
-                    {pdfAtivo && (
-                        <div className="fixed inset-0 z-[9999] bg-black/95 flex flex-col p-2">
-                            <div className="flex justify-between items-center mb-4 bg-[#000814] p-4 border border-[#D4AF37]/30">
-                                <h2 className="text-[#D4AF37] font-black uppercase text-xs">LEITURA: {pdfAtivo.nome}</h2>
-                                <button onClick={() => setPdfAtivo(null)} className="bg-red-600 px-6 py-2 rounded font-black hover:bg-red-700">FECHAR</button>
-                            </div>
-                            <div className="flex-1 bg-white rounded overflow-hidden">
-                                <iframe src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + pdfAtivo.url)}&embedded=true`} className="w-full h-full border-0" />
-                            </div>
-                        </div>
-                    )}
                 </div>
             );
         }
