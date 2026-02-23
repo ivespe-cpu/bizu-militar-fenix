@@ -16,7 +16,7 @@ const CONFIG_ESCOLAS = {
     slug: "cmrj",
     banner: "cmrj.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "REDAÇÃO"],
-    possuiManual: true // Ativa o card especial do Manual do Aluno
+    possuiManual: true 
   },
   "EPCAR": {
     slug: "epcar",
@@ -29,7 +29,7 @@ const CONFIG_ESCOLAS = {
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA"],
   },
   "EEAR": {
-    slug: "eear1", // Mantido eear1 conforme sua estrutura de pastas
+    slug: "eear1", 
     banner: "eear1.jpg",
     materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"],
   },
@@ -40,11 +40,34 @@ const CONFIG_ESCOLAS = {
   },
 };
 
+/* ==========================================================================
+   MAPEAMENTO DE ARQUIVOS DO REPOSITÓRIO (LISTA REAL)
+   ========================================================================== */
+const REPOSITORIO_EXTRAS = {
+  "cn": {
+    edital: ["edital2020cn.pdf", "edital2021cn.pdf", "edital2022cn.pdf", "edital2023cn.pdf"],
+    provas_anteriores: [
+      "prova2023cn_Port_Ciencias.pdf", 
+      "prova2023cn_mat_ingles.pdf", 
+      "prova2024cn_Port_Ciencias.pdf", 
+      "prova2024cn_mat_ingles.pdf", 
+      "prova2025cn_Port_Cienc2.pdf",
+      "prova2025cn_Port_Ciencias.pdf",
+      "prova2025cn_mat_ingles.pdf"
+    ],
+    gabaritos: ["gabarito2023cn.pdf", "gabarito2024cn.pdf", "gabarito2025cn.pdf", "gabarito_2025cn.pdf"]
+  },
+  "cmrj": {
+    edital: ["edital_cmrj.pdf"],
+    provas_anteriores: [], 
+    gabaritos: []
+  }
+};
+
 export default function Dashboard() {
   const [moduloAtivo, setModuloAtivo] = useState("menu");
   const [escolaSelecionada, setEscolaSelecionada] = useState(null);
 
-  // Formata nomes como "MATEMÁTICA" para "matematica"
   const formatarNomeArquivo = (texto) => {
     return texto
       .toLowerCase()
@@ -61,7 +84,22 @@ export default function Dashboard() {
 
   const abrirDocumentoExtra = (tipo) => {
     const slug = CONFIG_ESCOLAS[escolaSelecionada].slug;
-    window.open(`${BASE_URL}/pdf/${tipo}_${slug}.pdf`, "_blank");
+    
+    // Caso especial para o informativo geral que está na raiz da pasta PDF
+    if (tipo === 'informativo') {
+      window.open(`${BASE_URL}/pdf/informativo_fenix.pdf`, "_blank");
+      return;
+    }
+
+    const lista = REPOSITORIO_EXTRAS[slug]?.[tipo] || [];
+
+    if (lista.length > 0) {
+      // Pega sempre o último da lista (o mais atual)
+      const arquivoMaisAtual = lista[lista.length - 1];
+      window.open(`${BASE_URL}/pdf/${arquivoMaisAtual}`, "_blank");
+    } else {
+      alert("Material ainda não disponível para esta instituição.");
+    }
   };
 
   return (
@@ -72,9 +110,12 @@ export default function Dashboard() {
           <Flame className="text-orange-500 animate-pulse" />
           <h1 className="font-black italic text-xl tracking-tighter text-orange-500">BIZÚ MILITAR FÊNIX</h1>
         </div>
-        <div className="text-[10px] font-bold text-orange-400 border border-orange-600/30 px-3 py-1 rounded-full bg-orange-600/5">
-          PLATAFORMA DE ELITE v2.0
-        </div>
+        <button 
+          onClick={() => abrirDocumentoExtra('informativo')}
+          className="text-[10px] font-bold text-orange-400 border border-orange-600/30 px-3 py-1 rounded-full bg-orange-600/5 hover:bg-orange-600 hover:text-white transition-all"
+        >
+          INFORMATIVO FÊNIX
+        </button>
       </header>
 
       <main className="p-6 md:p-10 max-w-7xl mx-auto">
@@ -118,7 +159,7 @@ export default function Dashboard() {
               onClick={() => setModuloAtivo("menu")}
               className="mb-8 flex items-center gap-2 text-white/60 hover:text-orange-500 transition-colors font-bold uppercase text-xs tracking-widest"
             >
-              <ChevronLeft size={18} /> Voltar ao Centro de Comando
+              <ChevronLeft size={18} /> Voltar ao Menu
             </button>
 
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
@@ -207,7 +248,6 @@ export default function Dashboard() {
         )}
       </main>
       
-      {/* RODAPÉ OPERACIONAL */}
       <footer className="mt-20 p-10 border-t border-white/5 text-center text-white/20 text-[10px] font-bold tracking-[0.5em] uppercase">
         Foco, Força e Fé • Bizú Militar Fênix
       </footer>
