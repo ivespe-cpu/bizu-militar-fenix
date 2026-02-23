@@ -119,16 +119,11 @@
 
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
-                const s = senhaIn.toLowerCase().trim();
-                const aluno = ALUNOS_DB.find(a => a.m === s);
-                if (s === "esp0815") { setUser({ p: "COMANDANTE", pts: "∞" }); setStatus('qg'); } 
-                else if (s === "instrutor77") { setUser({ p: "INSTRUTOR TÁTICO", pts: "9999" }); setStatus('qg'); }
-                else if (aluno) { setUser(aluno); setStatus('qg'); } 
-                else { 
-                    alert("ACESSO NEGADO! Verifique sua matrícula."); 
-                }
+                const m = matricula.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === m);
+                if (aluno) { setUser(aluno); setStatus('qg'); }
+                else { alert("ACESSO NEGADO!"); }
             };
-
 
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-4 militar-gradient">
