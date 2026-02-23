@@ -89,14 +89,16 @@
             ]
         };
 
-        const VIDEOS_DB = [
-            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" },
-            { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
-            { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
-            { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
+                const VIDEOS_DB = [
+            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" }, { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
+            { t: "INSTITUCIONAL", id: "H0Gssr6mZbw" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
+            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
         ];
 
+
         const FRASES = [
+            "Coragem não é não ter medo, e sim, seguir em frente.",
+            "Os fortes agem, avançam e deixam um legado.", 
             "A limitação está apenas na sua mente.",
             "Grandes batalhas só são dadas a grandes guerreiros.",
             "Vencer na vida não é um destino, é a sua escolha."
@@ -117,11 +119,16 @@
 
             const handleLogin = (e) => {
                 if(e) e.preventDefault();
-                const m = matricula.toLowerCase().trim();
-                const aluno = ALUNOS_DB.find(a => a.m === m);
-                if (aluno) { setUser(aluno); setStatus('qg'); }
-                else { alert("ACESSO NEGADO!"); }
+                const s = senhaIn.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === s);
+                if (s === "esp0815") { setUser({ p: "COMANDANTE", pts: "∞" }); setStatus('qg'); } 
+                else if (s === "instrutor77") { setUser({ p: "INSTRUTOR TÁTICO", pts: "9999" }); setStatus('qg'); }
+                else if (aluno) { setUser(aluno); setStatus('qg'); } 
+                else { 
+                    alert("ACESSO NEGADO! Verifique sua matrícula."); 
+                }
             };
+
 
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center p-4 militar-gradient">
