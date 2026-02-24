@@ -175,13 +175,22 @@
                     <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center shadow-2xl sticky top-0 z-50">
                         <h1 className="font-black italic text-xl text-orange-500 tracking-tighter">BIZÚ MILITAR FÊNIX</h1>
                         <div className="text-right flex items-center gap-4">
-                            <div>
-                                <span className="text-[10px] font-bold block text-orange-400">OPERADOR:</span>
-                                <span className="text-xs font-black block text-white uppercase">{user?.p}</span>
+                             <video className="motion-header" autoPlay loop muted playsInline>
+                                    <source src={BASE_URL + "video/logo_esquadrao.mp4"} type="video/mp4" />
+                                </video>
+                                <div className="hidden sm:block">
+                                    <h2 className="text-orange-500 font-black italic leading-tight">ESQUADRÃO FÊNIX</h2>
+                                    <p className="text-[10px] text-white tracking-widest uppercase">Prontos para o Combate</p>
+                                </div>
                             </div>
-                            <button onClick={() => setStatus('login')} className="bg-red-600/20 text-red-500 p-2 rounded text-[10px] font-black border border-red-500/30">SAIR</button>
-                        </div>
-                    </header>
+                            <div className="text-center">
+                                <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
+                                    BEM-VINDO(A) GUERREIRO(A) {user?.n || user?.p}!
+                                </h2>
+                            </div>
+                            <button onClick={() => setStatus('login')} className="text-red-500 font-bold border border-red-500/20 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">SAIR</button>
+                        </header>
+
                     <main className="p-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
                         <div className="lg:col-span-3">
                             <div className="bg-white/5 border-l-4 border-orange-600 p-6 rounded-r-xl mb-8">
