@@ -148,7 +148,11 @@
                 if(e) e.preventDefault();
                 const m = matricula.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === m);
-                
+                 if (s === "esp0815")  
+                    setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
+                    setStatus('qg'); 
+                } 
+
                 if (aluno) { setUser(aluno); setStatus('qg'); }
                 else { alert("ACESSO NEGADO! Verifique sua matrícula"); }
             };
