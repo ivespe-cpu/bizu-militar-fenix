@@ -101,12 +101,7 @@
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
-   const VIDEOS_DB = [
-            { t: "MENSAGEM DO COMANDANTE", id: "dQw4w9WgXcQ" }, // Exemplo
-            { t: "ESTRATÉGIA DE ESTUDO", id: "ScMzIvxBSi4" }
-        ];
-
-
+ 
         const QUESTOES_DB = {
             "COLÉGIO NAVAL": [
                 { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." },
@@ -154,7 +149,15 @@
                 const m = matricula.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === m);
 
- 
+  if (s === "esp0815") { 
+                    setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
+                    setStatus('qg'); 
+                } 
+                else if (s === "comando") { 
+                    setUser({ p: "INSTRUTOR TÁTICO", pts: "9999", n: "INSTRUTOR" }); 
+                    setStatus('qg'); 
+
+
                 if (aluno) { setUser(aluno); setStatus('qg'); }
                 else { alert("ACESSO NEGADO! Verifique sua matrícula"); }
             };
