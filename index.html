@@ -12,31 +12,46 @@
         :root { --azul-marinho: #050505; --dourado: #D4AF37; --laranja: #ea580c; }
         body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
         .militar-gradient { background: radial-gradient(circle at top, #1e293b 0%, #050505 100%); min-height: 100vh; }
-        
-        /* BOTÕES DOURADOS MODERNOS */
-        .btn-ouro { 
-            background: transparent; 
-            border: 2px solid var(--dourado); 
-            color: var(--dourado); 
-            font-weight: 900; 
-            transition: 0.3s; 
-        }
-        .btn-ouro:hover { 
-            background: var(--dourado); 
-            color: black;
-            transform: scale(1.05); 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); 
-        }
-        
-        .btn-ouro-solido { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; }
-        .btn-ouro-solido:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
-
+        .btn-ouro { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; }
+        .btn-ouro:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
         .card-operacional { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .card-operacional:hover { border-color: var(--laranja); }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--laranja); border-radius: 10px; }
+        /* ESTILO DOS NOVOS BOTÕES DOURADOS */
+.botoes-topo-cmrj {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.btn-ouro {
+  background: transparent;
+  border: 2px solid #ffcc00;
+  color: #ffcc00;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-ouro:hover {
+  background: #ffcc00;
+  color: #000;
+}
+
+/* AJUSTE PARA AS CAPAS DAS APOSTILAS */
+.capa-manual {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
     </style>
 </head>
 <body>
@@ -79,6 +94,7 @@
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
+
         const QUESTOES_DB = {
             "COLÉGIO NAVAL": [
                 { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." },
@@ -89,16 +105,14 @@
             ]
         };
 
-                const VIDEOS_DB = [
-            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" }, { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
-            { t: "INSTITUCIONAL", id: "H0Gssr6mZbw" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
-            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
+        const VIDEOS_DB = [
+            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" },
+            { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
+            { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
+            { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
         ];
 
-
         const FRASES = [
-            "Coragem não é não ter medo, e sim, seguir em frente.",
-            "Os fortes agem, avançam e deixam um legado.", 
             "A limitação está apenas na sua mente.",
             "Grandes batalhas só são dadas a grandes guerreiros.",
             "Vencer na vida não é um destino, é a sua escolha."
@@ -136,7 +150,7 @@
                                 className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-xl outline-none focus:border-orange-500 font-mono" 
                                 placeholder="SUA MATRÍCULA" 
                             />
-                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro-solido text-lg">AUTENTICAR NO QG</button>
+                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro text-lg">AUTENTICAR NO QG</button>
                         </form>
                     </div>
                 </div>
@@ -191,7 +205,7 @@
                 <div className="min-h-screen flex flex-col">
                     <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
                         <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
-                        <button onClick={() => setStatus('qg')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">VOLTAR AO QG</button>
+                        <button onClick={() => setStatus('qg')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">VOLTAR AO QG</button>
                     </header>
                     <main className="flex-1 flex items-center justify-center p-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
@@ -212,71 +226,30 @@
                 </div>
             );
 
-            /* =========================================================================
-               TELA DE MATERIAIS / BIBLIOTECA (AQUI ENTRA O CÓDIGO DO CMRJ)
-               ========================================================================= */
             if (status === 'materiais') {
                 const escola = CONFIG_ESCOLAS[escolaSel];
                 const slugLimpo = escola.slug.replace('1','');
-                
                 return (
                     <div className="min-h-screen">
                         <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
                             <h1 className="font-black italic text-orange-500 uppercase">BIBLIOTECA: {escolaSel}</h1>
-                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">RECUAR</button>
+                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">RECUAR</button>
                         </header>
-                        
-                        <main className="p-8 max-w-7xl mx-auto">
-                            
-                            {/* BOTÕES DE ACESSO RÁPIDO - TOPO */}
-                            <div className="flex flex-wrap justify-center gap-4 mb-10">
-                                <button onClick={() => window.open(`${BASE_URL}/pdf/edital_${slugLimpo}.pdf`)} className="btn-ouro text-xs px-6 py-3 rounded-lg flex items-center gap-2">
-                                    📜 EDITAL
-                                </button>
-                                <button onClick={() => window.open(`${BASE_URL}/pdf/provas_anteriores_${slugLimpo}.pdf`)} className="btn-ouro text-xs px-6 py-3 rounded-lg flex items-center gap-2">
-                                    📝 PROVAS ANTERIORES
-                                </button>
-                                <button onClick={() => window.open(`${BASE_URL}/pdf/gabaritos_${slugLimpo}.pdf`)} className="btn-ouro text-xs px-6 py-3 rounded-lg flex items-center gap-2">
-                                    ✅ GABARITOS
-                                </button>
-                            </div>
-
-                            {/* GRID DE APOSTILAS E MANUAIS */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                
-                                {/* CARD EXCLUSIVO: MANUAL DO ALUNO (SÓ APARECE SE FOR CMRJ) */}
-                                {escola.slug === 'cmrj' && (
-                                    <div className="card-operacional rounded-3xl overflow-hidden group border-2 border-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.3)]">
-                                        <div className="h-64 bg-black p-4 flex items-center justify-center relative">
-                                            <div className="absolute top-2 left-2 bg-orange-600 text-xs font-black px-2 py-1 rounded z-10">DESTAQUE</div>
-                                            <img src={`${BASE_URL}/png/manual_cmrj.png`} 
-                                                 className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all duration-500"
-                                                 onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=MANUAL+DO+ALUNO"} />
-                                        </div>
-                                        <div className="p-5 text-center bg-black/40">
-                                            <h3 className="font-black text-[11px] mb-4 uppercase text-orange-400">MANUAL DO ALUNO</h3>
-                                            <button onClick={() => window.open(`${BASE_URL}/pdf/manual_cmrj.pdf`)}
-                                                    className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-white transition-all">LER MANUAL</button>
-                                        </div>
+                        <main className="p-8 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {escola.materias.map((m) => (
+                                <div key={m} className="card-operacional rounded-3xl overflow-hidden group">
+                                    <div className="h-64 bg-black p-4 flex items-center justify-center">
+                                        <img src={`${BASE_URL}/png/card_${formatar(m)}_${slugLimpo}.png`} 
+                                             className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all duration-500"
+                                             onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=EM+BREVE"} />
                                     </div>
-                                )}
-
-                                {/* CARDS DAS MATÉRIAS NORMAIS */}
-                                {escola.materias.map((m) => (
-                                    <div key={m} className="card-operacional rounded-3xl overflow-hidden group">
-                                        <div className="h-64 bg-black p-4 flex items-center justify-center">
-                                            <img src={`${BASE_URL}/png/card_${formatar(m)}_${slugLimpo}.png`} 
-                                                 className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all duration-500"
-                                                 onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=EM+BREVE"} />
-                                        </div>
-                                        <div className="p-5 text-center bg-black/40">
-                                            <h3 className="font-black text-[11px] mb-4 uppercase text-orange-100">{m}</h3>
-                                            <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${slugLimpo}.pdf`)}
-                                                    className="w-full bg-orange-600/20 border border-orange-600/50 text-orange-500 font-black py-3 rounded-xl text-xs hover:bg-orange-600 hover:text-black transition-all">LER APOSTILA</button>
-                                        </div>
+                                    <div className="p-5 text-center bg-black/40">
+                                        <h3 className="font-black text-[11px] mb-4 uppercase text-orange-100">{m}</h3>
+                                        <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${slugLimpo}.pdf`)}
+                                                className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-white">LER APOSTILA</button>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ))}
                         </main>
                     </div>
                 );
@@ -288,7 +261,7 @@
                     <div className="min-h-screen">
                         <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
                             <h1 className="font-black italic text-orange-500 uppercase">MISSÃO DE COMBATE: {escolaSel}</h1>
-                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">CESSAR FOGO</button>
+                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">CESSAR FOGO</button>
                         </header>
                         <main className="max-w-4xl mx-auto p-6 space-y-8">
                             {questoes.length > 0 ? questoes.map((q, idx) => (
@@ -315,7 +288,7 @@
                 <div className="min-h-screen">
                     <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
                         <h1 className="font-black italic text-orange-500 uppercase">CINE FÊNIX</h1>
-                        <button onClick={() => setStatus('menu_escola')} className="btn-ouro-solido px-6 py-2 rounded-lg text-[10px]">VOLTAR</button>
+                        <button onClick={() => setStatus('menu_escola')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">VOLTAR</button>
                     </header>
                     <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                         {VIDEOS_DB.map((v, i) => (
