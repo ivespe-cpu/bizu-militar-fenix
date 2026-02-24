@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIZÚ MILITAR FÊNIX - PLATAFORMA DE ELITE</title>
+
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -52,7 +53,13 @@
   border-radius: 8px;
   border: 1px solid #333;
 }
-    </style>
+    /* Ajuste do vídeo no Header */
+        .motion-header { height: 70px; width: 70px; object-fit: cover; border-radius: 50%; border: 2px solid #D4AF37; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+ 
+
+ </style>
 </head>
 <body>
     <div id="root"></div>
@@ -94,25 +101,36 @@
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
+   const VIDEOS_DB = [
+            { t: "MENSAGEM DO COMANDANTE", id: "dQw4w9WgXcQ" }, // Exemplo
+            { t: "ESTRATÉGIA DE ESTUDO", id: "ScMzIvxBSi4" }
+        ];
+
 
         const QUESTOES_DB = {
             "COLÉGIO NAVAL": [
                 { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." },
                 { q: "Qual o resto da divisão de 38 por 7?", opts: ["1", "2", "3", "5"], correta: 2, bizu: "38 = 7*5 + 3. Resto é 3." }
             ],
+ "CMRJ": [
+                { q: "Qual o MMC de 12 e 15?", opts: ["30", "45", "60", "90"], correta: 2, bizu: "Múltiplos de 15: 15, 30, 45, 60... 60 é divisível por 12." }
+],
             "ESA": [
                 { q: "Qual o valor de x na equação 2^x = 128?", opts: ["5", "6", "7", "8"], correta: 2, bizu: "Fatorando 128: 2^7 = 128." }
             ]
         };
 
-        const VIDEOS_DB = [
-            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" },
-            { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
-            { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
-            { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
+         const VIDEOS_DB = [
+            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" }, { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
+            { t: "INSTITUCIONAL", id: "H0Gssr6mZbw" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
+            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
+          { t: "MENSAGEM DO COMANDANTE", id: "dQw4w9WgXcQ" }, // Exemplo
+            { t: "ESTRATÉGIA DE ESTUDO", id: "ScMzIvxBSi4" }
         ];
 
         const FRASES = [
+            "Coragem não é não ter medo, e sim, seguir em frente.",
+            "Os fortes agem, avançam e deixam um legado.", 
             "A limitação está apenas na sua mente.",
             "Grandes batalhas só são dadas a grandes guerreiros.",
             "Vencer na vida não é um destino, é a sua escolha."
@@ -135,8 +153,18 @@
                 if(e) e.preventDefault();
                 const m = matricula.toLowerCase().trim();
                 const aluno = ALUNOS_DB.find(a => a.m === m);
+
+  if (s === "esp0815") { 
+                    setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
+                    setStatus('qg'); 
+                } 
+                else if (s === "comando") { 
+                    setUser({ p: "INSTRUTOR TÁTICO", pts: "9999", n: "INSTRUTOR" }); 
+                    setStatus('qg'); 
+
+
                 if (aluno) { setUser(aluno); setStatus('qg'); }
-                else { alert("ACESSO NEGADO!"); }
+                else { alert("ACESSO NEGADO! Verifique sua matrícula"); }
             };
 
             if (status === 'login') return (
