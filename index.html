@@ -44,6 +44,12 @@
   background: #ffcc00;
   color: #000;
 }
+        
+ /* Ajuste do vídeo no Header */
+        .motion-header { height: 70px; width: 70px; object-fit: cover; border-radius: 50%; border: 2px solid #D4AF37; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+ 
 
 /* AJUSTE PARA AS CAPAS DAS APOSTILAS */
 .capa-manual {
@@ -149,11 +155,7 @@
                     setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
                     setStatus('qg'); 
                 } 
-                else if (s === "comando") { 
-                    setUser({ p: "INSTRUTOR TÁTICO", pts: "9999", n: "INSTRUTOR" }); 
-                    setStatus('qg'); 
-
-
+               
                 if (aluno) { setUser(aluno); setStatus('qg'); }
                 else { alert("ACESSO NEGADO! Verifique sua matrícula"); }
             };
