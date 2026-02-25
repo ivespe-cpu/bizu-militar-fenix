@@ -168,11 +168,9 @@
     }, []);
 
     return (
-        <div className="w-full text-center py-2 bg-orange-600/10 border-y border-orange-600/20 mb-6">
-            <p className="text-orange-500 italic text-sm font-medium animate-pulse">
-                <i className="fas fa-quote-left mr-2 text-[10px]"></i>
+      <div className="w-full text-center py-2 bg-[#1a2f23] border-y border-[#83E509]/20 mb-6">
+            <p className="text-[#83E509] italic text-sm font-medium animate-pulse">
                 {FRASES[index]}
-                <i className="fas fa-quote-right ml-2 text-[10px]"></i>
             </p>
         </div>
     );
@@ -215,64 +213,64 @@
                 </div>
             );
 
-           if (status === 'qg') return (
-                <div className="min-h-screen">
-                    {/* HEADER MESCLADO: TÍTULOS ORIGINAIS + SAUDAÇÃO + BOTÃO SAIR */}
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center sticky top-0 z-50">
-                        <div className="flex items-center gap-4">
-                            <video className="motion-header" autoPlay loop muted playsInline>
-                                <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
-                            </video>
-                            <div className="hidden sm:block">
-                                <h1 className="text-orange-500 font-black italic leading-tight">ESQUADRÃO FÊNIX</h1>
-                                <p className="text-[10px] text-white tracking-widest uppercase">Prontos para o Combate</p>
-                            </div>
-                        </div>
-
-                        {/* MANTIDA A SAUDAÇÃO QUE VOCÊ SOLICITOU */}
-                        <div className="text-center px-2">
-                            <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
-                                BEM-VINDO(A) GUERREIRO(A) {user?.n || user?.p}!
-                            </h2>
-                        </div>
-
-                        <button onClick={() => setStatus('login')} className="text-red-500 font-bold border border-red-500/20 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">SAIR</button>
-                    </header>
-
-                    {/* NOVO: BANNER DE FRASES DINÂMICAS */}
-                    <BannerFrases />
-
-                    <main className="p-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
-                        {/* GRID AJUSTADO: md:grid-cols-3 para ocupar melhor o espaço e h-40 para reduzir altura */}
-                        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 content-start">
-                            {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
-                                <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('menu_escola'); }}
-                                    className="relative h-40 rounded-2xl overflow-hidden group border border-white/10 hover:border-orange-600 transition-all shadow-lg"
-                                >
-                                    <div className="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110" 
-                                         style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
-                                        <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all"></div>
-                                    </div>
-                                    <span className="relative z-10 text-xl font-black italic text-white drop-shadow-lg">{nome}</span>
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* RANKING LATERAL */}
-                        <aside className="bg-[#0f172a] rounded-2xl p-5 border border-white/5 shadow-xl h-fit">
-                            <h3 className="text-orange-500 font-black text-center mb-4 uppercase text-xs border-b border-orange-600/20 pb-2">Top Pelotão</h3>
-                            <div className="space-y-2 max-h-[450px] overflow-y-auto custom-scroll pr-2">
-                                {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
-                                    <div key={i} className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-[10px] border-l-2 border-orange-600 hover:bg-white/10 transition-all">
-                                        <span className="font-bold text-gray-300">{i+1}º {a.p}</span>
-                                        <span className="text-orange-500 font-black">{a.pts} PTS</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </aside>
-                    </main>
+          if (status === 'qg') return (
+    <div className="min-h-screen">
+        {/* Header com a barra inferior em Verde Musgo */}
+        <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
+            <div className="flex items-center gap-4">
+                <video className="motion-header" autoPlay loop muted playsInline>
+                    <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
+                </video>
+                <div className="hidden sm:block text-left">
+                    <h1 className="text-[#83E509] font-black italic leading-tight uppercase">ESQUADRÃO FÊNIX</h1>
+                    <p className="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">Prontos para o Combate</p>
                 </div>
-            );
+            </div>
+
+            {/* Inscrição em Dourado conforme solicitado */}
+            <div className="text-center px-2">
+                <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
+                    BEM-VINDO(A) GUERREIRO(A) {user?.n || user?.p}!
+                </h2>
+            </div>
+
+            <button onClick={() => setStatus('login')} className="text-red-500 font-bold border border-red-500/20 px-3 py-1 rounded text-xs hover:bg-red-600 hover:text-white transition">SAIR</button>
+        </header>
+
+        <BannerFrases />
+
+        <main className="p-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Grid das Escolas - Espaçamento Corrigido (3 Colunas) */}
+            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 content-start">
+                {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
+                    <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('menu_escola'); }}
+                        className="relative h-40 rounded-2xl overflow-hidden group border border-white/5 hover:border-[#83E509] transition-all shadow-lg"
+                    >
+                        <div className="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110" 
+                             style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
+                            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all"></div>
+                        </div>
+                        {/* Texto da Escola em Dourado para destaque no card */}
+                        <span className="relative z-10 text-xl font-black italic text-[#D4AF37] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{nome}</span>
+                    </button>
+                ))}
+            </div>
+
+            {/* Ranking Lateral com Verde e Dourado */}
+            <aside className="bg-[#0f172a] rounded-2xl p-5 border border-white/5 shadow-xl h-fit">
+                <h3 className="text-[#83E509] font-black text-center mb-4 uppercase text-xs border-b border-[#1a2f23] pb-2">Top Pelotão</h3>
+                <div className="space-y-2 max-h-[450px] overflow-y-auto custom-scroll pr-2">
+                    {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
+                        <div key={i} className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-[10px] border-l-2 border-[#83E509] hover:bg-white/10 transition-all">
+                            <span className="font-bold text-gray-300">{i+1}º {a.p}</span>
+                            <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
+                        </div>
+                    ))}
+                </div>
+            </aside>
+        </main>
+    </div>
+);
             
             if (status === 'menu_escola') return (
                 <div className="min-h-screen flex flex-col">
