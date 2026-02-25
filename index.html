@@ -158,6 +158,9 @@
             "Vencer na vida não é um destino, é a sua escolha."
         ];
 
+  useEffect(() => {
+                setFraseDia(FRASES[Math.floor(Math.random() * FRASES.length)]);
+            }, [status]);
 
 
         function App() {
@@ -208,7 +211,7 @@
 
                               <div className="hidden sm:block">
                                     <h1 className="text-orange-500 font-black italic leading-tight">ESQUADRÃO FÊNIX</h1>
-                                    <p className="text-[12px] text-white tracking-widest uppercase">Prontos para o Combate</p>
+                                    <p className="text-[10px] text-white tracking-widest uppercase">Prontos para o Combate</p>
                                 </div>
                             </div>
                             <div className="text-center">
