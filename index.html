@@ -21,7 +21,51 @@
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--laranja); border-radius: 10px; }
+         /* ESTILO DOS NOVOS BOTÕES DOURADOS */
+.botoes-topo-cmrj {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+.btn-ouro {
+  background: transparent;
+  border: 2px solid #ffcc00;
+  color: #ffcc00;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-ouro:hover {
+  background: #ffcc00;
+  color: #000;
+}
+        
+ /* Ajuste do vídeo no Header */
         .motion-header { height: 70px; width: 70px; object-fit: cover; border-radius: 50%; border: 2px solid #D4AF37; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+ 
+
+/* AJUSTE PARA AS CAPAS DAS APOSTILAS */
+.capa-manual {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+  
+
+ </style>
+</head>
+<body>
+    <div id="root"></div>
+
+        
     </style>
 </head>
 <body>
@@ -41,10 +85,31 @@
             "ESA": { slug: "esa", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA"] }
         };
 
-        const ALUNOS_DB = [
-            { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 },
-            { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 }
+         const ALUNOS_DB = [
+            { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
+            { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
+            { m: "bbs203", p: "SD. BERNARDO", pts: 900 }, { m: "cvs208", p: "CB. CAMILA", pts: 1050 },
+            { m: "dva194", p: "CB. ALBUQUERQUE", pts: 1300 }, { m: "esp192", p: "SG. PEIXOTO", pts: 1250 },
+            { m: "egc228", p: "CB. ENZO", pts: 850 }, { m: "gsp187", p: "SG. GABRIELLE PEREIRA", pts: 1400 },
+            { m: "gac174", p: "SG. GABRIELLY COUTINHO", pts: 1350 }, { m: "gem240", p: "SD.MICAELA", pts: 950 },
+            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "hls197", p: "CB. SALES", pts: 1150 },
+            { m: "icg127", p: "SG. GRANADO", pts: 1600 }, { m: "iws159", p: "SG. LIMA", pts: 1550 },
+            { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
+            { m: "jva190", p: "SG. ANDRADE", pts: 1480 }, { m: "jhs198", p: "CB. JOSUÉ", pts: 1120 },
+            { m: "jcm166", p: "SG. JUNIO", pts: 1420 }, { m: "kfs245", p: "CB. FONTES", pts: 1080 },
+            { m: "lgb226", p: "CB. BELTRON", pts: 1190 }, { m: "lod225", p: "CB. FADINI", pts: 1170 },
+            { m: "lse165", p: "SG. ELEUTHÉRIO", pts: 1510 }, { m: "lfs220", p: "CB. LUIZ FERNANDO", pts: 1030 },
+            { m: "lmc184", p: "SG. COSTA", pts: 1800 }, { m: "mps144", p: "SG. PEÇANHA", pts: 1750 },
+            { m: "mis133", p: "SG. IRENO", pts: 1320 }, { m: "nmp214", p: "CB. NATHAN", pts: 800 },
+            { m: "nab161", p: "SG. NICOLLAS ARTHUR", pts: 1580 }, { m: "nvo148", p: "SG. NICOLY VICTORIA", pts: 1570 },
+            { m: "php105", p: "SUB.TEN. PAULO", pts: 1910 }, { m: "pha219", p: "CB. PEDRO HENRIQUE", pts: 1180 },
+            { m: "pho188", p: "SG. DE PAULA", pts: 1410 }, { m: "phm185", p: "SG. PEDRO RIBEIRO", pts: 1430 },
+            { m: "phc232", p: "SD. PIETRO", pts: 920 }, { m: "rsb130", p: "SG. BARBOSA", pts: 1620 },
+            { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
+            { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
+
+
 
         // --- BANCO DE DADOS: QUESTÕES (RESTAURADO INTEGRALMENTE) ---
         const QUESTOES_DB = {
@@ -80,10 +145,20 @@
         };
 
         const VIDEOS_DB = [
-            { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
-            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" },
-            { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" }
+            { t: "FAB - EPCAR", id: "Vq_Z5KNmuks" }, { t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" },
+            { t: "INSTITUCIONAL", id: "H0Gssr6mZbw" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" },
+            { t: "QUEM DISSE QUE SERIA FÁCIL", id: "dOV_Dum7t58" }, { t: "ESPCEX AMAN", id: "WKMS3LfGERo" }
+                  ];
+
+        const FRASES = [
+            "Coragem não é não ter medo, e sim, seguir em frente.",
+            "Os fortes agem, avançam e deixam um legado.", 
+            "A limitação está apenas na sua mente.",
+            "Grandes batalhas só são dadas a grandes guerreiros.",
+            "Vencer na vida não é um destino, é a sua escolha."
         ];
+
+
 
         function App() {
             const [status, setStatus] = useState('login'); 
@@ -93,13 +168,28 @@
 
             const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
 
-            const handleLogin = (e) => {
+              const handleLogin = (e) => {
                 if(e) e.preventDefault();
-                const m = matricula.toLowerCase().trim();
-                const aluno = ALUNOS_DB.find(a => a.m === m);
-                if (aluno) { setUser(aluno); setStatus('qg'); }
-                else { alert("ACESSO NEGADO!"); }
+                const s = senhaIn.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === s);
+                
+                if (s === "esp0815") { 
+                    setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
+                    setStatus('qg'); 
+                } 
+                else if (s === "instrutor77") { 
+                    setUser({ p: "INSTRUTOR TÁTICO", pts: "9999", n: "INSTRUTOR" }); 
+                    setStatus('qg'); 
+                }
+                else if (aluno) { 
+                    setUser(aluno); 
+                    setStatus('qg'); 
+                } 
+                else {
+                    alert("ACESSO NEGADO! Verifique sua matrícula."); 
+                }
             };
+
 
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center militar-gradient">
