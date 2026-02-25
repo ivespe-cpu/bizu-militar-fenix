@@ -246,156 +246,123 @@
                 </div>
             );
 
-          if (status === 'qg') return (
-    <div className="min-h-screen">
-        {/* Header com a barra inferior em Verde Musgo */}
-        <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
-            <div className="flex items-center gap-4">
-                <video className="motion-header" autoPlay loop muted playsInline>
-                    <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
-                </video>
-                <div className="hidden sm:block text-left">
-                    <h1 className="text-[#83E509] font-black italic leading-tight uppercase">ESQUADRÃO FÊNIX</h1>
-                    <p className="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">Prontos para o Combate</p>
-                </div>
-            </div>
+         // --- INÍCIO DA ÁREA DE ESTADOS DO QG ---
 
-            {/* Inscrição em Dourado conforme solicitado */}
-            <div className="text-center px-2">
-                <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
-                    BEM-VINDO(A) GUERREIRO(A) {user?.n || user?.p}!
-                </h2>
-            </div>
-
-            <button onClick={() => setStatus('login')} className="text-red-500 font-bold border border-red-500/20 px-3 py-1 rounded text-xs hover:bg-red-600 hover:text-white transition">SAIR</button>
-        </header>
-
-        <BannerFrases />
-
-        <main className="p-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Grid das Escolas - Espaçamento Corrigido (3 Colunas) */}
-            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 content-start">
-                {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
-                    <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('menu_escola'); }}
-                        className="relative h-40 rounded-2xl overflow-hidden group border border-white/5 hover:border-[#83E509] transition-all shadow-lg"
-                    >
-                        <div className="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110" 
-                             style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
-                            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all"></div>
-                        </div>
-                        {/* Texto da Escola em Dourado para destaque no card */}
-                        <span className="relative z-10 text-xl font-black italic text-[#D4AF37] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{nome}</span>
-                    </button>
-                ))}
-            </div>
-
-            {/* Ranking Lateral com Verde e Dourado */}
-            <aside className="bg-[#0f172a] rounded-2xl p-5 border border-white/5 shadow-xl h-fit">
-                <h3 className="text-[#83E509] font-black text-center mb-4 uppercase text-xs border-b border-[#1a2f23] pb-2">Top Pelotão</h3>
-                <div className="space-y-2 max-h-[450px] overflow-y-auto custom-scroll pr-2">
-                    {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
-                        <div key={i} className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-[10px] border-l-2 border-[#83E509] hover:bg-white/10 transition-all">
-                            <span className="font-bold text-gray-300">{i+1}º {a.p}</span>
-                            <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
-                        </div>
-                    ))}
-                </div>
-            </aside>
-        </main>
-    </div>
-);
-            
-            if (status === 'menu_escola') return (
-                <div className="min-h-screen flex flex-col">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                        <h1 className="font-black italic text-orange-500 uppercase">{escolaSel}</h1>
-                        <button onClick={() => setStatus('qg')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">VOLTAR AO QG</button>
-                    </header>
-                    <main className="flex-1 flex items-center justify-center p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
-                            <button onClick={() => setStatus('simulado')} className="p-10 bg-gradient-to-br from-red-600 to-red-900 rounded-3xl text-center hover:scale-105 transition-all shadow-2xl">
-                                <span className="block text-4xl mb-4">📝</span>
-                                <span className="font-black text-xl">SIMULADOS INTERATIVOS</span>
-                            </button>
-                            <button onClick={() => setStatus('materiais')} className="p-10 bg-gradient-to-br from-blue-600 to-blue-900 rounded-3xl text-center hover:scale-105 transition-all shadow-2xl">
-                                <span className="block text-4xl mb-4">📚</span>
-                                <span className="font-black text-xl">BIBLIOTECA DE APOSTILAS</span>
-                            </button>
-                            <button onClick={() => setStatus('videos')} className="p-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-3xl text-center hover:scale-105 transition-all shadow-2xl">
-                                <span className="block text-4xl mb-4">🎬</span>
-                                <span className="font-black text-xl">CINE FÊNIX (VÍDEOS)</span>
-                            </button>
-                        </div>
-                    </main>
-                </div>
-            );
-
-            if (status === 'materiais') return (
-                <div className="min-h-screen">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                        <h1 className="font-black italic text-orange-500 uppercase">BIBLIOTECA: {escolaSel}</h1>
-                        <button onClick={() => setStatus('menu_escola')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">RECUAR</button>
-                    </header>
-                    <main className="p-8 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {CONFIG_ESCOLAS[escolaSel].materias.map((m) => (
-                            <div key={m} className="card-operacional rounded-3xl overflow-hidden group">
-                                <div className="h-64 bg-black p-4 flex items-center justify-center">
-                                    <img src={`${BASE_URL}/png/card_${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.png`} 
-                                         className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all"
-                                         onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=EM+BREVE"} />
+        if (status === 'qg') return (
+            <div className="min-h-screen">
+                <HeaderPadrao 
+                    titulo={`BEM-VINDO(A) GUERREIRO(A) ${user?.n || user?.p}!`} 
+                    acaoBotao={() => setStatus('login')} 
+                    textoBotao="Sair" 
+                />
+                <BannerFrases />
+                <main className="p-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 content-start">
+                        {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
+                            <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('menu_escola'); }}
+                                className="relative h-40 rounded-2xl overflow-hidden group border border-white/5 hover:border-[#83E509] transition-all shadow-lg"
+                            >
+                                <div className="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-110" 
+                                     style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
+                                    <div className="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all"></div>
                                 </div>
-                                <div className="p-5 text-center bg-black/40">
-                                    <h3 className="font-black text-[11px] mb-4 uppercase text-orange-100">{m}</h3>
-                                    <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)}
-                                            className="w-full bg-orange-600 text-black font-black py-3 rounded-xl text-xs hover:bg-white">LER APOSTILA</button>
-                                </div>
-                            </div>
+                                <span className="relative z-10 text-xl font-black italic text-[#D4AF37] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{nome}</span>
+                            </button>
                         ))}
-                    </main>
-                </div>
-            );
-
-            if (status === 'simulado') {
-                const questoes = QUESTOES_DB[escolaSel] || [];
-                return (
-                    <div className="min-h-screen">
-                        <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                            <h1 className="font-black italic text-orange-500 uppercase">MISSÃO DE COMBATE: {escolaSel}</h1>
-                            <button onClick={() => setStatus('menu_escola')} className="btn-ouro px-6 py-2 rounded-lg text-[10px]">CESSAR FOGO</button>
-                        </header>
-                        <main className="max-w-4xl mx-auto p-6 space-y-8">
-                            {questoes.map((q, idx) => (
-                                <div key={idx} className="bg-[#0f172a] p-8 rounded-3xl border border-white/5 shadow-2xl">
-                                    <p className="text-xl font-bold mb-6 text-white/90">QUESTÃO {idx + 1}: {q.q}</p>
-                                    <div className="grid gap-3">
-                                        {q.opts.map((opt, i) => (
-                                            <button key={i} onClick={() => {
-                                                if(i === q.correta) alert("✅ NA MOSCA, GUERREIRO!");
-                                                else alert(`❌ NEGATIVO! \n\n💡 BIZU: ${q.bizu}`);
-                                            }} className="text-left p-4 bg-white/5 border border-white/10 hover:border-orange-500 rounded-xl transition-all">
-                                                <span className="text-orange-500 font-black mr-4">{String.fromCharCode(65 + i)})</span> {opt}
-                                            </button>
-                                        ))}
-                                    </div>
+                    </div>
+                    <aside className="bg-[#0f172a] rounded-2xl p-5 border border-white/5 shadow-xl h-fit">
+                        <h3 className="text-[#83E509] font-black text-center mb-4 uppercase text-xs border-b border-[#1a2f23] pb-2">Top Pelotão</h3>
+                        <div className="space-y-2 max-h-[450px] overflow-y-auto custom-scroll pr-2">
+                            {ALUNOS_DB.sort((a,b) => b.pts - a.pts).map((a, i) => (
+                                <div key={i} className="flex justify-between items-center p-2 bg-white/5 rounded-lg text-[10px] border-l-2 border-[#83E509] hover:bg-white/10 transition-all">
+                                    <span className="font-bold text-gray-300">{i+1}º {a.p}</span>
+                                    <span className="text-[#D4AF37] font-black">{a.pts} PTS</span>
                                 </div>
                             ))}
-                        </main>
-                    </div>
-                );
-            }
+                        </div>
+                    </aside>
+                </main>
+            </div>
+        );
 
-            if (status === 'videos') return (
+        if (status === 'menu_escola') return (
+            <div className="min-h-screen flex flex-col">
+                <HeaderPadrao 
+                    titulo={escolaSel} 
+                    subTitulo="SELECIONE O MÓDULO DE TREINAMENTO"
+                    acaoBotao={() => setStatus('qg')} 
+                    textoBotao="Voltar ao QG" 
+                    corBotao="text-[#D4AF37]"
+                />
+                <main className="flex-1 flex items-center justify-center p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+                        <button onClick={() => setStatus('simulado')} className="p-10 bg-gradient-to-br from-[#1a2f23] to-black border-2 border-[#83E509]/30 rounded-3xl text-center hover:scale-105 hover:border-[#83E509] transition-all shadow-2xl group">
+                            <span className="block text-4xl mb-4 group-hover:animate-bounce">📝</span>
+                            <span className="font-black text-xl text-[#83E509]">SIMULADOS INTERATIVOS</span>
+                        </button>
+                        <button onClick={() => setStatus('materiais')} className="p-10 bg-gradient-to-br from-[#1a2f23] to-black border-2 border-[#D4AF37]/30 rounded-3xl text-center hover:scale-105 hover:border-[#D4AF37] transition-all shadow-2xl group">
+                            <span className="block text-4xl mb-4 group-hover:animate-bounce">📚</span>
+                            <span className="font-black text-xl text-[#D4AF37]">BIBLIOTECA DE APOSTILAS</span>
+                        </button>
+                        <button onClick={() => setStatus('videos')} className="p-10 bg-gradient-to-br from-[#1a2f23] to-black border-2 border-white/10 rounded-3xl text-center hover:scale-105 hover:border-white transition-all shadow-2xl group">
+                            <span className="block text-4xl mb-4 group-hover:animate-bounce">🎬</span>
+                            <span className="font-black text-xl text-white">CINE FÊNIX (VÍDEOS)</span>
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+
+        if (status === 'materiais') return (
+            <div className="min-h-screen">
+                <HeaderPadrao 
+                    titulo={`BIBLIOTECA: ${escolaSel}`} 
+                    acaoBotao={() => setStatus('menu_escola')} 
+                    textoBotao="Recuar" 
+                    corBotao="text-[#D4AF37]"
+                />
+                <main className="p-8 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {CONFIG_ESCOLAS[escolaSel].materias.map((m) => (
+                        <div key={m} className="bg-[#0f172a] border border-white/5 rounded-3xl overflow-hidden group hover:border-[#83E509] transition-all">
+                            <div className="h-64 bg-black p-4 flex items-center justify-center relative">
+                                <img src={`${BASE_URL}/png/card_${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.png`} 
+                                     className="max-w-full max-h-full object-contain group-hover:scale-105 transition-all"
+                                     onError={(e) => e.target.src = "https://via.placeholder.com/300x450?text=EM+BREVE"} />
+                            </div>
+                            <div className="p-5 text-center bg-black/40 border-t border-white/5">
+                                <h3 className="font-black text-[11px] mb-4 uppercase text-[#D4AF37]">{m}</h3>
+                                <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)}
+                                        className="w-full bg-[#83E509] text-black font-black py-3 rounded-xl text-xs hover:bg-[#D4AF37] transition-colors">LER APOSTILA</button>
+                            </div>
+                        </div>
+                    ))}
+                </main>
+            </div>
+        );
+
+        if (status === 'simulado') {
+            const questoes = QUESTOES_DB[escolaSel] || [];
+            return (
                 <div className="min-h-screen">
-                    <header className="bg-[#0f172a] border-b-4 border-orange-600 p-5 flex justify-between items-center">
-                        <h1 className="font-black italic text-orange-500 uppercase">CINE FÊNIX</h1>
-                        <button onClick={() => setStatus('menu_escola')} className="btn-ouro px-6 py-2 rounded-xl text-xs">VOLTAR</button>
-                    </header>
-                    <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {VIDEOS_DB.map((v, i) => (
-                            <div key={i} className="bg-black/40 p-6 rounded-3xl border border-white/5">
-                                <h3 className="text-orange-500 font-black mb-4 uppercase text-xs tracking-widest">{v.t}</h3>
-                                <div className="video-container">
-                                    <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
+                    <HeaderPadrao 
+                        titulo={`MISSÃO: ${escolaSel}`} 
+                        subTitulo="FOCO TOTAL NA RESOLUÇÃO"
+                        acaoBotao={() => setStatus('menu_escola')} 
+                        textoBotao="Cessar Fogo" 
+                    />
+                    <main className="max-w-4xl mx-auto p-6 space-y-8">
+                        {questoes.map((q, idx) => (
+                            <div key={idx} className="bg-[#0f172a] p-8 rounded-3xl border-l-4 border-[#83E509] shadow-2xl">
+                                <p className="text-xl font-bold mb-6 text-white/90">QUESTÃO {idx + 1}: {q.q}</p>
+                                <div className="grid gap-3">
+                                    {q.opts.map((opt, i) => (
+                                        <button key={i} onClick={() => {
+                                            if(i === q.correta) alert("✅ NA MOSCA, GUERREIRO!");
+                                            else alert(`❌ NEGATIVO! \n\n💡 BIZU: ${q.bizu}`);
+                                        }} className="text-left p-4 bg-white/5 border border-white/10 hover:border-[#83E509] hover:bg-[#83E509]/5 rounded-xl transition-all group">
+                                            <span className="text-[#D4AF37] font-black mr-4 group-hover:text-[#83E509]">{String.fromCharCode(65 + i)})</span> {opt}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                         ))}
@@ -403,6 +370,30 @@
                 </div>
             );
         }
+
+        if (status === 'videos') return (
+            <div className="min-h-screen">
+                <HeaderPadrao 
+                    titulo="CINE FÊNIX" 
+                    subTitulo="TREINAMENTO EM VÍDEO"
+                    acaoBotao={() => setStatus('menu_escola')} 
+                    textoBotao="Voltar" 
+                    corBotao="text-[#D4AF37]"
+                />
+                <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {VIDEOS_DB.map((v, i) => (
+                        <div key={i} className="bg-black/40 p-6 rounded-3xl border border-[#83E509]/20 hover:border-[#83E509] transition-all">
+                            <h3 className="text-[#D4AF37] font-black mb-4 uppercase text-xs tracking-widest border-b border-[#1a2f23] pb-2">{v.t}</h3>
+                            <div className="video-container rounded-xl overflow-hidden border border-white/5">
+                                <iframe src={`https://www.youtube.com/embed/${v.id}`} allowFullScreen></iframe>
+                            </div>
+                        </div>
+                    ))}
+                </main>
+            </div>
+        );
+
+        // --- FIM DA ÁREA DE ESTADOS ---
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
