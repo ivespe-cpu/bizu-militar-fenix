@@ -10,9 +10,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        const HeaderPadrao = ({ titulo, subTitulo, user, acaoBotao, textoBotao, corBotao = "text-red-500" }) => (
-    <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-4">
+               <div className="flex items-center gap-4">
             <video className="motion-header" autoPlay loop muted playsInline>
                 <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
             </video>
@@ -92,19 +90,14 @@
   border: 1px solid #333;
 }
   
-
- </style>
-</head>
-<body>
-    <div id="root"></div>
-
-        
-    </style>
+            </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
+         const HeaderPadrao = ({ titulo, subTitulo, user, acaoBotao, textoBotao, corBotao = "text-red-500" }) => (
+    <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
         const { useState, useEffect } = React;
         const BASE_URL = "https://ivespe-cpu.github.io/bizu-militar-fenix";
 
