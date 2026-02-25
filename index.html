@@ -158,7 +158,25 @@
             "Vencer na vida não é um destino, é a sua escolha."
         ];
 
- 
+ const BannerFrases = () => {
+    const [index, setIndex] = React.useState(0);
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prev) => (prev + 1) % FRASES.length);
+        }, 8000); // Muda a frase a cada 8 segundos
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="w-full text-center py-2 bg-orange-600/10 border-y border-orange-600/20 mb-6">
+            <p className="text-orange-500 italic text-sm font-medium animate-pulse">
+                <i className="fas fa-quote-left mr-2 text-[10px]"></i>
+                {FRASES[index]}
+                <i className="fas fa-quote-right ml-2 text-[10px]"></i>
+            </p>
+        </div>
+    );
+};
         function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
