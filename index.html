@@ -9,309 +9,269 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-                    :root { 
-        --preto-operacional: #050505; 
-        --verde-vibrante: #83E509; 
-        --verde-musgo: #1a2f23; /* Verde musgo escuro para a barra */
-        --dourado: #D4AF37; 
-    }
-    body { background-color: var(--preto-operacional); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
-    
-    /* Botão Dourado mantido conforme solicitado */
-    .btn-ouro { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; cursor: pointer; border: none; }
-    .btn-ouro:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
-    
-    .card-operacional { background: #0f172a; border: 1px solid rgba(131, 229, 9, 0.1); transition: 0.3s; }
-    .card-operacional:hover { border-color: var(--verde-vibrante); }
-
-    /* Estilização do Scrollbar para combinar com o verde */
-    .custom-scroll::-webkit-scrollbar-thumb { background: var(--verde-vibrante); border-radius: 10px; }
-    
-    .motion-header { height: 70px; width: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--verde-vibrante); }
-
-         /* ESTILO DOS NOVOS BOTÕES DOURADOS */
-.botoes-topo-cmrj {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-.btn-ouro {
-  background: transparent;
-  border: 2px solid #ffcc00;
-  color: #ffcc00;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.btn-ouro:hover {
-  background: #ffcc00;
-  color: #000;
-}
+        :root { 
+            --preto-operacional: #050505; 
+            --verde-vibrante: #83E509; 
+            --verde-musgo: #1a2f23;
+            --dourado: #D4AF37; 
+        }
+        body { 
+            background-color: var(--preto-operacional); 
+            color: white; 
+            margin: 0; 
+            font-family: 'Segoe UI', sans-serif; 
+            overflow-x: hidden;
+        }
         
- /* Ajuste do vídeo no Header */
-        .motion-header { height: 70px; width: 70px; object-fit: cover; border-radius: 50%; border: 2px solid #D4AF37; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
- 
-/* AJUSTE PARA AS CAPAS DAS APOSTILAS */
-.capa-manual {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #333;
-</style>
+        /* Botão Dourado */
+        .btn-ouro { 
+            background: var(--dourado); 
+            color: black; 
+            font-weight: 900; 
+            transition: 0.3s; 
+            cursor: pointer; 
+            border: none; 
+        }
+        .btn-ouro:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); 
+        }
+        
+        .motion-header { 
+            height: 60px; 
+            width: 60px; 
+            object-fit: cover; 
+            border-radius: 50%; 
+            border: 2px solid var(--dourado); 
+        }
+
+        /* Ajuste do Iframe do PDF */
+        .leitor-pdf {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .capa-manual {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const HeaderPadrao = ({ titulo, subTitulo, user, acaoBotao, textoBotao, corBotao = "text-red-500" }) => (
-    <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-            <video className="motion-header" autoPlay loop muted playsInline>
-                <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
-            </video>
-            <div className="hidden sm:block text-left">
-                <h1 className="text-[#83E509] font-black italic leading-tight uppercase">ESQUADRÃO FÊNIX</h1>
-                <p className="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">Prontos para o Combate</p>
-            </div>
-        </div>
-
-        <div className="text-center px-2">
-            <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
-                {titulo}
-            </h2>
-            {subTitulo && <p className="text-[9px] text-white/50 font-bold uppercase">{subTitulo}</p>}
-        </div>
-
-        <button onClick={acaoBotao} className={`${corBotao} font-bold border border-white/10 px-3 py-1 rounded text-xs hover:bg-white/5 transition uppercase`}>
-            {textoBotao}
-        </button>
-    </header>
-);
         const { useState, useEffect } = React;
-const BASE_URL = "https://ivespe-cpu.github.io/bizu-militar-fenix";
+        const BASE_URL = "https://ivespe-cpu.github.io/bizu-militar-fenix";
 
-// --- BANCO DE ARQUIVOS REAIS DO GITHUB ---
-const REPOSITORIO_PDFS = [
-    "edital2020cn.pdf", "edital2021cn.pdf", "edital2022cn.pdf", "edital2023cn.pdf",
-    "edital_cmrj.pdf", "gabarito2023cn.pdf", "gabarito2024cn.pdf", "gabarito2025cn.pdf",
-    "gabarito_2025cn.pdf", "prova2023cn_Port_Ciencias.pdf", "prova2023cn_mat_ingles.pdf",
-    "prova2024cn_Port_Ciencias.pdf", "prova2024cn_mat_ingles.pdf", "prova2025cn_Port_Cienc2.pdf",
-    "prova2025cn_Port_Ciencias.pdf", "prova2025cn_mat_ingles.pdf"
-];
+        // --- BANCO DE DADOS ---
+        const REPOSITORIO_PDFS = [
+            "edital2020cn.pdf", "edital2021cn.pdf", "edital2022cn.pdf", "edital2023cn.pdf",
+            "edital_cmrj.pdf", "gabarito2023cn.pdf", "gabarito2024cn.pdf", "gabarito2025cn.pdf",
+            "prova2023cn_Port_Ciencias.pdf", "prova2023cn_mat_ingles.pdf",
+            "prova2024cn_Port_Ciencias.pdf", "prova2024cn_mat_ingles.pdf",
+            "prova2025cn_Port_Ciencias.pdf", "prova2025cn_mat_ingles.pdf"
+        ];
 
-const CONFIG_ESCOLAS = {
-    "COLÉGIO NAVAL": { slug: "cn", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA", "BIOLOGIA"] },
-    "EPCAR": { slug: "epcar", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"] },
-    "CMRJ": { slug: "cmrj", materias: ["MATEMÁTICA", "PORTUGUÊS"] },
-    "EsPCEX": { slug: "espcex", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA"] },
-    "EEAR": { slug: "eear1", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"] },
-    "ESA": { slug: "esa", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA"] }
-};
+        const CONFIG_ESCOLAS = {
+            "COLÉGIO NAVAL": { slug: "cn", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA", "BIOLOGIA"] },
+            "EPCAR": { slug: "epcar", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS"] },
+            "CMRJ": { slug: "cmrj", materias: ["MATEMÁTICA", "PORTUGUÊS"] },
+            "EsPCEX": { slug: "espcex", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA", "FÍSICA", "QUÍMICA"] },
+            "EEAR": { slug: "eear1", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "FÍSICA"] },
+            "ESA": { slug: "esa", materias: ["MATEMÁTICA", "PORTUGUÊS", "INGLÊS", "HISTÓRIA", "GEOGRAFIA"] }
+        };
 
-const ALUNOS_DB = [
-    { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 },
-    { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 }, { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }
-    // ... adicione os outros conforme sua lista original
-];
+        const ALUNOS_DB = [
+            { m: "ags186", p: "SG.GASPARELLO" },
+            { m: "gfa109", p: "SUB.TEN. ARAUJO" },
+            { m: "jpj110", p: "ASP. JOÃO SAMUEL" },
+            { m: "jgm108", p: "SUB.TEN. MORAES" }
+        ];
 
-const QUESTOES_DB = {
-    "COLÉGIO NAVAL": [
-        { q: "Se x + 1/x = 5, determine o valor de x² + 1/x².", opts: ["23", "25", "27", "30"], correta: 0, bizu: "Eleve (x + 1/x)² = 25. O termo central é 2. Logo, 25 - 2 = 23." }
-    ],
-    "CMRJ": [
-        { q: "Qual o MMC de 12 e 15?", opts: ["30", "45", "60", "90"], correta: 2, bizu: "Múltiplos de 15: 15, 30, 45, 60... 60 é divisível por 12." }
-    ]
-};
+        const FRASES = [
+            "Coragem não é não ter medo, e sim, seguir em frente.",
+            "Grandes batalhas só são dadas a grandes guerreiros.",
+            "A limitação está apenas na sua mente."
+        ];
 
-const VIDEOS_DB = [{ t: "MARINHA DO BRASIL", id: "zSSp5CQpg10" }, { t: "MOTIVACIONAL", id: "Nc3WusSAIQI" }];
-const FRASES = ["Coragem não é não ter medo, e sim, seguir em frente.", "A limitação está apenas na sua mente."];
+        // --- COMPONENTES ---
+        const HeaderPadrao = ({ titulo, acaoBotao, textoBotao, corBotao = "text-red-500" }) => (
+            <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
+                <div className="flex items-center gap-4">
+                    <video className="motion-header" autoPlay loop muted playsInline>
+                        <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
+                    </video>
+                    <div className="hidden sm:block">
+                        <h1 className="text-[#83E509] font-black italic uppercase leading-none text-lg">ESQUADRÃO FÊNIX</h1>
+                        <p className="text-[10px] text-[#D4AF37] font-bold tracking-tighter">PRONTOS PARA O COMBATE</p>
+                    </div>
+                </div>
+                <h2 className="text-sm font-black text-[#D4AF37] uppercase animate-pulse">{titulo}</h2>
+                <button onClick={acaoBotao} className={`${corBotao} font-bold border border-white/10 px-4 py-1 rounded text-xs uppercase hover:bg-white/5`}>
+                    {textoBotao}
+                </button>
+            </header>
+        );
 
-// --- COMPONENTES AUXILIARES ---
-const HeaderPadrao = ({ titulo, subTitulo, acaoBotao, textoBotao, corBotao = "text-red-500" }) => (
-    <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-            <video className="motion-header" autoPlay loop muted playsInline>
-                <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
-            </video>
-            <div className="hidden sm:block text-left">
-                <h1 className="text-[#83E509] font-black italic leading-tight uppercase">ESQUADRÃO FÊNIX</h1>
-                <p className="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">Prontos para o Combate</p>
-            </div>
-        </div>
-        <div className="text-center px-2">
-            <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">{titulo}</h2>
-            {subTitulo && <p className="text-[9px] text-white/50 font-bold uppercase">{subTitulo}</p>}
-        </div>
-        <button onClick={acaoBotao} className={`${corBotao} font-bold border border-white/10 px-3 py-1 rounded text-xs hover:bg-white/5 transition uppercase`}>
-            {textoBotao}
-        </button>
-    </header>
-);
+        const BannerFrases = () => {
+            const [index, setIndex] = useState(0);
+            useEffect(() => {
+                const interval = setInterval(() => setIndex(prev => (prev + 1) % FRASES.length), 8000);
+                return () => clearInterval(interval);
+            }, []);
+            return (
+                <div className="w-full text-center py-2 bg-[#1a2f23] border-y border-[#83E509]/20 mb-4">
+                    <p className="text-[#83E509] italic text-xs font-medium">{FRASES[index]}</p>
+                </div>
+            );
+        };
 
-const BannerFrases = () => {
-    const [index, setIndex] = useState(0);
-    useEffect(() => {
-        const interval = setInterval(() => setIndex((p) => (p + 1) % FRASES.length), 8000);
-        return () => clearInterval(interval);
-    }, []);
-    return (
-        <div className="w-full text-center py-2 bg-[#1a2f23] border-y border-[#83E509]/20 mb-6">
-            <p className="text-[#83E509] italic text-sm font-medium animate-pulse">{FRASES[index]}</p>
-        </div>
-    );
-};
+        // --- APP PRINCIPAL ---
+        function App() {
+            const [status, setStatus] = useState('login');
+            const [user, setUser] = useState(null);
+            const [matricula, setMatricula] = useState('');
+            const [escolaSel, setEscolaSel] = useState(null);
+            const [tipoDoc, setTipoDoc] = useState('');
+            const [pdfAtivo, setPdfAtivo] = useState(null);
 
-// --- FUNÇÃO PRINCIPAL DO APP ---
-function App() {
-    const [status, setStatus] = useState('login');
-    const [user, setUser] = useState(null);
-    const [matricula, setMatricula] = useState('');
-    const [escolaSel, setEscolaSel] = useState(null);
-    const [tipoDoc, setTipoDoc] = useState('');
-    const [pdfAtivo, setPdfAtivo] = useState(null);
+            const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
 
-    const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+            const handleLogin = (e) => {
+                if(e) e.preventDefault();
+                const m = matricula.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === m);
 
-    const handleLogin = (e) => {
-        if (e) e.preventDefault();
-        const m = matricula.toLowerCase().trim();
-        const aluno = ALUNOS_DB.find(a => a.m === m);
-        if (m === 'esp0815' || m === 'militar') {
-            setUser({ p: m === 'militar' ? "INSTRUTOR" : "COMANDANTE IVESPE" });
-            setStatus('qg');
-        } else if (aluno) {
-            setUser(aluno);
-            setStatus('qg');
-        } else {
-            alert("MATRÍCULA NÃO ENCONTRADA!");
+                if (m === 'esp0815' || m === 'militar') {
+                    setUser({ p: m === 'militar' ? "INSTRUTOR" : "COMANDANTE IVESPE" });
+                    setStatus('qg');
+                } else if (aluno) {
+                    setUser(aluno);
+                    setStatus('qg');
+                } else {
+                    alert("MATRÍCULA NÃO ENCONTRADA!");
+                }
+            };
+
+            // TELA: LOGIN
+            if (status === 'login') return (
+                <div className="min-h-screen flex items-center justify-center p-4">
+                    <div className="max-w-md w-full bg-[#0f172a] p-8 rounded-3xl border-2 border-[#D4AF37]/20 text-center">
+                        <video className="w-32 h-32 mx-auto rounded-full mb-6 border-2 border-[#D4AF37]" autoPlay loop muted playsInline>
+                            <source src={`${BASE_URL}/video/logo_bizu2.mp4`} type="video/mp4" />
+                        </video>
+                        <h2 className="text-[#D4AF37] font-black mb-6 italic">ACESSO AO QG</h2>
+                        <form onSubmit={handleLogin}>
+                            <input type="text" value={matricula} onChange={(e) => setMatricula(e.target.value)}
+                                className="w-full p-4 mb-4 bg-black border border-white/10 rounded-xl text-white text-center text-xl outline-none focus:border-[#D4AF37]" 
+                                placeholder="MATRÍCULA" />
+                            <button type="submit" className="w-full py-4 rounded-xl btn-ouro uppercase">Entrar em Formas</button>
+                        </form>
+                    </div>
+                </div>
+            );
+
+            // TELA: QG
+            if (status === 'qg') return (
+                <div className="min-h-screen">
+                    <HeaderPadrao titulo={`GUERREIRO: ${user?.p}`} acaoBotao={() => setStatus('login')} textoBotao="Sair" />
+                    <BannerFrases />
+                    <main className="p-4 max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
+                            <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('menu_escola'); }}
+                                className="relative h-44 rounded-2xl overflow-hidden group border border-white/5 hover:border-[#83E509] transition-all">
+                                <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
+                                    <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all"></div>
+                                </div>
+                                <span className="relative z-10 text-xl font-black italic text-[#D4AF37] uppercase">{nome}</span>
+                            </button>
+                        ))}
+                    </main>
+                </div>
+            );
+
+            // TELA: MENU DA ESCOLA
+            if (status === 'menu_escola') return (
+                <div className="min-h-screen">
+                    <HeaderPadrao titulo={escolaSel} acaoBotao={() => setStatus('qg')} textoBotao="Voltar" corBotao="text-[#D4AF37]" />
+                    <main className="p-8 max-w-4xl mx-auto text-center">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+                            <button onClick={() => { setTipoDoc('EDITAL'); setStatus('documentos'); }} className="p-4 bg-yellow-600/10 border border-yellow-500/50 text-yellow-500 rounded-xl font-bold hover:bg-yellow-500 hover:text-black transition-all">📜 EDITAIS</button>
+                            <button onClick={() => { setTipoDoc('PROVA'); setStatus('documentos'); }} className="p-4 bg-green-600/10 border border-green-500/50 text-green-500 rounded-xl font-bold hover:bg-green-500 hover:text-black transition-all">📝 PROVAS</button>
+                            <button onClick={() => { setTipoDoc('GABARITO'); setStatus('documentos'); }} className="p-4 bg-blue-600/10 border border-blue-500/50 text-blue-500 rounded-xl font-bold hover:bg-blue-500 hover:text-black transition-all">✅ GABARITOS</button>
+                        </div>
+                        <div className="flex flex-col sm:flex-row justify-center gap-6">
+                            <button onClick={() => alert("Simulados em manutenção")} className="flex-1 p-10 bg-[#0f172a] border-2 border-[#83E509]/30 rounded-3xl text-[#83E509] font-black hover:border-[#83E509]">SIMULADOS</button>
+                            <button onClick={() => setStatus('materiais')} className="flex-1 p-10 bg-[#0f172a] border-2 border-[#D4AF37]/30 rounded-3xl text-[#D4AF37] font-black hover:border-[#D4AF37]">BIBLIOTECA</button>
+                        </div>
+                    </main>
+                </div>
+            );
+
+            // TELA: LISTA DE DOCUMENTOS
+            if (status === 'documentos') {
+                const slug = CONFIG_ESCOLAS[escolaSel].slug.replace('1', '').toLowerCase();
+                const listaFiltrada = REPOSITORIO_PDFS.filter(arq => 
+                    arq.toLowerCase().includes(tipoDoc.toLowerCase()) && arq.toLowerCase().includes(slug)
+                );
+                return (
+                    <div className="min-h-screen">
+                        <HeaderPadrao titulo={`${tipoDoc}S - ${escolaSel}`} acaoBotao={() => setStatus('menu_escola')} textoBotao="Recuar" corBotao="text-white" />
+                        <main className="max-w-3xl mx-auto p-6 space-y-3">
+                            {listaFiltrada.length > 0 ? listaFiltrada.map((arq, idx) => (
+                                <div key={idx} className="flex justify-between items-center p-4 bg-white/5 border-l-4 border-[#D4AF37] rounded-lg">
+                                    <span className="text-xs font-bold uppercase text-gray-300">{arq.replace('.pdf', '').replace(/_/g, ' ')}</span>
+                                    <button onClick={() => setPdfAtivo({ url: arq, nome: arq.toUpperCase() })}
+                                        className="bg-[#D4AF37] text-black text-[10px] font-black px-6 py-2 rounded shadow-lg">VISUALIZAR</button>
+                                </div>
+                            )) : <p className="text-center text-white/30 py-10">Nenhum documento encontrado.</p>}
+                        </main>
+
+                        {pdfAtivo && (
+                            <div className="fixed inset-0 z-[100] bg-black flex flex-col">
+                                <div className="p-4 bg-[#000814] flex justify-between items-center border-b border-white/10">
+                                    <span className="text-[#D4AF37] font-black text-xs uppercase">{pdfAtivo.nome}</span>
+                                    <button onClick={() => setPdfAtivo(null)} className="bg-red-600 text-white px-6 py-1 rounded-full font-black text-xs">FECHAR</button>
+                                </div>
+                                <iframe 
+                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + "/pdf/" + pdfAtivo.url)}&embedded=true`} 
+                                    className="flex-1 w-full bg-white" 
+                                />
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            // TELA: BIBLIOTECA
+            if (status === 'materiais') return (
+                <div className="min-h-screen">
+                    <HeaderPadrao titulo={`BIBLIOTECA: ${escolaSel}`} acaoBotao={() => setStatus('menu_escola')} textoBotao="Voltar" />
+                    <main className="p-6 max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {CONFIG_ESCOLAS[escolaSel].materias.map((m) => (
+                            <div key={m} className="bg-[#0f172a] border border-white/5 rounded-2xl p-4 text-center flex flex-col">
+                                <div className="h-32 bg-black/40 rounded-lg mb-4 flex items-center justify-center">
+                                    <span className="text-[#D4AF37] font-black text-4xl">PDF</span>
+                                </div>
+                                <h3 className="font-bold text-xs mb-4 text-gray-200 uppercase flex-1">{m}</h3>
+                                <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)} 
+                                    className="w-full bg-[#83E509] text-black font-black py-2 rounded-lg text-[10px] uppercase">Abrir Material</button>
+                            </div>
+                        ))}
+                    </main>
+                </div>
+            );
+
+            return null;
         }
-    };
-
-    if (status === 'login') return (
-        <div className="min-h-screen flex items-center justify-center bg-black">
-            <div className="max-w-md w-full p-8 text-center">
-                <video className="w-full rounded-2xl mb-6" autoPlay loop muted playsInline>
-                    <source src={`${BASE_URL}/video/logo_bizu2.mp4`} type="video/mp4" />
-                </video>
-                <form onSubmit={handleLogin}>
-                    <input type="text" value={matricula} onChange={(e) => setMatricula(e.target.value)}
-                        className="w-full p-4 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-center" placeholder="MATRÍCULA" />
-                    <button type="submit" className="w-full py-4 rounded-xl btn-ouro">AUTENTICAR</button>
-                </form>
-            </div>
-        </div>
-    );
-
-    if (status === 'qg') return (
-        <div className="min-h-screen">
-            <HeaderPadrao titulo={`OLÁ, ${user?.p}!`} acaoBotao={() => setStatus('login')} textoBotao="Sair" />
-            <BannerFrases />
-            <main className="p-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {Object.entries(CONFIG_ESCOLAS).map(([nome, d]) => (
-                        <button key={nome} onClick={() => { setEscolaSel(nome); setStatus('menu_escola'); }}
-                            className="relative h-40 rounded-2xl overflow-hidden group border border-white/5 hover:border-[#83E509] transition-all">
-                            <div className="absolute inset-0 bg-center bg-cover" style={{ backgroundImage: `url(${BASE_URL}/jpg/${d.slug}.jpg)` }}>
-                                <div className="absolute inset-0 bg-black/60 group-hover:bg-black/20"></div>
-                            </div>
-                            <span className="relative z-10 text-xl font-black italic text-[#D4AF37]">{nome}</span>
-                        </button>
-                    ))}
-                </div>
-            </main>
-        </div>
-    );
-
-    if (status === 'menu_escola') return (
-        <div className="min-h-screen">
-            <HeaderPadrao titulo={escolaSel} acaoBotao={() => setStatus('qg')} textoBotao="Voltar" corBotao="text-[#D4AF37]" />
-            <main className="p-8 max-w-7xl mx-auto text-center">
-                <div className="flex flex-wrap justify-center gap-4 mb-10">
-                    <button onClick={() => { setTipoDoc('EDITAL'); setStatus('documentos'); }} className="px-6 py-2 bg-yellow-600/20 border border-yellow-500 text-yellow-500 rounded-lg font-bold">📜 EDITAIS</button>
-                    <button onClick={() => { setTipoDoc('PROVA'); setStatus('documentos'); }} className="px-6 py-2 bg-green-600/20 border border-green-500 text-green-500 rounded-lg font-bold">📝 PROVAS</button>
-                    <button onClick={() => { setTipoDoc('GABARITO'); setStatus('documentos'); }} className="px-6 py-2 bg-blue-600/20 border border-blue-500 text-blue-500 rounded-lg font-bold">✅ GABARITOS</button>
-                </div>
-                <div className="flex justify-center gap-8 flex-wrap">
-                    <button onClick={() => setStatus('simulado')} className="p-10 bg-black border-2 border-[#83E509]/30 rounded-3xl text-[#83E509] font-black">SIMULADOS</button>
-                    <button onClick={() => setStatus('materiais')} className="p-10 bg-black border-2 border-[#D4AF37]/30 rounded-3xl text-[#D4AF37] font-black">BIBLIOTECA</button>
-                </div>
-            </main>
-        </div>
-    );
-
-    if (status === 'documentos') {
-        const slug = CONFIG_ESCOLAS[escolaSel].slug.replace('1', '').toLowerCase();
-        const lista = REPOSITORIO_PDFS.filter(arq => arq.toLowerCase().includes(tipoDoc.toLowerCase()) && arq.toLowerCase().includes(slug));
-        return (
-            <div className="min-h-screen">
-                <HeaderPadrao titulo={`${tipoDoc}S: ${escolaSel}`} acaoBotao={() => setStatus('menu_escola')} textoBotao="Recuar" />
-                <main className="max-w-4xl mx-auto p-6 space-y-3">
-                    {lista.map((arq, i) => (
-                        <div key={i} className="flex justify-between items-center p-4 bg-white/5 border-l-4 border-[#D4AF37] rounded">
-                            <span className="text-xs font-bold uppercase">{arq.replace('.pdf', '')}</span>
-                            <button onClick={() => setPdfAtivo({ url: arq, nome: arq.toUpperCase() })} className="bg-[#D4AF37] text-black text-[10px] font-black px-6 py-2 rounded">ABRIR</button>
-                        </div>
-                    ))}
-                </main>
-                {pdfAtivo && (
-                    <div className="fixed inset-0 z-[9999] bg-black flex flex-col p-2">
-                        <div className="flex justify-between items-center p-4 bg-[#000814] border border-[#D4AF37]/30 rounded mb-2">
-                            <h2 className="text-[#D4AF37] font-black text-xs">{pdfAtivo.nome}</h2>
-                            <button onClick={() => setPdfAtivo(null)} className="bg-red-600 text-white px-4 py-1 rounded font-black">FECHAR</button>
-                        </div>
-                        <iframe src={`https://docs.google.com/viewer?url=${encodeURIComponent(BASE_URL + "/pdf/" + pdfAtivo.url)}&embedded=true`} className="flex-1 w-full rounded bg-white" />
-                    </div>
-                )}
-            </div>
-        );
-    }
-
-    if (status === 'materiais') return (
-        <div className="min-h-screen">
-            <HeaderPadrao titulo={`BIBLIOTECA: ${escolaSel}`} acaoBotao={() => setStatus('menu_escola')} textoBotao="Recuar" />
-            <main className="p-8 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {CONFIG_ESCOLAS[escolaSel].materias.map((m) => (
-                    <div key={m} className="bg-[#0f172a] border border-white/5 rounded-3xl overflow-hidden p-5 text-center">
-                        <img src={`${BASE_URL}/png/card_${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.png`} className="h-40 mx-auto mb-4 object-contain" onError={(e) => e.target.src="https://via.placeholder.com/150?text=PDF"} />
-                        <h3 className="font-black text-[11px] mb-4 text-[#D4AF37]">{m}</h3>
-                        <button onClick={() => window.open(`${BASE_URL}/pdf/${formatar(m)}_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)} className="w-full bg-[#83E509] text-black font-black py-2 rounded-xl text-xs">LER APOSTILA</button>
-                    </div>
-                ))}
-            </main>
-        </div>
-    );
-
-    if (status === 'simulado') {
-        const questoes = QUESTOES_DB[escolaSel] || [];
-        return (
-            <div className="min-h-screen">
-                <HeaderPadrao titulo={`MISSÃO: ${escolaSel}`} acaoBotao={() => setStatus('menu_escola')} textoBotao="Cessar Fogo" />
-                <main className="max-w-4xl mx-auto p-6 space-y-6">
-                    {questoes.length > 0 ? questoes.map((q, idx) => (
-                        <div key={idx} className="bg-[#0f172a] p-6 rounded-3xl border-l-4 border-[#83E509]">
-                            <p className="font-bold mb-4">{idx+1}. {q.q}</p>
-                            <div className="grid gap-2">
-                                {q.opts.map((opt, i) => (
-                                    <button key={i} onClick={() => alert(i === q.correta ? "✅ ACERTOU!" : "❌ BIZU: " + q.bizu)} className="text-left p-3 bg-white/5 rounded hover:bg-[#83E509]/10 border border-transparent hover:border-[#83E509] transition-all">
-                                        {opt}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )) : <p className="text-center text-white/40">Simulado em breve para esta escola.</p>}
-                </main>
-            </div>
-        );
-    }
-}
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
