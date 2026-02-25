@@ -10,17 +10,26 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --azul-marinho: #050505; --dourado: #D4AF37; --laranja: #ea580c; }
-        body { background-color: var(--azul-marinho); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
-        .militar-gradient { background: radial-gradient(circle at top, #1e293b 0%, #050505 100%); min-height: 100vh; }
-        .btn-ouro { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; cursor: pointer; border: none; }
-        .btn-ouro:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
-        .card-operacional { background: #0f172a; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-        .card-operacional:hover { border-color: var(--laranja); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: var(--laranja); border-radius: 10px; }
+       :root { 
+        --preto-operacional: #050505; 
+        --verde-vibrante: #83E509; 
+        --verde-musgo: #1a2f23; /* Verde musgo escuro para a barra */
+        --dourado: #D4AF37; 
+    }
+    body { background-color: var(--preto-operacional); color: white; margin: 0; font-family: 'Segoe UI', sans-serif; }
+    
+    /* Botão Dourado mantido conforme solicitado */
+    .btn-ouro { background: var(--dourado); color: black; font-weight: 900; transition: 0.3s; cursor: pointer; border: none; }
+    .btn-ouro:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+    
+    .card-operacional { background: #0f172a; border: 1px solid rgba(131, 229, 9, 0.1); transition: 0.3s; }
+    .card-operacional:hover { border-color: var(--verde-vibrante); }
+
+    /* Estilização do Scrollbar para combinar com o verde */
+    .custom-scroll::-webkit-scrollbar-thumb { background: var(--verde-vibrante); border-radius: 10px; }
+    
+    .motion-header { height: 70px; width: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--verde-vibrante); }
+
          /* ESTILO DOS NOVOS BOTÕES DOURADOS */
 .botoes-topo-cmrj {
   display: flex;
