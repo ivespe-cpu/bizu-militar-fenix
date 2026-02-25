@@ -168,25 +168,15 @@
 
             const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
 
-              const handleLogin = (e) => {
+             const handleLogin = (e) => {
                 if(e) e.preventDefault();
-                const s = senhaIn.toLowerCase().trim();
-                const aluno = ALUNOS_DB.find(a => a.m === s);
-                
-                if (s === "esp0815") { 
-                    setUser({ p: "COMANDANTE", pts: "∞", n: "COMANDANTE" }); 
+                const m = matricula.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === m);
+                if (aluno || m === 'admin') { 
+                    setUser(aluno || {p: "COMANDANTE"}); 
                     setStatus('qg'); 
-                } 
-                else if (s === "instrutor77") { 
-                    setUser({ p: "INSTRUTOR TÁTICO", pts: "9999", n: "INSTRUTOR" }); 
-                    setStatus('qg'); 
-                }
-                else if (aluno) { 
-                    setUser(aluno); 
-                    setStatus('qg'); 
-                } 
-                else {
-                    alert("ACESSO NEGADO! Verifique sua matrícula."); 
+                } else { 
+                    alert("MATRÍCULA NÃO ENCONTRADA NO PELOTÃO!"); 
                 }
             };
 
