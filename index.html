@@ -10,6 +10,30 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        const HeaderPadrao = ({ titulo, subTitulo, user, acaoBotao, textoBotao, corBotao = "text-red-500" }) => (
+    <header className="bg-[#0f172a] border-b-4 border-[#1a2f23] p-5 flex justify-between items-center sticky top-0 z-50">
+        <div className="flex items-center gap-4">
+            <video className="motion-header" autoPlay loop muted playsInline>
+                <source src={`${BASE_URL}/video/logo_esquadrao.mp4`} type="video/mp4" />
+            </video>
+            <div className="hidden sm:block text-left">
+                <h1 className="text-[#83E509] font-black italic leading-tight uppercase">ESQUADRÃO FÊNIX</h1>
+                <p className="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">Prontos para o Combate</p>
+            </div>
+        </div>
+
+        <div className="text-center px-2">
+            <h2 className="text-sm font-black text-[#D4AF37] italic uppercase animate-pulse">
+                {titulo}
+            </h2>
+            {subTitulo && <p className="text-[9px] text-white/50 font-bold uppercase">{subTitulo}</p>}
+        </div>
+
+        <button onClick={acaoBotao} className={`${corBotao} font-bold border border-white/10 px-3 py-1 rounded text-xs hover:bg-white/5 transition uppercase`}>
+            {textoBotao}
+        </button>
+    </header>
+);
        :root { 
         --preto-operacional: #050505; 
         --verde-vibrante: #83E509; 
