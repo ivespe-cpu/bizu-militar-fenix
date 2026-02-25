@@ -207,17 +207,26 @@
             const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
 
              const handleLogin = (e) => {
-                if(e) e.preventDefault();
-                const m = matricula.toLowerCase().trim();
-                const aluno = ALUNOS_DB.find(a => a.m === m);
-                if (aluno || m === 'admin') { 
-                    setUser(aluno || {p: "COMANDANTE"}); 
-                    setStatus('qg'); 
-                } else { 
-                    alert("MATRÍCULA NÃO ENCONTRADA NO PELOTÃO!"); 
-                }
-            };
+                if(e) e.preventDefault();
+                const m = matricula.toLowerCase().trim();
+                const aluno = ALUNOS_DB.find(a => a.m === m);
 
+                // Acesso do Comandante
+                if (m === 'esp0815') { 
+                    setUser({p: "COMANDANTE IVESPE", cargo: "Comandante"}); 
+                    setStatus('qg'); 
+                // Acesso do Instrutor
+                } else if (m === 'militar') {
+                    setUser({p: "INSTRUTOR", cargo: "Instrutor"}); 
+                    setStatus('qg');
+                // Acesso dos Alunos
+                } else if (aluno) { 
+                    setUser(aluno); 
+                    setStatus('qg'); 
+                } else { 
+                    alert("MATRÍCULA NÃO ENCONTRADA NO PELOTÃO!"); 
+                }
+            };
 
             if (status === 'login') return (
                 <div className="min-h-screen flex items-center justify-center militar-gradient">
