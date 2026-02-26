@@ -412,7 +412,7 @@ const [pdfAtivo, setPdfAtivo] = useState(null); // Controla qual PDF está abert
             );
         }
 
-        if (status === 'videos') return (
+  if (status === 'videos') return (
             <div className="min-h-screen">
                 <HeaderPadrao 
                     titulo="CINE FÊNIX" 
@@ -433,56 +433,56 @@ const [pdfAtivo, setPdfAtivo] = useState(null); // Controla qual PDF está abert
                 </main>
             </div>
         );
-                    }
-        /* === NOVO BLOCO: TELA DE LISTAGEM DE DOCUMENTOS (EVITA A TELA PRETA) === */
-if (status === 'documentos') {
-    // Filtra os arquivos que pertencem à escola selecionada e ao tipo clicado
-    const documentosFiltrados = ARQUIVOS_PDF.filter(doc => 
-        doc.escola === escolaSel && doc.tipo === tipoDoc
-    );
 
-    return (
-        <div className="min-h-screen">
-            <HeaderPadrao 
-                titulo={`${tipoDoc}: ${escolaSel}`} 
-                subTitulo="SELECIONE O ARQUIVO PARA ESTUDO"
-                acaoBotao={() => setStatus('menu_escola')} 
-                textoBotao="Recuar" 
-                corBotao="text-[#D4AF37]"
-            />
-            <main className="p-8 max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 gap-4">
-                    {documentosFiltrados.length > 0 ? (
-                        documentosFiltrados.map((doc, idx) => (
-                            <button 
-                                key={idx} 
-                                onClick={() => window.open(`${BASE_URL}/pdf/${doc.arquivo}`, "_blank")}
-                                className="flex items-center justify-between p-6 bg-[#0f172a] border border-white/10 rounded-2xl hover:border-[#83E509] hover:bg-white/5 transition-all group"
-                            >
-                                <div className="flex items-center gap-4">
-                                    <span className="text-2xl">📄</span>
-                                    <span className="font-bold text-gray-200 uppercase tracking-wider">{doc.nome}</span>
+        /* === NOVO BLOCO: TELA DE LISTAGEM DE DOCUMENTOS === */
+        if (status === 'documentos') {
+            const documentosFiltrados = ARQUIVOS_PDF.filter(doc => 
+                doc.escola === escolaSel && doc.tipo === tipoDoc
+            );
+
+            return (
+                <div className="min-h-screen">
+                    <HeaderPadrao 
+                        titulo={`${tipoDoc}: ${escolaSel}`} 
+                        subTitulo="SELECIONE O ARQUIVO PARA ESTUDO"
+                        acaoBotao={() => setStatus('menu_escola')} 
+                        textoBotao="Recuar" 
+                        corBotao="text-[#D4AF37]"
+                    />
+                    <main className="p-8 max-w-4xl mx-auto">
+                        <div className="grid grid-cols-1 gap-4">
+                            {documentosFiltrados.length > 0 ? (
+                                documentosFiltrados.map((doc, idx) => (
+                                    <button 
+                                        key={idx} 
+                                        onClick={() => window.open(`${BASE_URL}/pdf/${doc.arquivo}`, "_blank")}
+                                        className="flex items-center justify-between p-6 bg-[#0f172a] border border-white/10 rounded-2xl hover:border-[#83E509] hover:bg-white/5 transition-all group"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-2xl">📄</span>
+                                            <span className="font-bold text-gray-200 uppercase tracking-wider">{doc.nome}</span>
+                                        </div>
+                                        <span className="bg-[#83E509] text-black text-[10px] font-black px-3 py-1 rounded-full group-hover:bg-[#D4AF37] transition-colors">
+                                            ABRIR PDF
+                                        </span>
+                                    </button>
+                                ))
+                            ) : (
+                                <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
+                                    <p className="text-gray-500 font-bold">NENHUM ARQUIVO DISPONÍVEL NESTA CATEGORIA AINDA.</p>
                                 </div>
-                                <span className="bg-[#83E509] text-black text-[10px] font-black px-3 py-1 rounded-full group-hover:bg-[#D4AF37] transition-colors">
-                                    ABRIR PDF
-                                </span>
-                            </button>
-                        ))
-                    ) : (
-                        <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
-                            <p className="text-gray-500 font-bold">NENHUM ARQUIVO DISPONÍVEL NESTA CATEGORIA AINDA.</p>
+                            )}
                         </div>
-                    )}
+                    </main>
                 </div>
-            </main>
-        </div>
-    );
-}
-        // --- FIM DA ÁREA DE ESTADOS ---
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+            );
+        }
 
+        // Esta é a única chave que deve fechar a função App
+        return null; 
+    }
 
+    // --- RENDERIZAÇÃO FINAL ---
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+</script>
