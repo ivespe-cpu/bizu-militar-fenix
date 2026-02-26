@@ -198,11 +198,28 @@
         </div>
     );
 };
-        function App() {
+      
+const ARQUIVOS_PDF = [
+    // EDITAIS - COLÉGIO NAVAL
+    { nome: "EDITAL 2023", arquivo: "edital2023cn.pdf", tipo: "EDITAIS", escola: "COLÉGIO NAVAL" },
+    { nome: "EDITAL 2022", arquivo: "edital2022cn.pdf", tipo: "EDITAIS", escola: "COLÉGIO NAVAL" },
+    { nome: "EDITAL 2021", arquivo: "edital2021cn.pdf", tipo: "EDITAIS", escola: "COLÉGIO NAVAL" },
+    // PROVAS - COLÉGIO NAVAL
+    { nome: "PROVA 2024 - MAT/ING", arquivo: "prova2024cn_mat_ingles.pdf", tipo: "PROVAS", escola: "COLÉGIO NAVAL" },
+    { nome: "PROVA 2024 - PORT/CIEN", arquivo: "prova2024cn_Port_Ciencias.pdf", tipo: "PROVAS", escola: "COLÉGIO NAVAL" },
+    { nome: "PROVA 2023 - MAT/ING", arquivo: "prova2023cn_mat_ingles.pdf", tipo: "PROVAS", escola: "COLÉGIO NAVAL" },
+    // GABARITOS - COLÉGIO NAVAL
+    { nome: "GABARITO 2025", arquivo: "gabarito2025cn.pdf", tipo: "GABARITOS", escola: "COLÉGIO NAVAL" },
+    { nome: "GABARITO 2024", arquivo: "gabarito2024cn.pdf", tipo: "GABARITOS", escola: "COLÉGIO NAVAL" }
+];
+
+  function App() {
             const [status, setStatus] = useState('login'); 
             const [user, setUser] = useState(null);
             const [matricula, setMatricula] = useState('');
             const [escolaSel, setEscolaSel] = useState(null);
+const [tipoDoc, setTipoDoc] = useState(''); // Controla se clicou em EDITAIS, PROVAS ou GABARITOS
+const [pdfAtivo, setPdfAtivo] = useState(null); // Controla qual PDF está aberto no modal
 
             const formatar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
 
@@ -299,26 +316,26 @@
 
 
 {/* Barra de Ferramentas da Escola - ACESSO AOS PDFS */}
+{/* Barra de Ferramentas da Escola - AGORA DINÂMICA */}
 <div className="w-full flex flex-wrap justify-center gap-4 mb-10">
     <button 
-        onClick={() => window.open(`${BASE_URL}/pdf/edital_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)}
+        onClick={() => { setTipoDoc('EDITAIS'); setStatus('documentos'); }}
         className="px-6 py-2 bg-yellow-600/20 border border-yellow-500 text-yellow-500 rounded-lg hover:bg-yellow-500 hover:text-black transition-all font-bold">
         📜 EDITAIS
     </button>
     
     <button 
-        onClick={() => window.open(`${BASE_URL}/pdf/provas_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)}
+        onClick={() => { setTipoDoc('PROVAS'); setStatus('documentos'); }}
         className="px-6 py-2 bg-green-600/20 border border-green-500 text-green-500 rounded-lg hover:bg-green-500 hover:text-black transition-all font-bold">
         📝 PROVAS
     </button>
     
     <button 
-        onClick={() => window.open(`${BASE_URL}/pdf/gabaritos_${CONFIG_ESCOLAS[escolaSel].slug.replace('1','')}.pdf`)}
+        onClick={() => { setTipoDoc('GABARITOS'); setStatus('documentos'); }}
         className="px-6 py-2 bg-blue-600/20 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-black transition-all font-bold">
         ✅ GABARITOS
     </button>
 </div>
-
               <div className="flex justify-center gap-8 flex-wrap">
                         <button onClick={() => setStatus('simulado')} className="p-10 bg-gradient-to-br from-[#1a2f23] to-black border-2 border-[#83E509]/30 rounded-3xl text-center hover:scale-105 hover:border-[#83E509] transition-all shadow-2xl group">
                             <span className="block text-4xl mb-4 group-hover:animate-bounce">📝</span>
@@ -423,3 +440,5 @@
     </script>
 </body>
 </html>
+
+
