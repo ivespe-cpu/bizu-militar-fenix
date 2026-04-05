@@ -177,6 +177,7 @@
             "Os fortes agem, avançam e deixam um legado.", 
             "A limitação está apenas na sua mente.",
             "Grandes batalhas só são dadas a grandes guerreiros.",
+            "A farda de amanhã é forjada no estudo de hoje.",
             "Obstáculos são injeções de ânimo ou desânimo, você escolhe.",
             "Vencer na vida não é um destino, é a sua escolha."
         ];
@@ -186,7 +187,7 @@
     React.useEffect(() => {
         const interval = setInterval(() => {
             setIndex((prev) => (prev + 1) % FRASES.length);
-        }, 8000); // Muda a frase a cada 8 segundos
+        }, 10000); // Muda a frase a cada 10 segundos
         return () => clearInterval(interval);
     }, []);
 
