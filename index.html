@@ -111,11 +111,10 @@
          const ALUNOS_DB = [
             { m: "ags186", p: "SG.GASPARELLO", pts: 1500 }, { m: "alm170", p: "SG. MOURA", pts: 1450 },
             { m: "bsp223", p: "SD. PINHEIRO", pts: 1200 }, { m: "bab196", p: "CB. BRAYAN", pts: 1100 },
-            { m: "bbs203", p: "SD. BERNARDO", pts: 900 }, { m: "cvs208", p: "CB. CAMILA", pts: 1050 },
+            { m: "bbs203", p: "SD. BERNARDO", pts: 900 }, { m: "cvs208", p: "SG. CAMILA", pts: 1050 },
             { m: "dva194", p: "CB. ALBUQUERQUE", pts: 1300 }, { m: "esp192", p: "SG. PEIXOTO", pts: 1250 },
             { m: "egc228", p: "CB. ENZO", pts: 850 }, { m: "gsp187", p: "SG. GABRIELLE PEREIRA", pts: 1400 },
-            { m: "gac174", p: "SG. GABRIELLY COUTINHO", pts: 1350 }, { m: "gem240", p: "SD.MICAELA", pts: 950 },
-            { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, { m: "hls197", p: "CB. SALES", pts: 1150 },
+            { m: "gac174", p: "SG. GABRIELLY COUTINHO", pts: 1350 }, { m: "gfa109", p: "SUB.TEN. ARAUJO", pts: 1900 }, 
             { m: "icg127", p: "SG. GRANADO", pts: 1600 }, { m: "iws159", p: "SG. LIMA", pts: 1550 },
             { m: "jgm108", p: "SUB.TEN. MORAES", pts: 1950 }, { m: "jpj110", p: "ASP. JOÃO SAMUEL", pts: 2000 },
             { m: "jva190", p: "SG. ANDRADE", pts: 1480 }, { m: "jhs198", p: "CB. JOSUÉ", pts: 1120 },
@@ -128,7 +127,7 @@
             { m: "php105", p: "SUB.TEN. PAULO", pts: 1910 }, { m: "pha219", p: "CB. PEDRO HENRIQUE", pts: 1180 },
             { m: "pho188", p: "SG. DE PAULA", pts: 1410 }, { m: "phm185", p: "SG. PEDRO RIBEIRO", pts: 1430 },
             { m: "phc232", p: "SD. PIETRO", pts: 920 }, { m: "rsb130", p: "SG. BARBOSA", pts: 1620 },
-            { m: "scg216", p: "SD. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
+            { m: "scg216", p: "CB. SAMANTHA", pts: 940 }, { m: "tvo212", p: "SG. THAYANE", pts: 1390 },
             { m: "tgs164", p: "SG. GARCIA", pts: 1470 }, { m: "vho129", p: "SG. VICTOR HUGO", pts: 1650 }
         ];
 
@@ -174,10 +173,11 @@
                   ];
 
         const FRASES = [
-            "Coragem não é não ter medo, e sim, seguir em frente.",
+            "Coragem não é não ter medo, é seguir em frente apesar do medo.",
             "Os fortes agem, avançam e deixam um legado.", 
             "A limitação está apenas na sua mente.",
             "Grandes batalhas só são dadas a grandes guerreiros.",
+            "Obstáculos são injeções de ânimo ou desânimo, você escolhe.",
             "Vencer na vida não é um destino, é a sua escolha."
         ];
 
@@ -230,7 +230,7 @@ const [pdfAtivo, setPdfAtivo] = useState(null); // Controla qual PDF está abert
 
                 // Acesso do Comandante
                 if (m === 'esp0815') { 
-                    setUser({p: "COMANDANTE IVESPE", cargo: "Comandante"}); 
+                    setUser({p: "COMANDANTE", cargo: "Comandante"}); 
                     setStatus('qg'); 
                 // Acesso do Instrutor
                 } else if (m === 'militar') {
